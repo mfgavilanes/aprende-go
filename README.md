@@ -12,7 +12,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
   - [¿Qué es Go?](#qué-es-go)
   - [¿Por qué aprender Go?](#por-qué-aprender-go)
-  - [Instalación y configuración](#instalacion-y-configuracion)
+  - [Instalación y configuración](#instalación-y-configuración)
 
 - **Capítulo I**
 
