@@ -146,7 +146,7 @@ En este tutorial, se instalará Go y se configurará el editor.
 
 Se puede descargar Go desde la sección [downloads](https://go.dev/dl).
 
-![download](https://github.com/mfgavilanes/aprende-go/images/download.png)
+![download](images/download.png)
 
 ## Instalación
 
