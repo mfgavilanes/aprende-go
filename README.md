@@ -203,9 +203,9 @@ De forma predeterminada, el instalador instalará Go en Archivos de programa o A
 Puedes cambiar la ubicación según sea necesario. Después de la instalación, deberás cerrar y volver a abrir cualquier símbolo del sistema abierto para que los cambios en el entorno realizados por el instalador se reflejen en el símbolo del sistema.
 
 2. Comprueba que has instalado Go.
-  1. En Windows, haga clic en el menú Inicio.
-  2. En el cuadro de búsqueda del menú, escriba cmd y pulse la tecla Intro.
-  3. En la ventana del símbolo del sistema que aparece, escriba el siguiente comando:
+   1. En Windows, haga clic en el menú Inicio.
+   2. En el cuadro de búsqueda del menú, escriba cmd y pulse la tecla Intro.
+   3. En la ventana del símbolo del sistema que aparece, escriba el siguiente comando:
 
 ```
 $ go version
