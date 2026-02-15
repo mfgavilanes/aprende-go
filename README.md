@@ -148,7 +148,7 @@ Se puede descargar Go desde la sección [downloads](https://go.dev/dl).
 
 ![download](images/download.png)
 
-## Instalación
+## Instalación y configuración
 
 _Estas instrucciones son del [sitio oficial](https://go.dev/doc/install)._
 
