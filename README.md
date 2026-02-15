@@ -204,7 +204,7 @@ $ go version
 
 En este curso, utilizaré [VS Code](https://code.visualstudio.com), que puedes descargar desde [aquí](https://code.visualstudio.com/download).
 
-![vscode](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/getting-started/installation-and-setup/vscode.png)
+![vscode](images/vscode.png)
 
 _Siéntete libre de utilizar cualquier otro editor de código que prefieras._
 
