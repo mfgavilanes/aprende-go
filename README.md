@@ -204,7 +204,7 @@ $ go version
 
 En este curso, utilizaré [VS Code](https://code.visualstudio.com), que puedes descargar desde [aquí](https://code.visualstudio.com/download).
 
-![vscode](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/getting-started/installation-and-setup/vscode.png)
+![vscode](images/vscode.png)
 
 _Siéntete libre de utilizar cualquier otro editor de código que prefieras._
 
@@ -212,7 +212,7 @@ _Siéntete libre de utilizar cualquier otro editor de código que prefieras._
 
 Asegúrate de instalar también la [extensión Go](https://code.visualstudio.com/docs/languages/go), que facilita el trabajo con Go en VS Code.
 
-![extension](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/getting-started/installation-and-setup/extension.png)
+![extension](images/go-extension.png)
 
 Esto es todo en cuanto a la instalación y configuración de Go. ¡Empecemos el curso y escribamos nuestro primer «hola mundo»!
 
