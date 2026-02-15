@@ -12,11 +12,11 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
   - [¿Qué es Go?](#qué-es-go)
   - [¿Por qué aprender Go?](#por-qué-aprender-go)
-  - [Instalación y configuración](#installation-and-setup)
+  - [Instalación y configuración](#instalacion-y-configuracion)
 
 - **Capítulo I**
 
-  - [Hola mundo](#hello-world)
+  - [Hola mundo](#hola-mundo)
   - [Variables y tipos de datos](#variables-and-data-types)
   - [Formateo de cadenas](#string-formatting)
   - [Control de flujo](#flow-control)
@@ -150,87 +150,86 @@ Se puede descargar Go desde la sección [downloads](https://go.dev/dl).
 
 ## Instalación
 
-_These instructions are from the [official website](https://go.dev/doc/install)._
+_Estas instrucciones son del [sitio oficial](https://go.dev/doc/install)._
 
 ### MacOS
 
-1. Open the package file you downloaded and follow the prompts to install Go.
-   The package installs the Go distribution to `/usr/local/go`. The package should put the `/usr/local/go/bin` directory in your `PATH` environment variable.
-   You may need to restart any open Terminal sessions for the change to take effect.
-
-2. Verify that you've installed Go by opening a command prompt and typing the following command:
+1. Abre el archivo del paquete que descargaste y sigue las instrucciones para instalar Go.
+   El paquete instala la distribución de Go en `/usr/local/go`. El paquete debería colocar el directorio `/usr/local/go/bin` en tu variable de entorno `PATH`.
+   Es posible que tengas que reiniciar cualquier sesión de Terminal abierta para que el cambio surta efecto.
+2. Comprueba que has instalado Go abriendo un símbolo del sistema y escribiendo el siguiente comando:
 
 ```
 $ go version
 ```
 
-3. Confirm that the command prints the installed version of Go.
+3. Confirma que el comando muestra la versión instalada de Go.
 
 ### Linux
 
-1. Remove any previous Go installation by deleting the `/usr/local/go` folder (if it exists),
-   then extract the archive you just downloaded into `/usr/local`, creating a fresh Go tree in `/usr/local/go`:
+1. Elimina cualquier instalación anterior de Go borrando la carpeta `/usr/local/go` (si existe)
+   y, a continuación, extrae el archivo que acabas de descargar en `/usr/local`, creando un nuevo árbol Go en `/usr/local/go`:
 
 ```
 $ rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
 ```
 
-_Note: You may need to run the command as root or through sudo._
+_Nota: Es posible que tengas que ejecutar el comando como root o mediante sudo._
 
-**Do not untar** the archive into an existing `/usr/local/go` tree. This is known to produce broken Go installations.
+**No descomprimas** el archivo en un árbol `/usr/local/go` existente. Se sabe que esto provoca instalaciones defectuosas de Go.
 
-2. Add `/usr/local/go/bin` to the PATH environment variable.
-   You can do this by adding the following line to your `$HOME/.profile` or `/etc/profile` (for a system-wide installation):
+2. Añade `/usr/local/go/bin` a la variable de entorno PATH.
+   Puedes hacerlo añadiendo la siguiente línea a tu `$HOME/.profile` o `/etc/profile` (para una instalación en todo el sistema):
 
 ```
 export PATH=$PATH:/usr/local/go/bin
 ```
 
-_Note: Changes made to a profile file may not apply until the next time you log into your computer. To apply the changes immediately, just run the shell commands directly or execute them from the profile using a command such as source `$HOME/.profile`._
+_Nota: Es posible que los cambios realizados en un archivo de perfil no se apliquen hasta la próxima vez que inicie sesión en su ordenador. Para aplicar los cambios inmediatamente, simplemente ejecute los comandos del shell directamente o ejecútelos desde el perfil utilizando un comando como source `$HOME/.profile`._
 
-3. Verify that you've installed Go by opening a command prompt and typing the following command:
+3. Comprueba que has instalado Go abriendo un símbolo del sistema y escribiendo el siguiente comando:
 
 ```
 $ go version
 ```
 
-4. Confirm that the command prints the installed version of Go.
+4. Confirma que el comando muestra la versión instalada de Go.
 
 ### Windows
 
-1. Open the MSI file you downloaded and follow the prompts to install Go.
+1. Abre el archivo MSI que has descargado y sigue las instrucciones para instalar Go.
 
-By default, the installer will install Go to Program Files or Program Files (x86).
-You can change the location as needed. After installing, you will need to close and reopen any open command prompts so that changes to the environment made by the installer are reflected at the command prompt.
+De forma predeterminada, el instalador instalará Go en Archivos de programa o Archivos de programa (x86).
+Puedes cambiar la ubicación según sea necesario. Después de la instalación, deberás cerrar y volver a abrir cualquier símbolo del sistema abierto para que los cambios en el entorno realizados por el instalador se reflejen en el símbolo del sistema.
 
-2. Verify that you've installed Go.
-   1. In Windows, click the Start menu.
-   2. In the menu's search box, type cmd, then press the Enter key.
-   3. In the Command Prompt window that appears, type the following command:
+2. Comprueba que has instalado Go.
+  1. En Windows, haga clic en el menú Inicio.
+  2. En el cuadro de búsqueda del menú, escriba cmd y pulse la tecla Intro.
+  3. En la ventana del símbolo del sistema que aparece, escriba el siguiente comando:
 
 ```
 $ go version
 ```
 
-3. Confirm that the command prints the installed version of Go.
+3. Confirma que el comando muestra la versión instalada de Go.
 
 ## VS Code
 
-In this course, I will be using [VS Code](https://code.visualstudio.com) and you can download it from [here](https://code.visualstudio.com/download).
+En este curso, utilizaré [VS Code](https://code.visualstudio.com), que puedes descargar desde [aquí](https://code.visualstudio.com/download).
 
 ![vscode](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/getting-started/installation-and-setup/vscode.png)
 
-_Feel free to use any other code editor you prefer._
+_Siéntete libre de utilizar cualquier otro editor de código que prefieras._
 
-### Extension
+##  Extensión
 
-Make sure to also install the [Go extension](https://code.visualstudio.com/docs/languages/go) which makes it easier to work with Go in VS Code.
+Asegúrate de instalar también la [extensión Go](https://code.visualstudio.com/docs/languages/go), que facilita el trabajo con Go en VS Code.
 
 ![extension](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/getting-started/installation-and-setup/extension.png)
 
-This is it for the installation and setup of Go, let's start the course and write our first hello world!
+Esto es todo en cuanto a la instalación y configuración de Go. ¡Empecemos el curso y escribamos nuestro primer «hola mundo»!
 
-# Hello World
+# Hola Mundo
 
 Let's write our first hello world program, we can start by initializing a module. For that, we can use the `go mod` command.
 
