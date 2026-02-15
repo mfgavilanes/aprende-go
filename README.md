@@ -102,15 +102,9 @@ Go es un lenguaje muy simple:
 - pocos conceptos raros
 - solo ~25 palabras clave
 
-Además, tiene una comunidad muy activa y mucha documentación.
+Tiene una comunidad muy activa y mucha documentación.
 
-Se puede usar para:
-- backend
-- herramientas de sistema
-- redes
-- cloud
-- APIs
-- data pipelines
+Además, al ser un lenguaje polivalente, se puede utilizar para tareas como el desarrollo de backend, la computación en la nube y, más recientemente, la ciencia de datos.
 
 ## 2. Rápido y fiable
 
@@ -119,20 +113,13 @@ Go es:
 - estáticamente tipado
 - muy rápido
 
-Esto lo hace ideal para:
-- sistemas distribuidos
-- servidores
-- software de red
+Lo que lo hace muy adecuado para sistemas distribuidos. Proyectos como Kubernetes y Docker están escritos en Go.
 
 ## 3. Simple pero potente
 
-Go es minimalista. Tiene pocas reglas, pero muy bien pensadas.
+Go solo tiene 25 palabras clave, lo que facilita su lectura, escritura y mantenimiento. El lenguaje en sí es conciso.
 
-Ejemplos de cosas potentes:
-- concurrencia fácil (goroutines)
-- canales de comunicación
-- compilación rápida
-- binarios únicos
+Pero no te dejes engañar por su simplicidad, Go tiene varias características potentes que aprenderemos más adelante en el curso.
 
 ## 4. Oportunidades laborales
 
