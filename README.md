@@ -13,7 +13,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [¿Qué es Go?](#qué-es-go)
   - [¿Por qué aprender Go?](#por-qué-aprender-go)
   - [Instalación y configuración](#instalación-y-configuración)
-  - [Comandos báasicos de Go](#comandos-básicos-de-go)
+  - [Comandos básicos de Go](#comandos-básicos-de-go)
 
 - **Capítulo I**
 
@@ -265,7 +265,7 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Hello World!")
+	fmt.Println("Hola Mundo!")
 }
 ```
 
