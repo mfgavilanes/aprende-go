@@ -13,6 +13,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [¿Qué es Go?](#qué-es-go)
   - [¿Por qué aprender Go?](#por-qué-aprender-go)
   - [Instalación y configuración](#instalación-y-configuración)
+  - [Comandos báasicos de Go](#comandos-básicos-de-go)
 
 - **Capítulo I**
 
@@ -216,17 +217,47 @@ Asegúrate de instalar también la [extensión Go](https://code.visualstudio.com
 
 Esto es todo en cuanto a la instalación y configuración de Go. ¡Empecemos el curso y escribamos nuestro primer «hola mundo»!
 
+
+# Comandos básicos de Go
+
+Los comandos más habituales de Go son:
+- ```$ go build ```
+
+Si se ejecuta desde el directorio raíz del proyecto, genera un archivo ejecutable del proyecto.
+- ```$ go run <archivo>.go ```
+
+Si queremos ejecutar el programa de Go directamente sin generar el ejecutable.
+
+- ```$ go fmt ./... ```
+
+Es un comando que formatea automáticamente todo el código del proyecto (`./...`) siguiendo el estilo oficial del lenguaje.
+
+- ```$ go vet ```
+
+Es un comando que analiza el código y detecta posibles errores o cosas sospechosas que compilan pero probablemente están mal.
+
+- ```$ godoc ```
+
+Es la herramienta de Go para generar y ver documentación del código a partir de los comentarios que se escriben.
+- ```$ go get ```
+
+Es un comando de Go que se usa para descargar dependencias (librerías) desde internet y se añaden al proyecto.
+
+- ```$ go mod ```
+
+Es un comando que se usa en Go para gestionar los módulos del proyecto: dependencias, versiones y configuración del proyecto.
+
 # Hola Mundo
 
-Let's write our first hello world program, we can start by initializing a module. For that, we can use the `go mod` command.
+Escribamos nuestro primer programa «hola mundo». Podemos empezar inicializando un módulo. Para ello, podemos utilizar el comando «go mod».
 
 ```bash
 $ go mod init example
 ```
 
-But wait...what's a `module`? Don't worry we will discuss that soon! But for now, assume that the module is basically a collection of Go packages.
+Pero espera... ¿qué es un «módulo»? No te preocupes, lo explicaremos en breve. Por ahora, basta con que pienses que un módulo es básicamente una colección de paquetes Go.
 
-Moving ahead, let's now create a `main.go` file and write a program that simply prints hello world.
+Continuemos. Ahora vamos a crear un archivo «main.go» y a escribir un programa que simplemente imprima «hola mundo».
 
 ```go
 package main
@@ -238,42 +269,42 @@ func main() {
 }
 ```
 
-_If you're wondering, `fmt` is part of the Go standard library which is a set of core packages provided by the language._
+Si te lo estás preguntando, «fmt» forma parte de la biblioteca estándar de Go, que es un conjunto de paquetes básicos proporcionados por el lenguaje.
 
-## Structure of a Go program
+## Estructura de un programa Go
 
-Now, let's quickly break down what we did here, or rather the structure of a Go program.
+Ahora, analicemos rápidamente lo que hemos hecho aquí, o más bien la estructura de un programa Go.
 
-First, we defined a package such as `main`.
+En primer lugar, hemos definido un paquete como «main».
 
 ```go
 package main
 ```
 
-Then, we have some imports.
+A continuación, tenemos algunas importaciones.
 
 ```go
-import "fmt"
+import «fmt»
 ```
 
-Last but not least, is our `main` function which acts as an entry point for our application, just like in other languages like C, Java, or C#.
+Por último, pero no menos importante, está nuestra función `main`, que actúa como punto de entrada para nuestra aplicación, al igual que en otros lenguajes como C, Java o C#.
 
 ```go
 func main() {
-	...
+    ...
 }
 ```
 
-Remember, the goal here is to keep a mental note, and later in the course, we'll learn about `functions`, `imports`, and other things in detail!
+Recuerda que el objetivo aquí es tomar nota mentalmente y, más adelante en el curso, aprenderemos sobre «funciones», «importaciones» y otras cosas en detalle.
 
-Finally, to run our code, we can simply use `go run` command.
+Por último, para ejecutar nuestro código, simplemente podemos usar el comando «go run».
 
 ```bash
 $ go run main.go
-Hello World!
+¡Hola, mundo!
 ```
 
-Congratulations, you just wrote your first Go program!
+¡Enhorabuena, acabas de escribir tu primer programa Go!
 
 # Variables and Data Types
 
