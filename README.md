@@ -252,10 +252,10 @@ Es un comando que se usa en Go para gestionar los módulos del proyecto: depende
 Escribamos nuestro primer programa «hola mundo». Podemos empezar inicializando un módulo. Para ello, podemos utilizar el comando «go mod».
 
 ```bash
-$ go mod init example
+$ go mod init ejemplo
 ```
 
-Pero espera... ¿qué es un «módulo»? No te preocupes, lo explicaremos en breve. Por ahora, basta con que pienses que un módulo es básicamente una colección de paquetes Go.
+Pero espera... ¿qué es un «módulo»? Por ahora, basta con que pienses que un módulo es básicamente una colección de paquetes Go.
 
 Continuemos. Ahora vamos a crear un archivo «main.go» y a escribir un programa que simplemente imprima «hola mundo».
 
@@ -295,7 +295,7 @@ func main() {
 }
 ```
 
-Recuerda que el objetivo aquí es tomar nota mentalmente y, más adelante en el curso, aprenderemos sobre «funciones», «importaciones» y otras cosas en detalle.
+Recuerda que el objetivo aquí es tomar nota mentalmente y, más adelante, aprenderemos sobre «funciones», «importaciones» y otras cosas en detalle.
 
 Por último, para ejecutar nuestro código, simplemente podemos usar el comando «go run».
 
@@ -306,50 +306,52 @@ $ go run main.go
 
 ¡Enhorabuena, acabas de escribir tu primer programa Go!
 
-# Variables and Data Types
+# Variables y tipos de datos
 
-In this tutorial, we will learn about variables. We will also learn about the different data types that Go provides us.
+Los tipos de datos que proporciona Go son los siguientes:
+
+![extension](images/tipos-datos.png)
+
+Para poder seguir profundizando en más detalle en cada uno de los tipos de datos, déjame explicarte primero como se define una variable.
 
 ## Variables
 
-Let's start with declaring a variable.
-
-This is also known as declaration without initialization:
+Comencemos por declarar una variable. Es lo que se conoce como declaración sin inicialización:
 
 ```go
-var foo string
+var foo int
 ```
 
-Declaration with initialization:
+Declaración con inicialización:
 
 ```go
-var foo string = "Go is awesome"
+var foo int = 0
 ```
 
-Multiple declarations:
+Declaraciones múltiples:
 
 ```go
-var foo, bar string = "Hello", "World"
+var foo, bar int = 0, 1
 // OR
 var (
-	foo string = "Hello"
-	bar string  = "World"
+	foo int = 0
+	bar int  = 1
 )
 ```
 
-Type is omitted but will be inferred:
+El tipo se omite, pero se inferirá:
 
 ```go
-var foo = "What's my type?"
+var foo = 0
 ```
 
-Shorthand declaration, here we omit `var` keyword and type is always implicit. This is how we will see variables being declared most of the time. We also use the `:=` for declaration plus assignment.
+Declaración abreviada: aquí omitimos la palabra clave `var` y el tipo siempre es implícito. Así es como veremos declaradas las variables la mayoría de las veces. También usamos `:=` para la declaración más la asignación.
 
 ```go
-foo := "Shorthand!"
+foo := 2
 ```
 
-_Note: Shorthand only works inside `function` bodies._
+_Nota: La abreviatura solo funciona dentro de los cuerpos de las `function`._
 
 ## Constants
 
