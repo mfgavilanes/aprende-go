@@ -280,7 +280,7 @@ Si te lo estás preguntando, «fmt» forma parte de la biblioteca estándar de G
 
 Ahora, analicemos rápidamente lo que hemos hecho aquí, o más bien la estructura de un programa Go.
 
-En primer lugar, hemos definido un paquete como «main».
+En primer lugar, hemos definido un paquete como `main`.
 
 ```go
 package main
@@ -289,7 +289,7 @@ package main
 A continuación, tenemos algunas importaciones.
 
 ```go
-import «fmt»
+import "fmt"
 ```
 
 Por último, pero no menos importante, está nuestra función `main`, que actúa como punto de entrada para nuestra aplicación, al igual que en otros lenguajes como C, Java o C#.
@@ -403,34 +403,34 @@ const num2 = a // ko (variable de tipo int) no es constante (InvalidConstInit)
 Comencemos por los tipos básicos y más concretamente por las cadenas (`strings`).
 
 
-### String
+### Cadenas
 
-In Go, a string is a sequence of bytes. They are declared either using double quotes or backticks which can span multiple lines.
+En Go, una cadena es una secuencia de bytes. Se declaran utilizando comillas dobles o comillas invertidas, que pueden abarcar varias líneas.
 
 ```go
-var name string = "My name is Go"
+var cadena string = "Esto es un ejemplo de Go"
 
-var bio string = `I am statically typed.
-									I was designed at Google.`
+var biocad string = `Soy un lenguaje estáticamente tipado.
+									Fui diseñado  en Google.`
 ```
 
-### Bool
+### Booleano
 
-Next is `bool` which is used to store boolean values. It can have two possible values - `true` or `false`.
+A continuación está `bool`, que se utiliza para almacenar valores booleanos. Puede tener dos valores posibles: `true` o `false`.
 
 ```go
 var value bool = false
 var isItTrue bool = true
 ```
 
-**Operators**
+**Operadores**
 
-We can use the following operators on boolean types
+Podemos utilizar los siguientes operadores en tipos booleanos.
 
-| Type     | Syntax          |
-| -------- | --------------- |
-| Logical  | `&&` `\|\|` `!` |
-| Equality | `==` `!=`       |
+| Tipo     | Sintaxis   |
+|----------|-----------------|
+| Lógicos  | `&&` `\|\|` `!` |
+| Igualdad | `==` `!=`       |
 
 ### Numeric types
 
