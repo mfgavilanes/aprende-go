@@ -520,20 +520,20 @@ Go proporciona varios operadores para realizar operaciones con tipos numéricos.
 | Incremento/decremento | `++` `--`                                                |
 | Asignación          | `=` `+=` `-=` `*=` `/=` `%=` `<<=` `>>=` `&=` `\|=` `^=` |
 
-**Complex**
+**Complejos**
 
-There are 2 complex types in Go, `complex128` where both real and imaginary parts are `float64` and `complex64` where real and imaginary parts are `float32`.
+Hay dos tipos complejos en Go: `complex128`, donde tanto la parte real como la imaginaria son `float64`, y `complex64`, donde la parte real y la imaginaria son `float32`.
 
-We can define complex numbers either using the built-in complex function or as literals.
+Podemos definir números complejos utilizando la función compleja integrada o como literales.
 
 ```go
-var c1 complex128 = complex(10, 1)
-var c2 complex64 = 12 + 4i
+var c1 complejo128 = complex(24, 53)
+var c2 complejo64 = 18 + 24i
 ```
 
-## Zero Values
+## Valores por defecto
 
-Now let's discuss zero values. So in Go, any variable declared without an explicit initial value is given its _zero value_. For example, let's declare some variables and see:
+Ahora hablemos de los valores por defecto. En Go, cualquier variable declarada sin un valor inicial explícito recibe un valor por defecto. Por ejemplo, declaremos algunas variables y veamos:
 
 ```go
 var i int
@@ -549,9 +549,9 @@ $ go run main.go
 0 0 false ""
 ```
 
-So, as we can see `int` and `float` are assigned as 0, `bool` as false, and `string` as an empty string. This is quite different from how other languages do it. For example, most languages initialize unassigned variables as null or undefined.
+Como podemos ver, a `int` y `float` se les asigna el valor 0, a `bool` se le asigna el valor false y a `string` se le asigna una cadena vacía. Esto es muy diferente a cómo lo hacen otros lenguajes. Por ejemplo, la mayoría de los lenguajes inicializan las variables no asignadas como nulas o indefinidas.
 
-This is great, but what are those percent symbols in our `Printf` function? As you've already guessed, they are used for formatting and we will learn about them later.
+Esto está muy bien, pero ¿qué son esos símbolos de porcentaje en nuestra función `Printf`? Como ya habrás adivinado, se utilizan para dar formato y los veremos más adelante.
 
 ## Type Conversion
 
@@ -573,6 +573,8 @@ float64 uint
 And as we can see, it prints the type as `float64` and `uint`.
 
 _Note that this is different from parsing._
+
+
 
 ## Alias types
 
