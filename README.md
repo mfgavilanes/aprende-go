@@ -863,29 +863,28 @@ Para aquellos que provienen del mundo de C/C++, esto debería resultaros natural
 
 # Control de flujo
 
-Let's talk about flow control, starting with if/else.
+Hablemos del control de flujo, empezando por las sentencias `if/else`.
 
-## If/Else
+## Sentencias If/Else
 
-This works pretty much the same as you expect but the expression doesn't need to be surrounded by parentheses `()`.
+Funciona prácticamente igual de lo que cabría esperar, pero la expresión no necesita ir entre paréntesis `()`.
 
 ```go
 func main() {
-	x := 10
-
-	if x > 5 {
-		fmt.Println("x is gt 5")
-	} else if x > 10 {
-		fmt.Println("x is gt 10")
+	a := 5
+	if a == 0 {
+		fmt.Println("a vale 0")
+	} else if a > 0 {
+		fmt.Println("a es positivo")
 	} else {
-		fmt.Println("else case")
+		fmt.Println("a es negativo")
 	}
 }
 ```
 
 ```bash
 $ go run main.go
-x is gt 5
+a es positivo
 ```
 
 ### Compact if
