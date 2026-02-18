@@ -432,8 +432,8 @@ s1 := "apple"
 s2 := "banana"
 
 fmt.Println(s1 < s2)       // true (a < b)
-fmt.Println("Z" < "a")     // true (Z=90 < a=97 en ASCII) 
 fmt.Println("abc" < "abd") // true (diferencia en último carácter)
+fmt.Println("Z" < "a")     // true (Z=90 < a=97 en ASCII) 
 ```
 
 ### Booleano
