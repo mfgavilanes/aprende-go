@@ -19,8 +19,8 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
   - [Hola Mundo](#hola-mundo)
   - [Variables, constantes y tipos de datos](#variables-constantes-y-tipos-de-datos)
-  - [Formateo de cadenas](#string-formatting)
-  - [Control de flujo](#flow-control)
+  - [Formato de cadenas](#formato-de-cadenas)
+  - [Control de flujo](#control-de-flujo)
   - [Funciones](#functions)
   - [Módulos](#modules)
   - [Paquetes](#packages)
