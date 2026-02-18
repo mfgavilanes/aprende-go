@@ -553,9 +553,9 @@ Como podemos ver, a `int` y `float` se les asigna el valor 0, a `bool` se le asi
 
 Esto está muy bien, pero ¿qué son esos símbolos de porcentaje en nuestra función `Printf`? Como ya habrás adivinado, se utilizan para dar formato y los veremos más adelante.
 
-## Type Conversion
+## Conversión de tipos
 
-Moving on, now that we have seen how data types work, let's see how to do type conversion.
+Ahora que ya hemos visto cómo funcionan los tipos básicos de datos, veamos cómo se realiza la conversión de tipos.
 
 ```go
 i := 42
@@ -569,10 +569,9 @@ fmt.Printf("%T %T", f, u)
 $ go run main.go
 float64 uint
 ```
+Y, como podemos ver, imprime el tipo como `float64` y `uint`.
 
-And as we can see, it prints the type as `float64` and `uint`.
-
-_Note that this is different from parsing._
+_Ten en cuenta que esto es diferente del análisis sintáctico._
 
 
 
