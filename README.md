@@ -615,11 +615,9 @@ Como podemos ver, a `int` y `float` se les asigna el valor 0, a `bool` se le asi
 
 Esto está muy bien, pero ¿qué son esos símbolos de porcentaje en nuestra función `Printf`? Como ya habrás adivinado, se utilizan para dar formato y los veremos más adelante.
 
-
-
 ## Tipos alias
 
-Los tipos alias se introdujeron en Go 1.9. Permiten a los desarrolladores proporcionar un nombre alternativo para un tipo existente y utilizarlo indistintamente con el tipo subyacente.
+Los tipos alias se introdujeron en Go 1.9. Permiten a los desarrolladores proporcionar un nombre alternativo para un tipo existente y utilizarlo indistintamente con el tipo subyacente. Esta modalidad no crea un tipo nuevo.
 
 ```go
 package main
@@ -629,80 +627,71 @@ import "fmt"
 type Estado = string
 
 const (
+	activo Estado = "activo"
+	inactivo Estado = "inactivo"
 )
 func main() {
-	var str MyAlias = "I am an alias"
+	var str Estado = activo
 
-	fmt.Printf("%T - %s", str, str) // Output: string - I am an alias
+	fmt.Printf("%T - %s", str, str) // Salida: string - activo
 }
 ```
+
+## Tipos definidos
+
+Por último, hemos definido tipos que, a diferencia de los tipos alias, no utilizan el signo `=` para su declaración. Esta modalidad de tipos permite crear un tipo nuevo.
 
 ```go
 package main
 
 import "fmt"
 
-type MyAlias = string
+type Estado string
 
+const (
+  activo Estado = "activo"
+  inactivo Estado = "inactivo"
+)
 func main() {
-	var str MyAlias = "I am an alias"
+  var str Estado = activo
 
-	fmt.Printf("%T - %s", str, str) // Output: string - I am an alias
+  fmt.Printf("%T - %s", str, str) // Salida: main.Estado - activo
 }
 ```
 
-## Defined types
+**Pero espera... ¿cuál es la diferencia?**
 
-Lastly, we have defined types that unlike alias types do not use an equals sign.
+Por lo tanto, los tipos definidos hacen más que simplemente dar un nombre a un tipo.
+
+En primer lugar, definen un nuevo tipo con nombre con un tipo subyacente. Sin embargo, este tipo definido es diferente de cualquier otro tipo, incluido su tipo subyacente.
+
+Por lo tanto, no se puede utilizar indistintamente con el tipo subyacente como los tipos alias.
+
+Al principio resulta un poco confuso, pero esperamos que este ejemplo lo aclare.
 
 ```go
 package main
 
 import "fmt"
 
-type MyDefined string
+type EstadoAlias = string
+type EstadoDefinido string
 
 func main() {
-	var str MyDefined = "I am defined"
+	var alias EstadoAlias
+	var def EstadoDefinido
 
-	fmt.Printf("%T - %s", str, str) // Output: main.MyDefined - I am defined
-}
-```
-
-**But wait...what's the difference?**
-
-So, defined types do more than just give a name to a type.
-
-It first defines a new named type with an underlying type. However, this defined type is different from any other type, including its underline type.
-
-Hence, it cannot be used interchangeably with the underlying type like alias types.
-
-It's a bit confusing at first, hopefully, this example will make things clear.
-
-```go
-package main
-
-import "fmt"
-
-type MyAlias = string
-
-type MyDefined string
-
-func main() {
-	var alias MyAlias
-	var def MyDefined
-
-	// ✅ Works
+	// ok
 	var copy1 string = alias
 
-	// ❌ Cannot use def (variable of type MyDefined) as string value in variable
+	// ko No se puede utilizar def (variable de tipo MyDefined) como valor de cadena en la variable
 	var copy2 string = def
 
 	fmt.Println(copy1, copy2)
 }
 ```
 
-As we can see, we cannot use the defined type interchangeably with the underlying type, unlike _alias types_.
+Como podemos ver, no podemos utilizar el tipo definido de forma intercambiable con el tipo subyacente, a diferencia de los tipos _alias_.
 
 # String Formatting
 
