@@ -400,7 +400,7 @@ const num2 = a // ko (variable de tipo int) no es constante (InvalidConstInit)
 
 ![extension](images/tipos-datos.png)
 
-Comencemos por los tipos básicos y más concretamente por las cadenas (`strings`).
+Comencemos por los **tipos básicos** y más concretamente por las cadenas (`strings`).
 
 
 ### Cadenas
