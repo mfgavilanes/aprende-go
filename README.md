@@ -419,11 +419,11 @@ var biocad string = `Soy un lenguaje estáticamente tipado.
 Podemos utilizar los siguientes operadores en tipos cadena.
 
 
-| Tipo                         | Sintaxis          |
-|------------------------------|-------------------|
-| Comparación<br/>lexicográfica | `>` `>=` `<` `<=` |
-| Igualdad                     | `==` `!=`         |
- | Concatenación                | `+` |
+| Tipo                      | Sintaxis          |
+|---------------------------|-------------------|
+| Comparación lexicográfica | `>` `>=` `<` `<=` |
+| Igualdad                  | `==` `!=`         |
+ | Concatenación             | `+` |
 
 ### Booleano
 
