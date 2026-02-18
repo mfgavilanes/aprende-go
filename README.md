@@ -615,9 +615,9 @@ Como podemos ver, a `int` y `float` se les asigna el valor 0, a `bool` se le asi
 
 Esto está muy bien, pero ¿qué son esos símbolos de porcentaje en nuestra función `Printf`? Como ya habrás adivinado, se utilizan para dar formato y los veremos más adelante.
 
-## Tipos alias
+## Tipos alias, definidos y enumeraciones
 
-Los tipos alias se introdujeron en Go 1.9. Permiten a los desarrolladores proporcionar un nombre alternativo para un tipo existente y utilizarlo indistintamente con el tipo subyacente. Esta modalidad no crea un tipo nuevo.
+Los **tipos alias** se introdujeron en Go 1.9. Permiten a los desarrolladores proporcionar un nombre alternativo para un tipo existente y utilizarlo indistintamente con el tipo subyacente. Esta modalidad no crea un tipo nuevo.
 
 ```go
 package main
@@ -637,9 +637,7 @@ func main() {
 }
 ```
 
-## Tipos definidos
-
-Por último, hemos definido tipos que, a diferencia de los tipos alias, no utilizan el signo `=` para su declaración. Esta modalidad de tipos permite crear un tipo nuevo.
+Por último, podemos definir tipos, a diferencia de los tipos alias, no utilizan el signo `=` para su declaración. Esta modalidad de tipos permite crear un tipo nuevo y se denominan **tipos definidos**.
 
 ```go
 package main
@@ -692,6 +690,38 @@ func main() {
 ```
 
 Como podemos ver, no podemos utilizar el tipo definido de forma intercambiable con el tipo subyacente, a diferencia de los tipos _alias_.
+
+Hasta ahora hemos visto como podemos usar tipos alias o tipos definidos, en ambos casos utilizado `string`. Estos tipos también se pueden usar con `int`. Cuando eso ocurre podemos crear enumeraciones.
+
+Go no tiene un tipo enumeración nativo como puede occurrir en otros lenguajes de programación como C o Java. Sin embargo, se pueden implementar mediante tipos y constantes.
+
+```go
+package main
+
+import "fmt"
+type Color int // también podría ser un tipo predefinido
+
+const (
+  Verde Color = iota
+  Rojo
+  Azul
+) 
+
+func main() {
+	var c Color = Verde
+	if c == Verde {
+		fmt.Println("Verde")
+    }
+}
+```
+
+¿Qué hace `iota`? Genera valores enteros automáticos.
+```go
+Verde  = 0
+Rojo = 1
+Azul  = 2
+```
+Esto funciona porque `iota` es un contador entero y sirve para serializar números y permite comparar rápidamente.
 
 # String Formatting
 
