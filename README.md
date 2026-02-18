@@ -425,6 +425,17 @@ Podemos utilizar los siguientes operadores en tipos cadena.
 | Igualdad                  | `==` `!=`         |
  | Concatenación             | `+` |
 
+A modo de ejemplo tenemos:
+
+```go
+s1 := "apple"
+s2 := "banana"
+
+fmt.Println(s1 < s2)       // true (a < b)
+fmt.Println("Z" < "a")     // true (Z=90 < a=97 en ASCII) 
+fmt.Println("abc" < "abd") // true (diferencia en último carácter)
+```
+
 ### Booleano
 
 A continuación está `bool`, que se utiliza para almacenar valores booleanos. Puede tener dos valores posibles: `true` o `false`.
