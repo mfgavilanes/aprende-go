@@ -239,6 +239,7 @@ Es un comando que analiza el código y detecta posibles errores o cosas sospecho
 - ```$ godoc ```
 
 Es la herramienta de Go para generar y ver documentación del código a partir de los comentarios que se escriben.
+
 - ```$ go get ```
 
 Es un comando de Go que se usa para descargar dependencias (librerías) desde internet y se añaden al proyecto.
@@ -246,6 +247,10 @@ Es un comando de Go que se usa para descargar dependencias (librerías) desde in
 - ```$ go mod ```
 
 Es un comando que se usa en Go para gestionar los módulos del proyecto: dependencias, versiones y configuración del proyecto.
+
+-  ```$ golint ```
+
+Es un comando que se usa en Go para analizar los comentarios del proyecto.
 
 # Hola Mundo
 
@@ -352,6 +357,10 @@ foo := 2
 ```
 
 _Nota: La abreviatura solo funciona dentro de los cuerpos de las `function`._
+
+Hay que destacar que jamás una variable podrá tener el mismo nombre que una palabra reservada. A ese efecto, existen un total de palabras reservadas.
+
+![extension](images/palabras-clave.png)
 
 ## Constants
 
