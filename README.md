@@ -547,7 +547,21 @@ var c2 complejo64 = 18 + 24i
 Ahora que ya hemos visto cómo funcionan los tipos básicos de datos, veamos cómo se realiza la conversión de tipos.
 
 ```go
-i := 42
+var segundos int8 = 30
+var horas int
+horas = int(segundos)
+```
+
+Otro ejemplo podría ser:
+
+```go
+distancia := 15.78
+kms := int(distancia) //se trunca la parte con decimales
+```
+
+Finalmente, otro ejemplo sería:
+```go
+i:= 15
 f := float64(i)
 u := uint(f)
 
