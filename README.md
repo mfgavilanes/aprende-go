@@ -384,6 +384,16 @@ También podemos declarar constantes con la palabra clave `const`. Como su nombr
 const constante = "Es un ejemplo de constante"
 ```
 
+Del mismo modo, se pueden hacer declaraciones múltiples:
+
+```go
+const estado1, estado2 string = "e1", "e2"
+// OR
+const(
+estado1 string = "e1"
+estado2 string = "e2"
+)
+
 También es importante señalar que solo las constantes pueden asignarse a otras constantes.
 
 ```go
@@ -606,9 +616,25 @@ Esto está muy bien, pero ¿qué son esos símbolos de porcentaje en nuestra fun
 
 
 
-## Alias types
+## Tipos alias
 
-Alias types were introduced in Go 1.9. They allow developers to provide an alternate name for an existing type and use it interchangeably with the underlying type.
+Los tipos alias se introdujeron en Go 1.9. Permiten a los desarrolladores proporcionar un nombre alternativo para un tipo existente y utilizarlo indistintamente con el tipo subyacente.
+
+```go
+package main
+
+import "fmt"
+
+type Estado = string
+
+const (
+)
+func main() {
+	var str MyAlias = "I am an alias"
+
+	fmt.Printf("%T - %s", str, str) // Output: string - I am an alias
+}
+```
 
 ```go
 package main
