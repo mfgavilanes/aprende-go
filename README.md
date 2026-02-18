@@ -414,6 +414,17 @@ var biocad string = `Soy un lenguaje estáticamente tipado.
 									Fui diseñado  en Google.`
 ```
 
+**Operadores**
+
+Podemos utilizar los siguientes operadores en tipos cadena.
+
+
+| Tipo                           | Sintaxis          |
+|--------------------------------|-------------------|
+| Comparación<br/>lexicográfico | `>` `>=` `<` `<=` |
+| Igualdad                       | `==` `!=`         |
+ | Concatenación | `+` |
+
 ### Booleano
 
 A continuación está `bool`, que se utiliza para almacenar valores booleanos. Puede tener dos valores posibles: `true` o `false`.
