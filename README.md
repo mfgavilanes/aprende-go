@@ -17,8 +17,8 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
 - **Capítulo I**
 
-  - [Hola mundo](#hola-mundo)
-  - [Variables y tipos de datos](#variables-y-tipos-de-datos)
+  - [Hola Mundo](#hola-mundo)
+  - [Variables, constantes y tipos de datos](#variables-constantes-y-tipos-de-datos)
   - [Formateo de cadenas](#string-formatting)
   - [Control de flujo](#flow-control)
   - [Funciones](#functions)
@@ -311,10 +311,10 @@ $ go run main.go
 
 ¡Enhorabuena, acabas de escribir tu primer programa Go!
 
-# Variables y tipos de datos
+# Variables, constantes y tipos de datos
 
 
-Antes de profundizar en detalle en cada uno de los tipos de datos, déjame explicarte primero como se define una variable.
+Antes de profundizar en detalle en cada uno de los tipos de datos, déjame explicarte primero como se define una variable y una constante.
 
 ## Variables
 
