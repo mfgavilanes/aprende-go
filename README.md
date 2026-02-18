@@ -536,13 +536,13 @@ var f64 float64 = 3.1415 // IEEE-754 64-bit
 
 Go proporciona varios operadores para realizar operaciones con tipos numéricos.
 
-| Type                | Syntax                                                   |
-| ------------------- | -------------------------------------------------------- |
-| Aritmético         | `+` `-` `*` `/` `%`                                      |
-| Comparación         | `==` `!=` `<` `>` `<=` `>=`                              |
+| Tipo                    | Sintaxis                                                 |
+|-----------------------|----------------------------------------------------------|
+| Aritmético            | `+` `-` `*` `/` `%`                                      |
+| Comparación           | `==` `!=` `<` `>` `<=` `>=`                              |
 | Bit a bit             | `&` `\|` `^` `<<` `>>`                                   |
 | Incremento/decremento | `++` `--`                                                |
-| Asignación          | `=` `+=` `-=` `*=` `/=` `%=` `<<=` `>>=` `&=` `\|=` `^=` |
+| Asignación            | `=` `+=` `-=` `*=` `/=` `%=` `<<=` `>>=` `&=` `\|=` `^=` |
 
 **Complejos**
 
@@ -725,136 +725,143 @@ Azul  = 2
 ```
 Esto funciona porque `iota` es un contador entero y sirve para serializar números y permite comparar rápidamente.
 
-# String Formatting
+# Formato de cadenas
 
-In this tutorial, we will learn about string formatting or sometimes also known as templating.
+En este tutorial, aprenderemos sobre el formato de cadenas.
 
-`fmt` package contains lots of functions. So to save time, we will discuss the most frequently used functions. Let's start with `fmt.Print` inside our main function.
+El paquete `fmt` contiene muchas funciones. Para ahorrar tiempo, analizaremos las funciones más utilizadas. Comencemos con la salida estándar de datos. Existen las siguientes funciones:
+```go
+fmt.Print
+fmt.Println
+fmt.Printf
+```
+Tanto `fmt.Print` como `fmt.Println` enviarán a la salida estándar  los datos que figuren entre paréntesis y separados por comas. En caso de datos que no sean cadenas de texto, Go realizará una conversión a texto antes de enviarlo a la salida estándar.
 
 ```go
 ...
 
-fmt.Print("What", "is", "your", "name?")
-fmt.Print("My", "name", "is", "golang")
+fmt.Print("Dime", "tu", "nombre",".")
+fmt.Print("Mi", "nombre", "es", "Go")
 ...
 ```
 
 ```bash
 $ go run main.go
-Whatisyourname?Mynameisgolang
+Dimetunombre.MinombreesGo
 ```
 
-As we can see, `Print` does not format anything, it simply takes a string and prints it.
+Como podemos ver, `Print` no formatea nada, simplemente toma una cadena y la imprime.
 
-Next, we have `Println` which is the same as `Print` but it adds a new line at the end and also inserts space between the arguments.
+Sin embargo, cuando se usa `Println`, este añade un espacio entre los datos e introduce un retorno de carro al final.
 
 ```go
 ...
 
-fmt.Println("What", "is", "your", "name?")
-fmt.Println("My", "name", "is", "golang")
+fmt.Println("Dime", "tu", "nombre",".")
+fmt.Println("Mi", "nombre", "es", "Go")
 ...
 ```
 
 ```bash
 $ go run main.go
-What is your name?
-My name is golang
+Dime tu nombre.
+Mi nombre es Go
 ```
 
-That's much better!
+A continuación, tenemos `Printf`, también conocido como **formateador de impresión**, que nos permite formatear números, cadenas, booleanos y mucho más.
 
-Next, we have `Printf` also known as _"Print Formatter"_, which allows us to format numbers, strings, booleans, and much more.
-
-Let's look at an example.
+Veamos un ejemplo.
 
 ```go
 ...
-name := "golang"
+nombre := "Go"
 
-fmt.Println("What is your name?")
-fmt.Printf("My name is %s", name)
+fmt.Println("Dime tu nombre.")
+fmt.Printf("Mi nombre es %s", nombre)
 ...
 ```
 
 ```bash
 $ go run main.go
-What is your name?
-My name is golang
+Dime tu nombre.
+Mi nombre es Go
 ```
 
-As we can see that `%s` was substituted with our `name` variable.
+Como podemos ver, `%s` se sustituyó por nuestra variable `nombre`.
 
-But the question is what is `%s` and what does it mean?
+Pero la pregunta es: ¿qué es `%s` y qué significa?
 
-So, these are called _annotation verbs_ and they tell the function how to format the arguments. We can control things like width, types, and precision with these and there are lots of them. Here's a [cheatsheet](https://pkg.go.dev/fmt).
+Se denominan **verbos de anotación** y le indican a la función cómo formatear los argumentos. Con ellos podemos controlar aspectos como el ancho, los tipos y la precisión, y hay muchos. Aquí hay una [hoja de referencia](https://pkg.go.dev/fmt).
 
-Now, let's quickly look at some more examples. Here we will try to calculate a percentage and print it to the console.
+A modo de resumen tenemos:
 
+| Verbo | Descripción                                                          |
+|-------|----------------------------------------------------------------------|
+| %v    | Valor en el formato por defecto                                      |
+| %T    | Tipos de datos                                                       |
+| %d    | Valor numérico en base decimal                                       |
+| %b   | Valor numérico en base binario                                       |
+| %o    | Valor numérico en base octal                                         |
+| %x    | Valor numérico en base hexadecimal (con letras de a-f en minúsculas) |
+| %X    | Valor numérico en base hexadecimal (con letras de A-F en mayúsculas) |
+| %e    | Notación científica                                                  |
+| %f    | Número en coma flotante                                              |
+| %c    | Carácter individual                                                  |
+| %s    | Cadena de texto                                                      |
+| %q    | Cadena de texto delimitado por comillas dobles                       |
+
+Ahora, veamos rápidamente algunos ejemplos más. Aquí intentaremos calcular un porcentaje y mostrarlo en la consola.
 ```go
 ...
-percent := (7.0 / 9) * 100
-fmt.Printf("%f", percent)
+porcentaje := (81.5 / 9) * 100
+fmt.Printf("%f", porcentaje)
 ...
 ```
 
 ```bash
 $ go run main.go
-77.777778
+905.555556
 ```
 
-Let's say we want just `77.78` which is 2 points precision, we can do that as well by using `.2f`.
+Supongamos que solo queremos `905.55`, que tiene una precisión de 2 puntos. También podemos hacerlo utilizando `.2f`.
 
-Also, to add an actual percent sign, we will need to _escape it_.
+Además, para añadir un signo de porcentaje real, tendremos que _escaparlo_.
 
 ```go
 ...
-percent := (7.0 / 9) * 100
-fmt.Printf("%.2f %%", percent)
+porcentaje := (81.5 / 9) * 100
+fmt.Printf("%.2f %%", porcentaje)
 ...
 ```
 
 ```bash
 $ go run main.go
-77.78 %
+905.55 %
 ```
 
-This brings us to `Sprint`, `Sprintln`, and `Sprintf`. These are basically the same as the print functions, the only difference being they return the string instead of printing it.
+Esto nos lleva a `Sprint`, `Sprintln` y `Sprintf`. Básicamente son iguales que las funciones de impresión, con la única diferencia de que devuelven la cadena en lugar de imprimirla.
 
-Let's take a look at an example.
+Veamos un ejemplo.
 
 ```go
 ...
-s := fmt.Sprintf("hex:%x bin:%b", 10 ,10)
+s := fmt.Sprintf("hex:%x bin:%b", 15 ,15)
 fmt.Println(s)
 ...
 ```
 
 ```bash
 $ go run main.go
-hex:a bin:1010
+hex:f bin:1111
 ```
 
-So, as we can see `Sprintf` formats our integer as hex or binary and returns it as a string.
+Por lo tanto, como podemos ver, `Sprintf` formatea nuestro entero como hexadecimal o binario y lo devuelve como una cadena.
 
-Lastly, we have multiline string literals, which can be used like this.
+¡Genial! Pero esto es solouna pequeña parte... así que si quieres saber más asegúrate de consultar la documentación del paquete `fmt`.
 
-```go
-...
-msg := `
-Hello from
-multiline
-`
+Para aquellos que provienen del mundo de C/C++, esto debería resultaros natural, pero si provienes, por ejemplo, de Python o JavaScript, puede que al principio te resulte un poco extraño. Sin embargo, es muy potente y verás que esta funcionalidad se utiliza bastante.
 
-fmt.Println(msg)
-...
-```
-
-Great! But this is just the tip of the iceberg...so make sure to check out the go doc for `fmt` package.
-
-For those who are coming from C/C++ background, this should feel natural, but if you're coming from, let's say Python or JavaScript, this might be a little strange at first. But it is very powerful and you'll see this functionality used quite extensively.
-
-# Flow Control
+# Control de flujo
 
 Let's talk about flow control, starting with if/else.
 
