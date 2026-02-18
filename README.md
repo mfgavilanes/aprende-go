@@ -542,6 +542,27 @@ var c1 complejo128 = complex(24, 53)
 var c2 complejo64 = 18 + 24i
 ```
 
+## Conversión de tipos
+
+Ahora que ya hemos visto cómo funcionan los tipos básicos de datos, veamos cómo se realiza la conversión de tipos.
+
+```go
+i := 42
+f := float64(i)
+u := uint(f)
+
+fmt.Printf("%T %T", f, u)
+```
+
+```bash
+$ go run main.go
+float64 uint
+```
+Y, como podemos ver, imprime el tipo como `float64` y `uint`.
+
+_Ten en cuenta que esto es diferente del análisis sintáctico._
+
+
 ## Valores por defecto
 
 Ahora hablemos de los valores por defecto. En Go, cualquier variable declarada sin un valor inicial explícito recibe un valor por defecto. Por ejemplo, declaremos algunas variables y veamos:
@@ -563,26 +584,6 @@ $ go run main.go
 Como podemos ver, a `int` y `float` se les asigna el valor 0, a `bool` se le asigna el valor false y a `string` se le asigna una cadena vacía. Esto es muy diferente a cómo lo hacen otros lenguajes. Por ejemplo, la mayoría de los lenguajes inicializan las variables no asignadas como nulas o indefinidas.
 
 Esto está muy bien, pero ¿qué son esos símbolos de porcentaje en nuestra función `Printf`? Como ya habrás adivinado, se utilizan para dar formato y los veremos más adelante.
-
-## Conversión de tipos
-
-Ahora que ya hemos visto cómo funcionan los tipos básicos de datos, veamos cómo se realiza la conversión de tipos.
-
-```go
-i := 42
-f := float64(i)
-u := uint(f)
-
-fmt.Printf("%T %T", f, u)
-```
-
-```bash
-$ go run main.go
-float64 uint
-```
-Y, como podemos ver, imprime el tipo como `float64` y `uint`.
-
-_Ten en cuenta que esto es diferente del análisis sintáctico._
 
 
 
