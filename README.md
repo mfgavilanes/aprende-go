@@ -18,7 +18,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 - **Capítulo I**
 
   - [Hola mundo](#hola-mundo)
-  - [Variables y tipos de datos](#variables-and-data-types)
+  - [Variables y tipos de datos](#variables-y-tipos-de-datos)
   - [Formateo de cadenas](#string-formatting)
   - [Control de flujo](#flow-control)
   - [Funciones](#functions)
@@ -313,15 +313,29 @@ $ go run main.go
 
 # Variables y tipos de datos
 
-Los tipos de datos que proporciona Go son los siguientes:
 
-![extension](images/tipos-datos.png)
-
-Para poder seguir profundizando en más detalle en cada uno de los tipos de datos, déjame explicarte primero como se define una variable.
+Antes de profundizar en detalle en cada uno de los tipos de datos, déjame explicarte primero como se define una variable.
 
 ## Variables
 
-Comencemos por declarar una variable. Es lo que se conoce como declaración sin inicialización:
+El patrón de los identificadores es el siguiente: `[_a-zA-Z][_a-zA-Z0-9_]*`. Esto es, empiezan por letra o `_`.
+Aun así, las guías de estilo de Go recomiendan preferir usar el estilo `camelCase` y `PascalCase`, usando `_` solo en casos muy puntuales (por ejemplo, nombres generados, pruebas, etc.).
+
+Para los despistados:
+- `camelCase` es una convención de nomenclatura en programación que une palabras sin espacios, donde la primera letra de la primera palabra va en minúscula y las siguientes palabras comienzan con mayúscula.
+- `PascalCase` es una convención de nomenclatura en programación donde TODAS las palabras comienzan con letra mayúscula, sin espacios ni separadores.
+
+Ejemplo:
+
+```go
+miNombreCompleto     // camelCase
+controladorPrincipal // camelCase 
+numFilasTabla        // camelCase
+MiNombreCompleto     // PascalCase
+ControladorPrincipal // PascalCase 
+```
+
+Ya estamos en disposición de declarar una variable. Es lo que se conoce como declaración sin inicialización:
 
 ```go
 var foo int
@@ -358,31 +372,36 @@ foo := 2
 
 _Nota: La abreviatura solo funciona dentro de los cuerpos de las `function`._
 
-Hay que destacar que jamás una variable podrá tener el mismo nombre que una palabra reservada. A ese efecto, existen un total de palabras reservadas.
+Hay que destacar que jamás una variable podrá tener el mismo nombre que una palabra reservada. A ese efecto, existen un total de 25 palabras reservadas.
 
 ![extension](images/palabras-clave.png)
 
-## Constants
+## Constantes
 
-We can also declare constants with the `const` keyword. Which as the name suggests, are fixed values that cannot be reassigned.
-
-```go
-const constant = "This is a constant"
-```
-
-It is also important to note that, only constants can be assigned to other constants.
+También podemos declarar constantes con la palabra clave `const`. Como su nombre indica, son valores fijos que no se pueden reasignar.
 
 ```go
-const a = 10
-const b = a // ✅ Works
-
-var a = 10
-const b = a // ❌ a (variable of type int) is not constant (InvalidConstInit)
+const constante = "Es un ejemplo de constante"
 ```
 
-## Data Types
+También es importante señalar que solo las constantes pueden asignarse a otras constantes.
 
-Perfect! Now let's look at some basic data types available in Go. Starting with string.
+```go
+const num1 = 10
+const num2 = a // ok
+
+var num1 = 10
+const num2 = a // ko (variable de tipo int) no es constante (InvalidConstInit)
+```
+
+## Tipos de datos
+
+¡Perfecto! Ya podemos seguir con los tipos de datos. Estos son los que proporciona Go:
+
+![extension](images/tipos-datos.png)
+
+Comencemos por los tipos básicos y más concretamente por las cadenas (`strings`).
+
 
 ### String
 
