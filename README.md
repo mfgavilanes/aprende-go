@@ -557,6 +557,11 @@ Otro ejemplo podría ser:
 ```go
 distancia := 15.78
 kms := int(distancia) //se trunca la parte con decimales
+fmt.Printf(kms)
+```
+```bash
+$ go run main.go
+15
 ```
 
 Finalmente, otro ejemplo sería:
