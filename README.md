@@ -454,22 +454,22 @@ Go tiene varios tipos enteros integrados de diferentes tamaños para almacenar e
 El tamaño de los tipos genéricos `int` y `uint` depende de la plataforma. Esto significa que tiene 32 bits de ancho en un sistema de 32 bits y 64 bits de ancho en un sistema de 64 bits.
 
 ```go
-var i int = 404                     // Depende de la plataforma
-var i8 int8 = 127                   // -128 a 127
-var i16 int16 = 32767               // -2^15 a 2^15 - 1
-var i32 int32 = -2147483647         // -2^31 a 2^31 - 1
-var i64 int64 = 9223372036854775807 // -2^63 a 2^63 - 1
+var i int = 302                    // Depende de la plataforma
+var i8 int8 = 114                  // -128 a 127
+var i16 int16 = 32767              // -2^15 a 2^15 - 1
+var i32 int32 = -1147485649        // -2^31 a 2^31 - 1
+var i64 int64 = 78337203685478907  // -2^63 a 2^63 - 1
 ```
 
 Al igual que los enteros con signo, también existen los enteros sin signo.
 
 ```go
-var ui uint = 404                     // // Depende de la plataforma
+var ui uint = 302                     // Depende de la plataforma
 var ui8 uint8 = 255                   // 0 a 255
 var ui16 uint16 = 65535               // 0 a 2^16
-var ui32 uint32 = 2147483647          // 0 a 2^32
-var ui64 uint64 = 9223372036854775807 // 0 a 2^64
-var uiptr uintptr                      // Representación entera de una dirección de memoria
+var ui32 uint32 = 1147485649          // 0 a 2^32
+var ui64 uint64 = 78337203685478907   // 0 a 2^64
+var uiptr uintptr                     // Representación entera de una dirección de memoria
 ```
 
 Si te has fijado, también hay un tipo de puntero entero sin signo `uintptr`, que es una representación entera de una dirección de memoria. No se recomienda utilizarlo, por lo que no tenemos que preocuparnos por él.
