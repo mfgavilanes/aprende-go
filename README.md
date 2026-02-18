@@ -443,81 +443,82 @@ Podemos utilizar los siguientes operadores en tipos booleanos.
 | Lógicos  | `&&` `\|\|` `!` |
 | Igualdad | `==` `!=`       |
 
-### Numeric types
+### Tipos numéricos
 
-Now, let's talk about numeric types.
+Ahora, hablemos de los tipos numéricos.
 
-**Signed and Unsigned integers**
+**Enteros con y sin signo**
 
-Go has several built-in integer types of varying sizes for storing signed and unsigned integers
+Go tiene varios tipos enteros integrados de diferentes tamaños para almacenar enteros con y sin signo.
 
-The size of the generic `int` and `uint` types are platform-dependent. This means it is 32-bits wide on a 32-bit system and 64-bits wide on a 64-bit system.
-
-```go
-var i int = 404                     // Platform dependent
-var i8 int8 = 127                   // -128 to 127
-var i16 int16 = 32767               // -2^15 to 2^15 - 1
-var i32 int32 = -2147483647         // -2^31 to 2^31 - 1
-var i64 int64 = 9223372036854775807 // -2^63 to 2^63 - 1
-```
-
-Similar to signed integers, we have unsigned integers.
+El tamaño de los tipos genéricos `int` y `uint` depende de la plataforma. Esto significa que tiene 32 bits de ancho en un sistema de 32 bits y 64 bits de ancho en un sistema de 64 bits.
 
 ```go
-var ui uint = 404                     // Platform dependent
-var ui8 uint8 = 255                   // 0 to 255
-var ui16 uint16 = 65535               // 0 to 2^16
-var ui32 uint32 = 2147483647          // 0 to 2^32
-var ui64 uint64 = 9223372036854775807 // 0 to 2^64
-var uiptr uintptr                     // Integer representation of a memory address
+var i int = 404                     // Depende de la plataforma
+var i8 int8 = 127                   // -128 a 127
+var i16 int16 = 32767               // -2^15 a 2^15 - 1
+var i32 int32 = -2147483647         // -2^31 a 2^31 - 1
+var i64 int64 = 9223372036854775807 // -2^63 a 2^63 - 1
 ```
 
-If you noticed, there's also an unsigned integer pointer `uintptr` type, which is an integer representation of a memory address. It is not recommended to use this, so we don't have to worry about it.
+Al igual que los enteros con signo, también existen los enteros sin signo.
 
-**So which one should we use?**
+```go
+var ui uint = 404                     // // Depende de la plataforma
+var ui8 uint8 = 255                   // 0 a 255
+var ui16 uint16 = 65535               // 0 a 2^16
+var ui32 uint32 = 2147483647          // 0 a 2^32
+var ui64 uint64 = 9223372036854775807 // 0 a 2^64
+var uiptr uintptr                      // Representación entera de una dirección de memoria
+```
 
-It is recommended that whenever we need an integer value, we should just use `int` unless we have a specific reason to use a sized or unsigned integer type.
+Si te has fijado, también hay un tipo de puntero entero sin signo `uintptr`, que es una representación entera de una dirección de memoria. No se recomienda utilizarlo, por lo que no tenemos que preocuparnos por él.
 
-**Byte and Rune**
+**Entonces, ¿cuál debemos utilizar?**
 
-Golang has two additional integer types called `byte` and `rune` that are aliases for `uint8` and `int32` data types respectively.
+Se recomienda que, siempre que necesitemos un valor entero, utilicemos simplemente `int`, a menos que tengamos una razón específica para utilizar un tipo entero con tamaño o sin signo.
+
+**Byte y Rune**
+
+Golang tiene dos tipos de enteros adicionales llamados `byte` y `rune`, que son alias de los tipos de datos `uint8` e `int32`, respectivamente.
+
 
 ```go
 type byte = uint8
 type rune = int32
 ```
 
-_A `rune` represents a unicode code point._
+_Un `rune` representa un punto de código Unicode._
 
 ```go
 var b byte = 'a'
 var r rune = '🍕'
 ```
 
-**Floating point**
+**Punto flotante**
 
-Next, we have floating point types which are used to store numbers with a decimal component.
+A continuación, tenemos los tipos de punto flotante, que se utilizan para almacenar números con un componente decimal.
 
-Go has two floating point types `float32` and `float64`. Both type follows the IEEE-754 standard.
+Go tiene dos tipos de punto flotante: `float32` y `float64`. Ambos tipos siguen el estándar IEEE-754.
 
-_The default type for floating point values is float64._
+_El tipo predeterminado para los valores de punto flotante es float64._
 
 ```go
 var f32 float32 = 1.7812 // IEEE-754 32-bit
 var f64 float64 = 3.1415 // IEEE-754 64-bit
 ```
 
-**Operators**
+**Operadores**
 
-Go provides several operators for performing operations on numeric types.
+Go proporciona varios operadores para realizar operaciones con tipos numéricos.
 
 | Type                | Syntax                                                   |
 | ------------------- | -------------------------------------------------------- |
-| Arithmetic          | `+` `-` `*` `/` `%`                                      |
-| Comparison          | `==` `!=` `<` `>` `<=` `>=`                              |
-| Bitwise             | `&` `\|` `^` `<<` `>>`                                   |
-| Increment/Decrement | `++` `--`                                                |
-| Assignment          | `=` `+=` `-=` `*=` `/=` `%=` `<<=` `>>=` `&=` `\|=` `^=` |
+| Aritmético         | `+` `-` `*` `/` `%`                                      |
+| Comparación         | `==` `!=` `<` `>` `<=` `>=`                              |
+| Bit a bit             | `&` `\|` `^` `<<` `>>`                                   |
+| Incremento/decremento | `++` `--`                                                |
+| Asignación          | `=` `+=` `-=` `*=` `/=` `%=` `<<=` `>>=` `&=` `\|=` `^=` |
 
 **Complex**
 
