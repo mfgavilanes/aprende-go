@@ -390,8 +390,8 @@ Del mismo modo, se pueden hacer declaraciones múltiples:
 const estado1, estado2 string = "e1", "e2"
 // OR
 const(
-estado1 string = "e1"
-estado2 string = "e2"
+	estado1 string = "e1"
+	estado2 string = "e2"
 )
 ```
 
