@@ -393,6 +393,7 @@ const(
 estado1 string = "e1"
 estado2 string = "e2"
 )
+```
 
 También es importante señalar que solo las constantes pueden asignarse a otras constantes.
 
