@@ -21,32 +21,32 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Variables, constantes y tipos de datos](#variables-constantes-y-tipos-de-datos)
   - [Formato de cadenas](#formato-de-cadenas)
   - [Control de flujo](#control-de-flujo)
-  - [Funciones](#functions)
-  - [Módulos](#modules)
-  - [Paquetes](#packages)
+  - [Funciones](#funciones)
+  - [Módulos](#modulos)
+  - [Paquetes](#paquetes)
   - [Workspaces (espacios de trabajo)](#workspaces)
   - [Comandos útiles](#useful-commands)
   - [Compilación](#build)
 
 - **Capítulo II**
 
-  - [Punteros](#pointers)
+  - [Punteros](#punteros)
   - [Structs (estructuras)](#structs)
-  - [Métodos](#methods)
-  - [Arrays y slices](#arrays-and-slices)
+  - [Métodos](#metodos)
+  - [Arrays y slices](#arrays-y-slices)
   - [Maps](#maps)
 
 - **Capítulo III**
 
   - [Interfaces](#interfaces)
-  - [Errores](#errors)
+  - [Errores](#errores)
   - [Panic y Recover](#panic-and-recover)
   - [Testing (pruebas)](#testing)
   - [Genéricos](#generics)
 
 - **Capítulo IV**
 
-  - [Concurrencia](#concurrency)
+  - [Concurrencia](#concurrencia)
   - [Goroutines](#goroutines)
   - [Channels](#channels)
   - [Select](#select)
