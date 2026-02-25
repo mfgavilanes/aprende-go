@@ -256,7 +256,7 @@ Es un comando que se usa en Go para analizar los comentarios del proyecto.
 
 # Hola Mundo
 
-Escribamos nuestro primer programa «hola mundo». Podemos empezar inicializando un módulo. Para ello, podemos utilizar el comando «go mod».
+Escribamos nuestro primer programa «hola mundo». Podemos empezar inicializando un módulo. Para ello, podemos utilizar el comando `go mod`.
 
 ```bash
 $ go mod init ejemplo
@@ -264,7 +264,7 @@ $ go mod init ejemplo
 
 Pero espera... ¿qué es un «módulo»? Por ahora, basta con que pienses que un módulo es básicamente una colección de paquetes Go.
 
-Continuemos. Ahora vamos a crear un archivo «main.go» y a escribir un programa que simplemente imprima «hola mundo».
+Continuemos. Ahora vamos a crear un archivo `main.go` y a escribir un programa que simplemente imprima «hola mundo».
 
 ```go
 package main
@@ -276,7 +276,7 @@ func main() {
 }
 ```
 
-Si te lo estás preguntando, «fmt» forma parte de la biblioteca estándar de Go, que es un conjunto de paquetes básicos proporcionados por el lenguaje.
+Si te lo estás preguntando, `fmt` forma parte de la biblioteca estándar de Go, que es un conjunto de paquetes básicos proporcionados por el lenguaje.
 
 ## Estructura de un programa Go
 
@@ -304,7 +304,7 @@ func main() {
 
 Recuerda que el objetivo aquí es tomar nota mentalmente y, más adelante, aprenderemos sobre «funciones», «importaciones» y otras cosas en detalle.
 
-Por último, para ejecutar nuestro código, simplemente podemos usar el comando «go run».
+Por último, para ejecutar nuestro código, simplemente podemos usar el comando `go run`.
 
 ```bash
 $ go run main.go
@@ -1047,9 +1047,9 @@ En Go solo tenemos un tipo de bucle, que es el bucle `for`.
 
 Pero es increíblemente versátil. Al igual que la instrucción `if`, el bucle `for` no necesita paréntesis `()`, a diferencia de otros lenguajes.
 
-### Bucle For
+### Bucle For clásico
 
-Comencemos con el bucle básico `for`.
+Comencemos con el bucle clásico `for`.
 
 ```go
 func main() {
@@ -1059,7 +1059,7 @@ func main() {
 }
 ```
 
-El bucle básico `for` tiene tres componentes separados por punto y coma:
+El bucle clásico `for` tiene tres componentes separados por punto y coma:
 
 - **Sentencia de inicio**: se ejecuta antes de la primera iteración.
 - **Expresión condicional**: se evalúa antes de cada iteración.
@@ -1083,13 +1083,13 @@ func main() {
 		}
 	}
 
-	fmt.Println("We broke out!")
+	fmt.Println("Salimos del bucle")
 }
 ```
 
 Por lo tanto, la instrucción `continue` se utiliza cuando queremos omitir la parte restante del bucle, y la instrucción `break` se utiliza cuando queremos salir del bucle.
 
-Además, las instrucciones `init` y «post» son opcionales, por lo que también podemos hacer que nuestro bucle `for` se comporte como un bucle `while`.
+Además, las instrucciones `init` y `post` son opcionales, por lo que también podemos hacer que nuestro bucle `for` se comporte como un bucle `while`.
 
 ```go
 func main() {
@@ -1105,42 +1105,42 @@ _Nota: también podemos eliminar los puntos y comas adicionales para que quede u
 
 ### Bucle infinito
 
-Por último, si omitimos la condición del bucle, este se repetirá indefinidamente, por lo que se puede expresar de forma compacta un bucle infinito. Esto también se conoce como bucle infinito.
+Por último, si omitimos la condición del bucle, este se repetirá indefinidamente, por lo que se puede expresar de forma compacta un bucle infinito.
 
 ```go
 func main() {
 	for {
-		// do stuff here
+		// instrucciones
 	}
 }
 ```
 
 # Funciones
 
-In this tutorial, we will discuss how we work with functions in Go. So, let's start with a simple function declaration.
+En este tutorial, vamos a ver cómo trabajar con funciones en Go. Empecemos con una declaración de función sencilla.
 
-## Simple declaration
+## Declaración sencilla
 
 ```go
-func myFunction() {}
+func miFuncion() {}
 ```
 
-And we can _call or execute_ it as follows.
+Y podemos _llamarla o ejecutarla_ de la siguiente manera.
 
 ```go
 ...
-myFunction()
+miFuncion()
 ...
 ```
 
-Let's pass some parameters to it.
+Pasemos algunos parámetros a la función.
 
 ```go
 func main() {
-	myFunction("Hello")
+	miFuncion("Hola")
 }
 
-func myFunction(p1 string) {
+func miFuncion(p1 string) {
 	fmt.Println(p1)
 }
 ```
@@ -1149,95 +1149,95 @@ func myFunction(p1 string) {
 $ go run main.go
 ```
 
-As we can see it prints our message. We can also do a shorthand declaration if the consecutive parameters have the same type. For example:
+Como podemos ver, imprime nuestro mensaje. También podemos hacer una declaración abreviada si los parámetros consecutivos son del mismo tipo. Por ejemplo:
 
 ```go
-func myNextFunction(p1, p2 string) {}
+func miSiguienteFuncion(p1, p2 string) {}
 ```
 
-## Returning the value
+## Devolver el valor
 
-Now let's also return a value.
+Ahora devolvamos también un valor.
 
 ```go
 func main() {
-	s := myFunction("Hello")
+	s := miFuncion("Hola")
 	fmt.Println(s)
 }
 
-func myFunction(p1 string) string {
-	msg := fmt.Sprintf("%s function", p1)
+func miFuncion(p1 string) string {
+	msg := fmt.Sprintf("Funcion %s ", p1)
 	return msg
 }
 ```
 
-### Multiple returns
+### Devoluciones múltiples
 
-Why return one value at a time, when we can do more? Go also supports multiple returns!
+¿Por qué devolver un valor cada vez, cuando podemos hacer más? ¡Go también admite devoluciones múltiples!
 
 ```go
 func main() {
-	s, i := myFunction("Hello")
+	s, i := miFuncion("Hola")
 	fmt.Println(s, i)
 }
 
-func myFunction(p1 string) (string, int) {
-	msg := fmt.Sprintf("%s function", p1)
+func miFuncion(p1 string) (string, int) {
+	msg := fmt.Sprintf("Funcion %s ", p1)
 	return msg, 10
 }
 ```
 
-### Named returns
+### Retornos con nombre
 
-Another cool feature is [named returns](https://go.dev/tour/basics/7), where return values can be named and treated as their own variables.
+Otra característica interesante son los [retornos con nombre](https://go.dev/tour/basics/7), en los que los valores de retorno pueden nombrarse y tratarse como variables propias.
 
 ```go
-func myFunction(p1 string) (s string, i int) {
-	s = fmt.Sprintf("%s function", p1)
+func miFuncion(p1 string) (s string, i int) {
+	s = fmt.Sprintf("Funcion %s ", p1)
 	i = 10
 
 	return
 }
 ```
 
-Notice how we added a `return` statement without any arguments, this is also known as _naked return_.
+Observe cómo hemos añadido una instrucción `return` sin ningún argumento, lo que también se conoce como _naked return_.
 
-I will say that, although this feature is interesting, please use it with care as this might reduce readability for larger functions.
+Aunque esta característica es interesante, le recomiendo que la utilice con precaución, ya que puede reducir la legibilidad de las funciones más grandes.
 
-## Functions as values
+## Funciones como valores
 
-Next, let's talk about functions as values, in Go functions are first class and we can use them as values. So, let's clean up our function and try it out!
+A continuación, hablemos de las funciones como valores. En Go, las funciones son de primera clase y podemos utilizarlas como valores. Así que, ¡limpiemos nuestra función y probémosla!
 
 ```go
-func myFunction() {
+func miFuncion() {
 	fn := func() {
-		fmt.Println("inside fn")
+		fmt.Println("dentro de la funcion")
 	}
 
 	fn()
 }
 ```
 
-We can also simplify this by making `fn` an _anonymous function_.
+También podemos simplificarlo haciendo que `fn` sea una _función anónima_.
 
 ```go
-func myFunction() {
+func miFuncion() {
 	func() {
-		fmt.Println("inside fn")
+		fmt.Println("dentro de la funcion")
 	}()
 }
 ```
 
-_Notice how we execute it using the parenthesis at the end._
+_Fíjate en cómo lo ejecutamos utilizando los paréntesis al final._
 
-## Closures
+## Cierres
 
-Why stop there? let's also return a function and hence create something called a closure. A simple definition can be that a closure is a function value that references variables from outside its body.
+¿Por qué detenernos aquí? Devolvamos también una función y creemos así algo llamado cierre. Una definición sencilla podría ser que un cierre es un valor de función que hace referencia a variables externas a su cuerpo.
 
-Closures are lexically scoped, which means functions can access the values in scope when defining the function.
+Los cierres tienen ámbito léxico, lo que significa que las funciones pueden acceder a los valores del ámbito al definir la función.
 
 ```go
-func myFunction() func(int) int {
+func miFuncion() func(int) int {
 	sum := 0
 
 	return func(v int) int {
@@ -1250,20 +1250,20 @@ func myFunction() func(int) int {
 
 ```go
 ...
-add := myFunction()
+add := miFuncion()
 
 add(5)
 fmt.Println(add(10))
 ...
 ```
 
-As we can see, we get a result of 15 as `sum` variable is _bound_ to the function. This is a very powerful concept and definitely, a must know.
+Como podemos ver, obtenemos un resultado de 15, ya que la variable `sum` está vinculada a la función. Se trata de un concepto muy potente y, sin duda, imprescindible.
 
-## Variadic Functions
+## Funciones variádicas
 
-Now let's look at variadic functions, which are functions that can take zero or multiple arguments using the `...` ellipses operator.
+Ahora veamos las funciones variádicas, que son funciones que pueden tomar cero o múltiples argumentos utilizando el operador de elipsis `...`.
 
-An example here would be a function that can add a bunch of values.
+Un ejemplo aquí sería una función que puede sumar un conjunto de valores.
 
 ```go
 func main() {
@@ -1282,15 +1282,15 @@ func add(values ...int) int {
 }
 ```
 
-Pretty cool huh? Also, don't worry about the `range` keyword, we will discuss it later in the course.
+¿A que mola? Además, no te preocupes por la palabra clave `range`, la veremos más adelante en el curso.
 
-_**Fun fact**: `fmt.Println` is a variadic function, that's how we were able to pass multiple values to it._
+_**Dato curioso**: `fmt.Println` es una función variádica, por eso hemos podido pasarle varios valores._
 
-## Init
+## Inicialización
 
-In Go, `init` is a special lifecycle function that is executed before the `main` function.
+En Go, `init` es una función especial del ciclo de vida que se ejecuta antes de la función `main`.
 
-Similar to `main`, the `init` function does not take any arguments nor returns any value. Let's see how it works with an example.
+Al igual que `main`, la función `init` no toma ningún argumento ni devuelve ningún valor. Veamos cómo funciona con un ejemplo.
 
 ```go
 package main
@@ -1298,26 +1298,25 @@ package main
 import "fmt"
 
 func init() {
-	fmt.Println("Before main!")
+	fmt.Println("Antes del main!")
 }
 
 func main() {
-	fmt.Println("Running main")
+	fmt.Println("Ejecutando el main")
 }
 ```
 
-As expected, the `init` function was executed before the `main` function.
+Como era de esperar, la función `init` se ejecutó antes que la función `main`.
 
 ```bash
 $ go run main.go
-Before main!
-Running main
+Antes del main!
+Ejecutando main
 ```
 
-Unlike `main`, there can be more than one `init` function in single or multiple files.
+A diferencia de `main`, puede haber más de una función `init` en uno o varios archivos.
 
-For multiple `init` in a single file, their processing is done in the order of their declaration, while `init` functions declared in multiple files are processed according to the lexicographic filename order.
-
+En el caso de varias funciones `init` en un solo archivo, su procesamiento se realiza en el orden en que se declaran, mientras que las funciones `init` declaradas en varios archivos se procesan según el orden lexicográfico de los nombres de archivo.
 ```go
 package main
 
