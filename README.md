@@ -963,8 +963,7 @@ func main() {
 $ go run main.go
 letra entre la a y la c
 ```
-
-Del mismo modo, `switch` permite simular el comportamiento de `ìf-else` usando un `switch` sin expresión que también sirve para representar rangos.
+También podemos utilizarlo sin ninguna condición, lo que equivale a `switch true`. Básicamente permite simular el comportamiento de `ìf-else` usando un `switch` sin expresión. Es la forma habitualmente empleada para incluir rangos en las condiciones.
 ```go
 func main() {
 	nota := 8
@@ -1001,26 +1000,30 @@ Al igual que vimos en la sentencia compacta de `if`, `switch` también permite u
 
 En este caso, `x` solo es visible dentro del `switch`.
 
-We can also use the `fallthrough` keyword to transfer control to the next case even though the current case might have matched.
+Finalmente, por defecto, Go no continúa al siguiente caso. Se para en la primera coincidencia. Sin embargo, podemos forzar que lo haga usando la palabra clave `fallthrough` para transferir el control al siguiente caso. 
+
+Esto significa que `fallthrough` no vuelve a evaluar la condición del siguiente case. Simplemente ejecuta el siguiente bloque.
 
 ```go
-	switch day := "monday"; day {
-	case "monday":
-		fmt.Println("time to work!")
-		fallthrough
-	case "friday":
-		fmt.Println("let's party")
-	default:
-		fmt.Println("browse memes")
-	}
+	switch x:='a'; x {
+        case 'a':
+            fmt.Println("letra a")
+            fallthrough
+        case 'b':
+            fmt.Println("letra b")
+        case 'c':
+            fmt.Println("letra c")
+        default:
+            fmt.Println("otra letra")
+    }
 ```
 
-And if we run this, we'll see that after the first case matches the switch statement continues to the next case because of the `fallthrough` keyword.
+Y si ejecutamos esto, veremos que después de que el primer caso coincida, la instrucción switch continúa con el siguiente caso debido a la palabra clave `fallthrough`.
 
 ```bash
 $ go run main.go
-time to work!
-let's party
+letra a
+letra b
 ```
 
 We can also use it without any condition, which is the same as `switch true`.
