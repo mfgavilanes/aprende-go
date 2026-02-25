@@ -30,23 +30,23 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
 - **Capítulo II**
 
-  - [Punteros](#punteros)
+  - [Punteros](#pointers)
   - [Structs (estructuras)](#structs)
-  - [Métodos](#metodos)
-  - [Arrays y slices](#arrays-y-slices)
+  - [Métodos](#methods)
+  - [Arrays y slices](#arrays-and-slices)
   - [Maps](#maps)
 
 - **Capítulo III**
 
   - [Interfaces](#interfaces)
-  - [Errores](#errores)
+  - [Errores](#errors)
   - [Panic y Recover](#panic-and-recover)
   - [Testing (pruebas)](#testing)
   - [Genéricos](#generics)
 
 - **Capítulo IV**
 
-  - [Concurrencia](#concurrencia)
+  - [Concurrencia](#concurrency)
   - [Goroutines](#goroutines)
   - [Channels](#channels)
   - [Select](#select)
