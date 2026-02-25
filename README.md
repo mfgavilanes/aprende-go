@@ -1033,9 +1033,9 @@ x := 10
 
 switch {
 	case x > 5:
-		fmt.Println("x is greater")
+		fmt.Println("x es mayor que 5")
 	default:
-		fmt.Println("x is not greater")
+		fmt.Println("x no es mayor")
 }
 ```
 
@@ -1053,8 +1053,8 @@ Comencemos con el bucle básico `for`.
 
 ```go
 func main() {
-	for i := 0; i < 10; i++ {
-		fmt.Println(i)
+	for i := 1; i <=5; i++ {
+		fmt.Println("Valor",i)
 	}
 }
 ```
@@ -1071,14 +1071,14 @@ Como era de esperar, Go también admite las instrucciones `break` y `continue` p
 
 ```go
 func main() {
-	for i := 0; i < 10; i++ {
+	for i := 1; i <=5; i++ {
 		if i < 2 {
 			continue
 		}
 
 		fmt.Println(i)
 
-		if i > 5 {
+		if i > 3 {
 			break
 		}
 	}
