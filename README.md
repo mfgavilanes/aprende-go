@@ -887,7 +887,7 @@ $ go run main.go
 a es positivo
 ```
 
-### Sentncia if compacto
+### Sentencia if compacto
 
 Go permite declarar variables dentro del if de forma compacta siguiendo la siguiente estructura:
 
@@ -1039,17 +1039,17 @@ switch {
 }
 ```
 
-## Loops
+## Bucles
 
-Now, let's turn our attention toward loops.
+Ahora, vamos a ver los bucles.
 
-So in Go, we only have one type of loop which is the `for` loop.
+En Go solo tenemos un tipo de bucle, que es el bucle `for`.
 
-But it's incredibly versatile. Same as if statement, for loop, doesn't need any parenthesis `()` unlike other languages.
+Pero es increíblemente versátil. Al igual que la instrucción `if`, el bucle `for` no necesita paréntesis `()`, a diferencia de otros lenguajes.
 
-### For loop
+### Bucle For
 
-Let's start with the basic `for` loop.
+Comencemos con el bucle básico `for`.
 
 ```go
 func main() {
@@ -1059,15 +1059,15 @@ func main() {
 }
 ```
 
-The basic `for` loop has three components separated by semicolons:
+El bucle básico `for` tiene tres componentes separados por punto y coma:
 
-- **init statement**: which is executed before the first iteration.
-- **condition expression**: which is evaluated before every iteration.
-- **post statement**: which is executed at the end of every iteration.
+- **Sentencia de inicio**: se ejecuta antes de la primera iteración.
+- **Expresión condicional**: se evalúa antes de cada iteración.
+- **Sentencia post**: que se ejecuta al final de cada iteración.
 
-**Break and continue**
+**Break y continue**
 
-As expected, Go also supports both `break` and `continue` statements for loop control. Let's try a quick example:
+Como era de esperar, Go también admite las instrucciones `break` y `continue` para el control de bucles. Veamos un ejemplo rápido:
 
 ```go
 func main() {
