@@ -1087,9 +1087,9 @@ func main() {
 }
 ```
 
-So, the `continue` statement is used when we want to skip the remaining portion of the loop, and `break` statement is used when we want to break out of the loop.
+Por lo tanto, la instrucción `continue` se utiliza cuando queremos omitir la parte restante del bucle, y la instrucción `break` se utiliza cuando queremos salir del bucle.
 
-Also, Init and post statements are optional, hence we can make our `for` loop behave like a while loop as well.
+Además, las instrucciones `init` y «post» son opcionales, por lo que también podemos hacer que nuestro bucle `for` se comporte como un bucle `while`.
 
 ```go
 func main() {
@@ -1101,11 +1101,11 @@ func main() {
 }
 ```
 
-_Note: we can also remove the additional semi-colons to make it a little cleaner._
+_Nota: también podemos eliminar los puntos y comas adicionales para que quede un poco más limpio._
 
-### Forever loop
+### Bucle infinito
 
-Lastly, If we omit the loop condition, it loops forever, so an infinite loop can be compactly expressed. This is also known as the forever loop.
+Por último, si omitimos la condición del bucle, este se repetirá indefinidamente, por lo que se puede expresar de forma compacta un bucle infinito. Esto también se conoce como bucle infinito.
 
 ```go
 func main() {
@@ -1115,7 +1115,7 @@ func main() {
 }
 ```
 
-# Functions
+# Funciones
 
 In this tutorial, we will discuss how we work with functions in Go. So, let's start with a simple function declaration.
 
