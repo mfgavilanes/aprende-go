@@ -887,61 +887,119 @@ $ go run main.go
 a es positivo
 ```
 
-### Compact if
+### Sentncia if compacto
 
-We can also compact our if statements.
+Go permite declarar variables dentro del if de forma compacta siguiendo la siguiente estructura:
 
 ```go
-func main() {
-	if x := 10; x > 5 {
-		fmt.Println("x is gt 5")
-	}
+if variable := expresión; condición {
+    // código
 }
 ```
 
-_Note: This pattern is quite common._
+Para ilustrarlo, pongamos por caso el siguiente ejemplo:
+```go
+func main() {
+	if a := 10; a > 0 {
+		fmt.Println("a es mayor que 0")
+	}
+}
+```
+Como se puede observar, `a` se declara en la cabecera del `if` y solo existe dentro de él. No es visible fuera
+
+_Nota: Este forma de expresar las sentencias `if` es muy común mostrar resultados temporales, errores o cálculos cortos._
 
 ## Switch
+A continuación tenemos la sentencia `switch`, que suele ser una forma más clara y compacta de escribir lógica condicional.
 
-Next, we have `switch` statement, which is often a shorter way to write conditional logic.
+En Go, el `switch` ejecuta solo el primer case que coincide con la expresión evaluada.
 
-In Go, the switch case only runs the first case whose value is equal to the condition expression and not all the cases that follow. Hence, unlike other languages, `break` statement is automatically added at the end of each case.
+A diferencia de otros lenguajes (como C o Java), no es necesario escribir `break`, ya que Go lo añade implícitamente al final de cada `case`.
 
-This means that it evaluates cases from top to bottom, stopping when a case succeeds.
-Let's take a look at an example:
+Esto significa que los casos se evalúan de arriba hacia abajo y el `switch` se detiene cuando uno coincide.
+
+Veamos un ejemplo:
 
 ```go
 func main() {
-	day := "monday"
-
-	switch day {
-	case "monday":
-		fmt.Println("time to work!")
-	case "friday":
-		fmt.Println("let's party")
-	default:
-		fmt.Println("browse memes")
-	}
+  x := 'a'
+  
+  switch x {
+    case 'a':
+        fmt.Println("letra a")
+    case 'b':
+        fmt.Println("letra b")
+    case 'c':
+        fmt.Println("letra c")
+    default:
+        fmt.Println("otra letra")
+  }
 }
 ```
 
 ```bash
 $ go run main.go
-time to work!
+letra a
 ```
 
-Switch also supports shorthand declaration like this.
+Del mismo modo podemos tener varios valores dentro de un mismo `case`:
 
 ```go
-	switch day := "monday"; day {
-	case "monday":
-		fmt.Println("time to work!")
-	case "friday":
-		fmt.Println("let's party")
-	default:
-		fmt.Println("browse memes")
-	}
+func main() {
+  x := 'a'
+  
+  switch x {
+    case 'a', 'b', 'c':
+        fmt.Println("letra entre la a y la c")
+    case 'd', 'e', 'f':
+        fmt.Println("letra entre la d y la e")
+    default:
+        fmt.Println("otra letra")
+  }
+}
 ```
+
+```bash
+$ go run main.go
+letra entre la a y la c
+```
+
+Del mismo modo, `switch` permite simular el comportamiento de `ìf-else` usando un `switch` sin expresión que también sirve para representar rangos.
+```go
+func main() {
+	nota := 8
+	switch {
+	    case nota >= 9:
+            fmt.Println("sobresaliente")
+        case nota >= 5:
+			fmt.Println("aprobado")
+        default:
+			fmt.Println("suspenso")
+    }
+}
+```
+
+```bash
+$ go run main.go
+aprobado
+```
+
+Al igual que vimos en la sentencia compacta de `if`, `switch` también permite una declaración corta en su cabecera:
+
+```go
+	switch x:='a'; x {
+        case 'a':
+            fmt.Println("letra a")
+        case 'b':
+            fmt.Println("letra b")
+        case 'c':
+            fmt.Println("letra c")
+        default:
+            fmt.Println("otra letra")
+}
+```
+
+En este caso, `x` solo es visible dentro del `switch`.
 
 We can also use the `fallthrough` keyword to transfer control to the next case even though the current case might have matched.
 
