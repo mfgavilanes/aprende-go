@@ -1045,7 +1045,7 @@ Ahora, vamos a ver los bucles.
 
 En Go solo tenemos un tipo de bucle, que es el bucle `for`.
 
-Pero es increíblemente versátil. Al igual que la instrucción `if`, el bucle `for` no necesita paréntesis `()`, a diferencia de otros lenguajes.
+Es increíblemente versátil. Al igual que la instrucción `if`, el bucle `for` no necesita paréntesis `()`, a diferencia de otros lenguajes.
 
 ### Bucle For clásico
 
@@ -1114,6 +1114,21 @@ func main() {
 	}
 }
 ```
+
+Si además dentro de un bucle infinito introduzco la instrucción `break`, se consigue que nuestro bucle `for` se comporte como un bucle `do while`. A modo de ejemplo tenemos lo siguiente:
+```go
+func main() {
+	i:=1
+	for {
+		fmt.Println("Valor", i)
+		if i==5 {
+		    break	
+        }
+		i=i+1
+	}
+}
+```
+
 
 # Funciones
 
