@@ -386,14 +386,18 @@ También podemos declarar constantes con la palabra clave `const`. Como su nombr
 const constante = "Es un ejemplo de constante"
 ```
 
-Del mismo modo, se pueden hacer declaraciones múltiples:
+Del mismo modo, cuando se definen múltiples constantes, se pueden agrupar semánticamente bajo la misma directiva `const`:
 
 ```go
-const estado1, estado2 string = "e1", "e2"
+const TipoFuente string = "Times New Roman"
+const TamanoFuente int = 12
+const Subrayado, Negrita boolean = false, true
 // OR
 const(
-	estado1 string = "e1"
-	estado2 string = "e2"
+	TipoFuente string = "Times New Roman"
+	TamanoFuente int = 12
+	Subrayado boolean = false
+	Negrita boolean = true
 )
 ```
 
