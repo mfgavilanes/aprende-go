@@ -1562,11 +1562,11 @@ After the `go mod vendor` command is executed, a `vendor` directory will be crea
     └── modules.txt
 ```
 
-# Packages
+# Paquetes
 
 In this tutorial, we will talk about packages.
 
-## What are packages?
+## ¿Qué son los paquetes?
 
 A package is nothing but a directory containing one or more Go source files, or other Go packages.
 
