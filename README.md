@@ -561,7 +561,7 @@ var c2 complejo64 = 18 + 24i
 
 ## Conversión de tipos
 
-Ahora que ya hemos visto cómo funcionan los tipos básicos de datos, veamos cómo se realiza la conversión de tipos.
+Ahora que ya hemos visto cómo funcionan los tipos básicos de datos, veamos cómo se realiza la conversión de tipos. En Go, a didiferencia de lo que ocurre en otros lenguajes de tipado estático, si se quiere asignar una variable numérica a otra variable de otro tipo numérico, se deberá de explicitar el tipo de destino.
 
 ```go
 var segundos int8 = 30
@@ -867,7 +867,13 @@ Para aquellos que provienen del mundo de C/C++, esto debería resultaros natural
 
 # Control de flujo
 
-Hablemos del control de flujo, empezando por las sentencias `if/else`.
+Hablemos del control de flujo. En Go se permite alterar el flujo secuencial mediante los bloques de control de flujo, que se agrupan en dos tipos:
+* **Condicionales**: Permiten que un bloque de instrucciones se ejecute o no, dependiendo de si se cumple una condición en el programa.
+* **Iterativos**: Permiten que un bloque de instrucciones se ejecute repetidamente mientas se dé una condición.
+
+Por condi
+
+, empezando por las sentencias `if/else`.
 
 ## Sentencias If/Else
 
