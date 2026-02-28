@@ -871,11 +871,13 @@ Hablemos del control de flujo. En Go se permite alterar el flujo secuencial medi
 * **Condicionales**: Permiten que un bloque de instrucciones se ejecute o no, dependiendo de si se cumple una condición en el programa.
 * **Iterativos**: Permiten que un bloque de instrucciones se ejecute repetidamente mientas se dé una condición.
 
-Por condi
+Por condición entendemos cualquier expresión booleana que retorne `true` o `false`.
 
-, empezando por las sentencias `if/else`.
+Empecemos por los bloques condicionales, y más concretamente por las sentencias `if/else`.
 
-## Sentencias If/Else
+## Bloques condicionales
+
+### Sentencias If/else
 
 Funciona prácticamente igual de lo que cabría esperar, pero la expresión no necesita ir entre paréntesis `()`.
 
@@ -897,7 +899,7 @@ $ go run main.go
 a es positivo
 ```
 
-### Sentencia if compacto
+#### Sentencia if compacto
 
 Go permite declarar variables dentro del if de forma compacta siguiendo la siguiente estructura:
 
@@ -919,7 +921,7 @@ Como se puede observar, `a` se declara en la cabecera del `if` y solo existe den
 
 _Nota: Este forma de expresar las sentencias `if` es muy común mostrar resultados temporales, errores o cálculos cortos._
 
-## Switch
+### Switch
 A continuación tenemos la sentencia `switch`, que suele ser una forma más clara y compacta de escribir lógica condicional.
 
 En Go, el `switch` ejecuta solo el primer case que coincide con la expresión evaluada.
@@ -1049,15 +1051,15 @@ switch {
 }
 ```
 
-## Bucles
+## Bloques iterativos
 
-Ahora, vamos a ver los bucles.
+Ahora, vamos a ver los bucles. Se trata de un conjunto de órdenes que se repite.
 
 En Go solo tenemos un tipo de bucle, que es el bucle `for`.
 
 Es increíblemente versátil. Al igual que la instrucción `if`, el bucle `for` no necesita paréntesis `()`, a diferencia de otros lenguajes.
 
-### Bucle For clásico
+### Bucle for clásico
 
 Comencemos con el bucle clásico `for`.
 
