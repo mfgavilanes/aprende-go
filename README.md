@@ -22,7 +22,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Formato de cadenas](#formato-de-cadenas)
   - [Control de flujo](#control-de-flujo)
   - [Funciones](#funciones)
-  - [Módulos](#modulos)
+  - [Módulos](#módulos)
   - [Paquetes](#paquetes)
   - [Workspaces (espacios de trabajo)](#workspaces)
   - [Comandos útiles](#useful-commands)
