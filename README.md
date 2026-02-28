@@ -1342,6 +1342,24 @@ func add(values ...int) int {
 
 _**Dato curioso**: `fmt.Println` es una función variádica, por eso hemos podido pasarle varios valores._
 
+## El identificador vacío
+
+El identificador vacío (representado por el guión bajo, `_`) premite descartar los valores devueltos por una función que se van a necesitar. Aquellos valores que no se van a usar se deben asignar a este identificador vacío, ya que Go no permite declarar variables que no se van a usar (el compilador devolvería un error).
+
+```go
+m, _ := MaxMin(3,6)
+
+func MaxMin(a,b:int) (int,int) {
+	if a>b {
+		return a,b
+    }   
+	return b,a
+}
+
+```
+
+En el ejemplo anterior, guardará en la variable `m` el primer valor retornado por la función, y descartaría el segundo valor.
+
 ## Inicialización
 
 En Go, `init` es una función especial del ciclo de vida que se ejecuta antes de la función `main`.
@@ -1379,67 +1397,67 @@ package main
 import "fmt"
 
 func init() {
-	fmt.Println("Before main!")
+	fmt.Println("Antes del main!")
 }
 
 func init() {
-	fmt.Println("Hello again?")
+	fmt.Println("Hola de nuevo")
 }
 
 func main() {
-	fmt.Println("Running main")
+	fmt.Println("Ejecutando el main")
 }
 ```
 
-And if we run this, we'll see the `init` functions were executed in the order they were declared.
+Y si ejecutamos esto, veremos que las funciones `init` se ejecutaron en el orden en que fueron declaradas.
 
 ```bash
 $ go run main.go
-Before main!
-Hello again?
-Running main
+Antes del main!
+Hola de nuevo
+Ejecutando el main
 ```
 
-The `init` function is optional and is particularly used for any global setup which might be essential for our program, such as establishing a database connection, fetching configuration files, setting up environment variables, etc.
+La función `init` es opcional y se utiliza especialmente para cualquier configuración global que pueda ser esencial para nuestro programa, como establecer una conexión con la base de datos, recuperar archivos de configuración, configurar variables de entorno, etc.
 
 ## Defer
 
-Lastly, let's discuss the `defer` keyword, which lets us postpones the execution of a function until the surrounding function returns.
+Por último, veamos la palabra clave `defer`, que nos permite posponer la ejecución de una función hasta que la función circundante devuelva un resultado.
 
 ```go
 func main() {
-	defer fmt.Println("I am finished")
-	fmt.Println("Doing some work...")
+    defer fmt.Println("He terminado")
+    fmt.Println("Haciendo algo de trabajo...")
 }
 ```
 
-Can we use multiple defer functions? Absolutely, this brings us to what is known as _defer stack_. Let's take a look at an example:
+¿Podemos usar varias funciones defer? Por supuesto, esto nos lleva a lo que se conoce como _pila defer_. Veamos un ejemplo:
 
 ```go
 func main() {
-	defer fmt.Println("I am finished")
-	defer fmt.Println("Are you?")
+defer fmt.Println("He terminado")
+defer fmt.Println("¿Y tú?")
 
-	fmt.Println("Doing some work...")
+fmt.Println("Trabajando...")
 }
 ```
 
 ```bash
 $ go run main.go
-Doing some work...
-Are you?
-I am finished
+Haciendo algo de trabajo...
+¿Y tú?
+He terminado.
 ```
 
-As we can see, defer statements are stacked and executed in a _last in first out_ manner.
+Como podemos ver, las sentencias defer se apilan y se ejecutan siguiendo el principio «último en entrar, primero en salir».
 
-So, Defer is incredibly useful and is commonly used for doing cleanup or error handling.
+Por lo tanto, Defer es increíblemente útil y se utiliza habitualmente para realizar tareas de limpieza o gestionar errores.
 
-Functions can also be used with generics but we will discuss them later in the course.
+Las funciones también se pueden utilizar con genéricos, pero las veremos más adelante en el curso.
 
-# Modules
+# Módulos
 
-In this tutorial, we will learn about modules.
+En este tutorial, aprenderemos sobre los módulos.
 
 ## What are modules?
 
