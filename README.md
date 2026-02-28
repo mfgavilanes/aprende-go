@@ -1148,8 +1148,12 @@ En este tutorial, vamos a ver cómo trabajar con funciones en Go. Empecemos con 
 
 ## Declaración sencilla
 
+Se trata de un código que define una función que al invocarse, muestra por pantalla un sencillo texto `Hola`.
+
 ```go
-func miFuncion() {}
+func miFuncion() {
+	fmt.Println("Hola")
+}
 ```
 
 Y podemos _llamarla o ejecutarla_ de la siguiente manera.
@@ -1159,16 +1163,20 @@ Y podemos _llamarla o ejecutarla_ de la siguiente manera.
 miFuncion()
 ...
 ```
+Las funciones se definen fuera del cuerpo de la función `main`, y suelen invocarse desde el código de las propias funciones, mediante el nombre de la función seguido de dos paréntesis.
 
-Pasemos algunos parámetros a la función.
+Aunque un función ejecuta siempre el mismo código, se puede modificar ligeramente su comportamiento si se definen **argumentos** (o **parámetros**) entre los paréntesis de la cabecera de la función.
+Estos argumentos consisten en un nombre seguido de un tipo (como de una variable se tratara). Los diferentes argumentos se separan por comas. 
+
+Por ejemplo, en la anterior función podríamos pasar el siguientes parámetro.
 
 ```go
-func main() {
-	miFuncion("Hola")
-}
-
 func miFuncion(p1 string) {
 	fmt.Println(p1)
+}
+
+func main() {
+    miFuncion("Hola")
 }
 ```
 
@@ -1182,9 +1190,9 @@ Como podemos ver, imprime nuestro mensaje. También podemos hacer una declaraci�
 func miSiguienteFuncion(p1, p2 string) {}
 ```
 
-## Devolver el valor
+## Retorno de valor
 
-Ahora devolvamos también un valor.
+Ahora devolvamos también un valor. El tipo de retorno se declara al final de la cabecera de la función, cuando se cierran los paréntesis de los argumentos, y el retorno de la palabra resultante se especifica con la palabra `return` en el cuerpo de la función.
 
 ```go
 func main() {
@@ -1200,23 +1208,27 @@ func miFuncion(p1 string) string {
 
 ### Devoluciones múltiples
 
-¿Por qué devolver un valor cada vez, cuando podemos hacer más? ¡Go también admite devoluciones múltiples!
+¿Por qué devolver un valor cada vez, cuando podemos hacer más? ¡Go también admite devoluciones múltiples! En vez de especificar un solo tipo de retorno, se especificarán varios tipos de retorno separados por comas.
 
 ```go
-func main() {
-	s, i := miFuncion("Hola")
-	fmt.Println(s, i)
-}
-
 func miFuncion(p1 string) (string, int) {
 	msg := fmt.Sprintf("Funcion %s ", p1)
 	return msg, 10
 }
+
+func main() {
+    s, i := miFuncion("Hola")
+    fmt.Println(s, i)
+}
 ```
+
+Una función que retorno múltiples valores no se puede invocar en medio de una expresión matemática. Se debe previamente recoger los valores especificando múltiples variables, separadas por comas.
+
+En el anterior ejemplo, el primer valor devuelto se guardará en la variable `s` y el segundo valor en `i`.
 
 ### Retornos con nombre
 
-Otra característica interesante son los [retornos con nombre](https://go.dev/tour/basics/7), en los que los valores de retorno pueden nombrarse y tratarse como variables propias.
+Otra característica interesante son los [retornos con nombre](https://go.dev/tour/basics/7), en los que los valores devueltos pueden nombrarse y tratarse como variables propias.
 
 ```go
 func miFuncion(p1 string) (s string, i int) {
@@ -1259,7 +1271,7 @@ _Fíjate en cómo lo ejecutamos utilizando los paréntesis al final._
 
 ## Cierres
 
-¿Por qué detenernos aquí? Devolvamos también una función y creemos así algo llamado cierre. Una definición sencilla podría ser que un cierre es un valor de función que hace referencia a variables externas a su cuerpo.
+¿Por qué detenernos aquí? Devolvamos también una función y creemos así algo llamado cierre (_closure_). Una definición sencilla podría ser que un cierre es una función que recuerda las variables que existían cuando fue creada, o de un modo más formal, es una función que captura variables de su entorno
 
 Los cierres tienen ámbito léxico, lo que significa que las funciones pueden acceder a los valores del ámbito al definir la función.
 
@@ -1283,8 +1295,25 @@ add(5)
 fmt.Println(add(10))
 ...
 ```
+Analicemos el ejemplo:
+- `miFuncion` devuelve una función:
+```go
+func(int) int
+```
+Eso significa que recibe un `int` y devuelve un `int`.
+- Dentro de `miFuncion` se crea una variable: `sum := 0`.
+- Se devuelve una función anónima:
+```go
+return func(v int) int {
+    sum += v
+    return sum
+}
+```
+Esa función usa la variable `sum`. Pero... `sum` no está dentro de la función anónima. Está fuera.
 
-Como podemos ver, obtenemos un resultado de 15, ya que la variable `sum` está vinculada a la función. Se trata de un concepto muy potente y, sin duda, imprescindible.
+Ahí está el cierre.
+
+Como podemos ver, obtenemos un resultado de 15. Se trata de un concepto muy potente y, sin duda, imprescindible.
 
 ## Funciones variádicas
 
