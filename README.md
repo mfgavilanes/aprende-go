@@ -62,7 +62,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 # Cómo usar este repositorio
 ```
 $ git clone <repo>
-$ cd go-course
+$ cd aprende-go
 $ go run main.go
 ```
 # ¿Qué es Go?
@@ -1245,18 +1245,45 @@ Aunque esta característica es interesante, le recomiendo que la utilice con pre
 
 ## Funciones como valores
 
-A continuación, hablemos de las funciones como valores. En Go, las funciones son de primera clase y podemos utilizarlas como valores. Así que, ¡limpiemos nuestra función y probémosla!
+A continuación, hablemos de las funciones como valores. En Go, las funciones son valores como cualquier otro (int, string, etc.). Esto significa que puedes:
 
+- Asignarlas a variables
 ```go
-func miFuncion() {
-	fn := func() {
-		fmt.Println("dentro de la funcion")
-	}
-
-	fn()
+// 1. Asignar función a variable
+saludar := func(nombre string) {
+    fmt.Println("Hola", nombre)
 }
+saludar("Ana")  // Hola Ana
+```
+- Pasarlas como argumentos
+```go
+// 2. Pasar función como argumento
+func ejecutar(fn func(string), texto string) {
+    fn(texto)
+}
+ejecutar(saludar, "Juan")  // Hola Juan
+```
+- Devolverlas desde otras funciones
+```go
+// 3. Devolver la función
+func crearSaludo() func(string) {
+    return func(nombre string) {
+        fmt.Println("Hola", nombre)
+    }
+}
+miSaludo := crearSaludo()
+miSaludo("Pedro")  // Hola Pedro
 ```
 
+Otro ejemplo podría ser el siguiente:
+```go
+func miFuncion() {
+    fn := func() {
+        fmt.Println("dentro de la funcion")
+    }
+    fn()
+}
+```
 También podemos simplificarlo haciendo que `fn` sea una _función anónima_.
 
 ```go
@@ -1269,12 +1296,63 @@ func miFuncion() {
 
 _Fíjate en cómo lo ejecutamos utilizando los paréntesis al final._
 
-## Cierres
 
-¿Por qué detenernos aquí? Devolvamos también una función y creemos así algo llamado cierre (_closure_). Una definición sencilla podría ser que un cierre es una función que recuerda las variables que existían cuando fue creada, o de un modo más formal, es una función que captura variables de su entorno
+## Clausuras
 
-Los cierres tienen ámbito léxico, lo que significa que las funciones pueden acceder a los valores del ámbito al definir la función.
+¿Por qué detenernos aquí? Vamos ahora con las clausuras (en inglés _closure_). En Go, una clausura es una función anónima que captura y mantiene acceso a las variables de su ámbito exterior, incluso después de que ese ámbito haya terminado. Dicho de forma más sencillo,  es una función que recuerda las variables que existían cuando fue creada.
 
+En Go, la signatura de una función (la definición de sus argumentos y tipos de retorno) es un tipo de dato por sí mismo. Esto significa que se puede declarar una variable o un argumento de tipo función. Es lo que da lugar a las clausuras. 
+
+Las características clave en Go:
+- Funciones anónimas: Go permite definir funciones sin nombre,
+- Captura de variables: La función "recuerda" las variables del ámbito donde se creó,
+- Estado privado: Esas variables persisten entre llamadas y son inaccesibles desde fuera.
+
+```go
+func contador() func() int {
+    x := 0  // Variable "capturada"
+    return func() int {
+        x++     // Accede y modifica la variable externa
+        return x
+    }
+}
+
+func main() {
+    c1 := contador()  // Crea clausura 1 con su propio x=0
+    c2 := contador()  // Crea clausura 2 con su propio x=0
+
+    fmt.Println("contador: ", c1(), c1(), c2()) // 1 (x de c1 ahora vale 1), 2 (x de c1 ahora vale 2), 1 (x de c2 vale 1, independiente)
+}
+```
+El resultado sería el siguiente:
+```bash
+contador: 1 2 1
+```
+
+Una potente característica de las clausuras es que una variable del tipo "signatura de función" acepta una referencia a cualquier función existente, siempre que esta comparta la misma signatura. A modo de ejemplo:
+
+```go
+func suma(a,b int) int {
+	return a+b
+}
+func multiplica(a,b int) int{
+	return a*b
+}
+func main(){
+	var operador func(int,int) int
+	operador=suma
+	fmt.Println("suma =", operador(3,4))
+	operador=multiplica
+	fmt.Println("multiplica =", operador(3,4))
+}
+```
+Mostraría en pantalla:
+```bash
+suma =7
+multiplica = 12
+```
+
+Otro posible ejemplo de clausura sería el siguiente:
 ```go
 func miFuncion() func(int) int {
 	sum := 0
@@ -1296,10 +1374,7 @@ fmt.Println(add(10))
 ...
 ```
 Analicemos el ejemplo:
-- `miFuncion` devuelve una función:
-```go
-func(int) int
-```
+- `miFuncion` devuelve una función `func(int) int`
 Eso significa que recibe un `int` y devuelve un `int`.
 - Dentro de `miFuncion` se crea una variable: `sum := 0`.
 - Se devuelve una función anónima:
@@ -1311,9 +1386,7 @@ return func(v int) int {
 ```
 Esa función usa la variable `sum`. Pero... `sum` no está dentro de la función anónima. Está fuera.
 
-Ahí está el cierre.
-
-Como podemos ver, obtenemos un resultado de 15. Se trata de un concepto muy potente y, sin duda, imprescindible.
+Ahí está la clausura. Como podemos ver, obtenemos un resultado de 15. Se trata de un concepto muy potente y, sin duda, imprescindible.
 
 ## Funciones variádicas
 
@@ -1431,7 +1504,7 @@ func main() {
 }
 ```
 
-¿Podemos usar varias funciones defer? Por supuesto, esto nos lleva a lo que se conoce como _pila defer_. Veamos un ejemplo:
+¿Podemos usar varias funciones `defer`? Por supuesto, esto nos lleva a lo que se conoce como _pila defer_. Veamos un ejemplo:
 
 ```go
 func main() {
@@ -1449,33 +1522,30 @@ Haciendo algo de trabajo...
 He terminado.
 ```
 
-Como podemos ver, las sentencias defer se apilan y se ejecutan siguiendo el principio «último en entrar, primero en salir».
+Como podemos ver, las sentencias `defer` se apilan y se ejecutan siguiendo el principio "_último en entrar, primero en salir_".
 
-Por lo tanto, Defer es increíblemente útil y se utiliza habitualmente para realizar tareas de limpieza o gestionar errores.
-
-Las funciones también se pueden utilizar con genéricos, pero las veremos más adelante en el curso.
+Por lo tanto, `defer` es increíblemente útil y se utiliza habitualmente para realizar tareas de limpieza o gestionar errores.
 
 # Módulos
 
-En este tutorial, aprenderemos sobre los módulos.
+Ahora, lo siguiente que aprenderemos en este tutorial será lo relacionado con los módulos.
 
-## What are modules?
+## ¿Qué son los módulos?
 
-Simply defined, A module is a collection of [Go packages](https://go.dev/ref/spec#Packages) stored in a file tree with a `go.mod` file at its root, provided the directory is _outside_ `$GOPATH/src`.
+En términos simples, un módulo es una colección de [paquetes de Go](https://go.dev/ref/spec#Packages) agrupados en un mismo árbol de directorio con un fichero `go.mod` en su raíz, siempre que el directorio esté _fuera_ de `$GOPATH/src`. Un módulo puede contener tanto una biblioteca de funciones como un programa completo con su función `main`.  
 
-Go modules were introduced in Go 1.11, which brings native support for versions and modules. Earlier, we needed the `GO111MODULE=on` flag to turn on the modules functionality when it was experimental. But now after Go 1.13 modules mode is the default for all development.
+Los módulos de Go se introdujeron en Go 1.11, que da soporte nativo para versiones y módulos. Antes necesitábamos la bandera `GO111MODULE=on` para activar los módulos cuando eran experimentales. Pero ahora, desde Go 1.13, el modo módulos es el predeterminado para todo desarrollo.
 
-**But wait, what is `GOPATH`?**
+Pero espera, **¿qué es GOPATH?**
 
-Well, `GOPATH` is a variable that defines the root of your workspace and it contains the following folders:
+`GOPATH` es una variable que define la raíz del espacio de trabajo y contiene estas carpetas:
+- **src**: contiene código fuente de Go organizado jerárquicamente
+- **pkg**: contiene código de paquetes compilados
+- **bin**: contiene binarios y ejecutables compilados
 
-- **src**: contains Go source code organized in a hierarchy.
-- **pkg**: contains compiled package code.
-- **bin**: contains compiled binaries and executables.
+Como antes, creamos un nuevo módulo usando el comando `go mod init`, que crea un nuevo módulo e inicializa el archivo `go.mod` que lo describe:
 
-![gopath](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-I/modules/gopath.png)
-
-Like earlier, let's create a new module using `go mod init` command which creates a new module and initializes the `go.mod` file that describes it.
+![gopath](images/gopath.png)
 
 ```bash
 $ go mod init example
