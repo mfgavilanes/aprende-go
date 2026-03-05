@@ -1818,7 +1818,9 @@ And if we run this, we should see our output in reverse.
 
 ```bash
 $ go run main.go
-<span style="color:red">¡Hola espacio de trabajo de color ROJO!</span>
+¡Hola espacio de trabajo de color ROJO!
+RED='\033[0;31m'
+echo -e "${RED}Texto ROJO${NC}"
 ```
 
 This is great, but what if we want to modify the `stringutil` module that our code depends on?
