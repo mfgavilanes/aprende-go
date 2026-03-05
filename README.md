@@ -244,7 +244,11 @@ Es la herramienta de Go para generar y ver documentación del código a partir d
 
 - ```$ go get ```
 
-Es un comando de Go que se usa para descargar dependencias (librerías) desde internet y se añaden al proyecto.
+Es un comando de Go que se usa para descargar dependencias (librerías) desde internet y se añaden al proyecto a través de `go.mod`.
+
+- ```$ go install```
+
+Es un comando de Go que compila e instala binarios/ejecutables desde internet. Ignora `go.mod` del directorio actual.
 
 - ```$ go mod ```
 
@@ -1551,51 +1555,32 @@ Como antes, creamos un nuevo módulo usando el comando `go mod init`, que crea u
 $ go mod init example
 ```
 
-The important thing to note here is that a Go module can correspond to a Github repository as well if you plan to publish this module. For example:
+Lo importante aquí es que un módulo de Go puede corresponder a un repositorio de GitHub si planeas publicarlo. Por ejemplo:
 
 ```bash
-$ go mod init example
+$ go mod init github.com/tuusuario/example
 ```
 
-Now, let's explore `go.mod` which is the file that defines the module's _module path_ and also the import path used for the root directory, and its _dependency requirements_.
-
+Ahora exploremos `go.mod`, el archivo que define la _ruta del módulo_ y también la ruta de importación usada para el directorio raíz, junto con sus _requisitos de dependencias_:
 ```go
-module <name>
+module <nombre>
 
 go <version>
 
 require (
-	...
+    ...
 )
 ```
-
-And if we want to add a new dependency, we will use `go install` command:
-
-```bash
-$ go install github.com/rs/zerolog
-```
-
-As we can see a `go.sum` file was also created. This file contains the expected [hashes](https://go.dev/cmd/go/#hdr-Module_downloading_and_verification) of the content of the new modules.
-
-We can list all the dependencies using `go list` command as follows:
+Si queremos añadir una nueva dependencia, usamos el comando `go get`:
 
 ```bash
-$ go list -m all
+$ go get github.com/rs/zerolog
+go: added github.com/mattn/go-colorable v0.1.13
+go: added github.com/mattn/go-isatty v0.0.19
+go: added github.com/rs/zerolog v1.34.0
+go: added golang.org/x/sys v0.12.0
 ```
-
-If the dependency is not used, we can simply remove it using `go mod tidy` command:
-
-```bash
-$ go mod tidy
-```
-
-Finishing up our discussion on modules, let's also discuss vendoring.
-
-Vendoring is the act of making your own copy of the 3rd party packages your project is using. Those copies are traditionally placed inside each project and then saved in the project repository.
-
-This can be done through `go mod vendor` command.
-
-So, let's reinstall the removed module using `go mod tidy`.
+Y podemos hacer uso en el `main.go` de la siguiente manera:
 
 ```go
 package main
@@ -1603,34 +1588,70 @@ package main
 import "github.com/rs/zerolog/log"
 
 func main() {
-	log.Info().Msg("Hello")
+	log.Info().Msg("Hola")
 }
 ```
 
+Podemos listar todas las dependencias con el comando `go list`:
+
 ```bash
-$ go mod tidy
-go: finding module for package github.com/rs/zerolog/log
-go: found github.com/rs/zerolog/log in github.com/rs/zerolog v1.26.1
+$ go list all
+bytes
+cmp
+...
+vendor/golang.org/x/net/dns/dnsmessage
+weak
 ```
+
+Para terminar con los módulos, hablemos también del **vendoring**.
+
+**El vendoring** es el acto de hacer una copia propia de los paquetes de terceros que usa tu proyecto. Esas copias tradicionalmente se colocan dentro de cada proyecto y luego se guardan en el repositorio del proyecto.
+
+Esto se hace con el comando `go mod vendor`.
 
 ```bash
 $ go mod vendor
 ```
 
-After the `go mod vendor` command is executed, a `vendor` directory will be created.
+Tras ejecutar `go mod vendor`, se crea un directorio `vendor`:
 
 ```
 ├── go.mod
-├── go.sum
-├── go.work
 ├── main.go
 └── vendor
     ├── github.com
     │   └── rs
     │       └── zerolog
     │           └── ...
+    ├── golang.com
+    │   └── x
+    │       └── sys
+    │           └── ...
     └── modules.txt
 ```
+
+Si posteriormente una dependencia no se usara, la podríamos eliminar simplemente con `go mod tidy`:
+
+A modo de ejemplo, en el anterior fichero `main.go` modificamos su contenido para que quede de la siguiente manera:
+
+```go
+package main
+
+import "fmt"
+//import "github.com/rs/zerolog/log"
+
+func main() {
+	//log.Info().Msg("Hola")
+    fmt.Println("hola")
+}
+```
+
+```bash
+$ go mod tidy
+go: finding module for package github.com/rs/zerolog/log
+go: found github.com/rs/zerolog/log in github.com/rs/zerolog v1.34.0
+```
+Se eliminarán las depedencias de `github.com/rs/zerolog` ya que no se usan. Y si además se utiliza de nuevo `go mod vendor`, se eliminará el árbol `vendor`.
 
 # Paquetes
 
