@@ -1814,103 +1814,112 @@ go: added github.com/mattn/go-isatty v0.0.20
 go: added golang.org/x/sys v0.25.0
 ```
 
-And if we run this, we should see our output in reverse.
+Y si ejecutamos esto, deberíamos ver nuestra salida en color rojo.
 
 ```bash
 $ go run main.go
 ¡Hola espacio de trabajo de color ROJO!
-RED='\033[0;31m'
-echo -e "${RED}Texto ROJO${NC}"
 ```
 
-This is great, but what if we want to modify the `stringutil` module that our code depends on?
+Esto es genial, pero ¿qué pasa si queremos modificar el módulo `color` del que depende nuestro código?
 
-Until now, we had to do it using the `replace` directive in the `go.mod` file, but now let's see how we can use workspaces here.
+Hasta ahora, teníamos que hacerlo usando la directiva `replace` en el archivo `go.mod`, pero ahora veamos cómo podemos usar workspaces aquí.
 
-So, let's create our workspace in the `workspaces` directory.
+Así que, creemos nuestro espacio de trabajo en el directorio `workspaces`.
 
 ```bash
 $ go work init
 ```
 
-This will create a `go.work` file.
+Esto creará un archivo `go.work`.
 
 ```bash
 $ cat go.work
-go 1.18
+go 1.25.7
 ```
 
-We will also add our `hello` module to the workspace.
+También añadiremos nuestro módulo `hola` al espacio de trabajo.
 
 ```bash
-$ go work use ./hello
+$ go work use ./hola
 ```
 
-This should update the `go.work` file with a reference to our `hello` module.
+Esto debería actualizar el archivo `go.work` con una referencia a nuestro módulo `hola`.
 
 ```go
-go 1.18
+go 1.25.7
 
-use ./hello
+use ./hola
 ```
-
-Now, let's download and modify the `stringutil` package and update the `Reverse` function implementation.
+Ahora, descarguemos y modifiquemos el paquete `color` y actualicemos la implementación de la función de color.
 
 ```bash
-$ git clone https://go.googlesource.com/example
-Cloning into 'example'...
-remote: Total 204 (delta 39), reused 204 (delta 39)
-Receiving objects: 100% (204/204), 467.53 KiB | 363.00 KiB/s, done.
-Resolving deltas: 100% (39/39), done.
+$ git clone https://github.com/fatih/color.git 
+Cloning into 'color'...
+remote: Enumerating objects: 1736, done.
+remote: Counting objects: 100% (364/364), done.
+remote: Compressing objects: 100% (135/135), done.
+remote: Total 1736 (delta 281), reused 237 (delta 229), pack-reused 1372 (from 3)
+Receiving objects: 100% (1736/1736), 2.08 MiB | 6.18 MiB/s, done.
+Resolving deltas: 100% (1027/1027), done.
 ```
 
-`example/stringutil/reverse.go`
+`color/.github/color.go`
 
 ```go
-func Reverse(s string) string {
-	return fmt.Sprintf("I can do whatever!! %s", s)
+func New(value ...Attribute) *Color {
+    fmt.Println("Voy a imprimir algo antes del New")
+    c := &Color{
+        params: make([]Attribute, 0),
+    }
+
+    if noColorIsSet() {
+        c.noColor = boolPtr(true)
+    }
+
+    c.Add(value...)
+    return c
 }
 ```
 
-Finally, let's add `example` package to our workspace.
+Finalmente, añadamos el paquete `color` a nuestro espacio de trabajo.
 
 ```bash
-$ go work use ./example
+$ go work use ./color
 $ cat go.work
-go 1.18
+go 1.25.7
 
 use (
-	./example
-	./hello
+	./color
+	./hola
 )
 ```
 
-Perfect, now if we run our `hello` module we will notice that the `Reverse` function has been modified.
+Perfecto, ahora si ejecutamos nuestro módulo `hola` notaremos que la función `color` ha sido modificada.
 
 ```bash
-$ go run hello
-I can do whatever!! Hello Workspace
+$ go run hola
+Voy a imprimir algo antes del New
+¡Hola espacio de trabajo de color ROJO!
 ```
 
-_This is a very underrated feature from Go 1.18 but it is quite useful in certain circumstances._
+_Esta es una característica muy infravalorada de Go, pero bastante útil en ciertas circunstancias._
 
-# Useful Commands
+# Comandos útiles
 
-During our module discussion, we discussed some go commands related to go modules, let's now discuss some other important commands.
+Durante nuestra discusión sobre módulos, hablamos de algunos comandos `go` relacionados con módulos de Go. Ahora veamos otros comandos importantes.
 
-Starting with `go fmt`, which formats the source code and it's enforced by that language so that we can focus on how our code should work rather than how our code should look.
+Empezando con `go fmt`, que formatea el código fuente y está impuesto por el lenguaje para que podamos centrarnos en cómo funciona nuestro código en lugar de cómo se ve.
 
 ```bash
 $ go fmt
 ```
 
-This might seem a little weird at first especially if you're coming from a javascript or python background like me but frankly, it's quite nice not to worry about linting rules.
+Esto puede parecer un poco extraño al principio, pero francamente, es muy agradable no preocuparse por estas cuestiones.
 
-Next, we have `go vet` which reports likely mistakes in our packages.
+A continuación, tenemos `go vet`, que informa sobre errores probables en nuestros paquetes.
 
-So, if I go ahead and make a mistake in the syntax, and then run `go vet`.
-
-It should notify me of the errors.
+Si cometo un error de sintaxis y luego ejecuto `go vet`, debería notificármelo.
 
 ```bash
 $ go vet
