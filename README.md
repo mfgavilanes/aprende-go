@@ -1655,46 +1655,47 @@ Se eliminarán las depedencias de `github.com/rs/zerolog` ya que no se usan. Y s
 
 # Paquetes
 
-In this tutorial, we will talk about packages.
+Ahora, hablaremos sobre **paquetes**.
 
 ## ¿Qué son los paquetes?
 
-A package is nothing but a directory containing one or more Go source files, or other Go packages.
+Un **paquete** no es más que un directorio que contiene uno o más archivos fuente de Go, u otros paquetes de Go.
 
-This means every Go source file must belong to a package and package declaration is done at top of every source file as follows.
+Esto significa que todos los archivos fuente de Go deben pertenecer a un paquete, y la declaración del paquete se hace al inicio de cada archivo fuente así:
 
-```go
-package <package_name>
-```
-
-So far, we've done everything inside of `package main`. By convention, executable programs (by that I mean the ones with the `main` package) are called _Commands_, others are simply called _Packages_.
-
-The `main` package should also contain a `main()` function which is a special function that acts as the entry point of an executable program.
-
-Let's take a look at an example by creating our own package `custom` and adding some source files to it such as `code.go`.
 
 ```go
-package custom
+package <nombre_paquete>
 ```
 
-Before we proceed any further, we should talk about imports and exports. Just like other languages, go also has a concept of imports and exports but it's very elegant.
+Hasta ahora, hemos hecho todo dentro de `package main`. Por convención, los programas ejecutables (es decir, los que tienen el paquete `main` package) se llaman _Commands_, los demás simplemente se llaman _Packages_.
 
-Basically, any value (like a variable or function) can be exported and visible from other packages if they have been defined with an upper case identifier.
+El paquete `main` también debe contener una función `main()` que es una función especial que actúa como el punto de entrada de un **programa ejecutable**.
 
-Let's try an example in our `custom` package.
+Veamos un ejemplo creando nuestro propio paquete `custom`  y añadiendo algunos archivos fuente como `code.go`.
 
 ```go
 package custom
-
-var value int = 10 // Will not be exported
-var Value int = 20 // Will be exported
 ```
 
-As we can see lower case identifiers will not be exported and will be private to the package it's defined in. In our case the `custom` package.
+Antes de continuar, debemos hablar de **importaciones y exportaciones**. Al igual que otros lenguajes, Go también tiene un concepto de importaciones y exportaciones, pero es muy elegante.
 
-That's great but how do we import or access it? Well, same as we've been doing so far unknowingly. Let's go to our `main.go` file and import our `custom` package.
+Básicamente, cualquier valor (como una variable o función) puede ser **exportado** y visible desde otros paquetes si se define con un **identificador en mayúscula**.
 
-Here we can refer to it using the `module` we had initialized in our `go.mod` file earlier.
+Probemos un ejemplo en nuestro paquete `custom`.
+
+```go
+package custom
+
+var value int = 10 // NO será exportado
+var Value int = 20 // SÍ será exportado
+```
+
+Como vemos, los identificadores en **minúscula** NO se exportan y serán privados para el paquete en el que se definen. En nuestro caso, el paquete `custom`.
+
+Está muy bien, pero ¿cómo lo importamos o accedemos a él? Bueno, igual que hemos estado haciendo hasta ahora sin saberlo. Vamos a nuestro archivo `main.go` e importamos nuestro paquete `custom`.
+
+Aquí podemos referirnos a él usando el módulo que inicializamos en nuestro archivo `go.mod` anteriormente.
 
 ```go
 ---go.mod---
@@ -1712,16 +1713,15 @@ func main() {
 }
 ```
 
-_Notice how the package name is the last name of the import path._
+_Nota cómo el nombre del paquete es el último nombre de la ruta de importación._
 
-We can import multiple packages as well like this.
+También podemos importar múltiples paquetes así:
 
 ```go
 package main
 
 import (
 	"fmt"
-
 	"example/custom"
 )
 
@@ -1730,14 +1730,13 @@ func main() {
 }
 ```
 
-We can also alias our imports to avoid collisions like this.
+También podemos **poner alias** a nuestras importaciones para evitar colisiones así:
 
 ```go
 package main
 
 import (
 	"fmt"
-
 	abcd "example/custom"
 )
 
