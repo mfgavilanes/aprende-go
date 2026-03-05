@@ -22,8 +22,8 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Formato de cadenas](#formato-de-cadenas)
   - [Control de flujo](#control-de-flujo)
   - [Funciones](#funciones)
-  - [Módulos](#módulos)
   - [Paquetes](#paquetes)
+  - [Módulos](#módulos)
   - [Workspaces (espacios de trabajo)](#workspaces)
   - [Comandos útiles](#useful-commands)
   - [Compilación](#build)
@@ -1530,6 +1530,124 @@ Como podemos ver, las sentencias `defer` se apilan y se ejecutan siguiendo el pr
 
 Por lo tanto, `defer` es increíblemente útil y se utiliza habitualmente para realizar tareas de limpieza o gestionar errores.
 
+# Paquetes
+
+Ahora, hablaremos sobre **paquetes**.
+
+## ¿Qué son los paquetes?
+
+Un **paquete** no es más que un directorio que contiene uno o más archivos fuente de Go, u otros paquetes de Go.
+
+Esto significa que todos los archivos fuente de Go deben pertenecer a un paquete, y la declaración del paquete se hace al inicio de cada archivo fuente así:
+
+
+```go
+package <nombre_paquete>
+```
+
+Hasta ahora, hemos hecho todo dentro de `package main`. Por convención, los programas ejecutables (es decir, los que tienen el paquete `main` package) se llaman _Commands_, los demás simplemente se llaman _Packages_.
+
+El paquete `main` también debe contener una función `main()` que es una función especial que actúa como el punto de entrada de un **programa ejecutable**.
+
+Veamos un ejemplo creando nuestro propio paquete `custom`  y añadiendo algunos archivos fuente como `code.go`.
+
+```go
+package custom
+```
+
+Antes de continuar, debemos hablar de **importaciones y exportaciones**. Al igual que otros lenguajes, Go también tiene un concepto de importaciones y exportaciones, pero es muy elegante.
+
+Básicamente, cualquier valor (como una variable o función) puede ser **exportado** y visible desde otros paquetes si se define con un **identificador en mayúscula**.
+
+Probemos un ejemplo en nuestro paquete `custom`.
+
+```go
+package custom
+
+var value int = 10 // NO será exportado
+var Value int = 20 // SÍ será exportado
+```
+
+Como vemos, los identificadores en **minúscula** NO se exportan y serán privados para el paquete en el que se definen. En nuestro caso, el paquete `custom`.
+
+Está muy bien, pero ¿cómo lo importamos o accedemos a él? Bueno, igual que hemos estado haciendo hasta ahora sin saberlo. Vamos a nuestro archivo `main.go` e importamos nuestro paquete `custom`.
+
+Aquí podemos referirnos a él usando el módulo que inicializamos en nuestro archivo `go.mod` anteriormente.
+
+```go
+---go.mod---
+module example
+
+go 1.18
+
+---main.go--
+package main
+
+import "example/custom"
+
+func main() {
+	custom.Value
+}
+```
+
+_Nota cómo el nombre del paquete es el último nombre de la ruta de importación._
+
+También podemos importar múltiples paquetes así:
+
+```go
+package main
+
+import (
+	"fmt"
+	"example/custom"
+)
+
+func main() {
+	fmt.Println(custom.Value)
+}
+```
+
+También podemos **poner alias** a nuestras importaciones para evitar colisiones así:
+
+```go
+package main
+
+import (
+	"fmt"
+	abcd "example/custom"
+)
+
+func main() {
+	fmt.Println(abcd.Value)
+}
+```
+
+## Dependencias externas
+
+En Go, no estamos limitados solo a trabajar con paquetes locales, también podemos instalar paquetes externos usando el comando `go get` como vimos al comienzo del tutorial.
+
+Así que vamos a descargar un paquete de logging simple: `github.com/rs/zerolog/log`.
+
+```bash
+$ go get github.com/rs/zerolog
+```
+
+```go
+package main
+
+import (
+	"github.com/rs/zerolog/log"
+
+	abcd "example/custom"
+)
+
+func main() {
+	log.Print(abcd.Value)
+}
+```
+
+También asegúrate de revisar la **documentación Go** (`go doc`) de los paquetes que instales, que normalmente está ubicada en el archivo `README` del proyecto. go doc analiza el código fuente y genera documentación en formato HTML. La referencia a ella suele estar en los archivos `README`.
+
 # Módulos
 
 Ahora, lo siguiente que aprenderemos en este tutorial será lo relacionado con los módulos.
@@ -1653,127 +1771,8 @@ go: found github.com/rs/zerolog/log in github.com/rs/zerolog v1.34.0
 ```
 Se eliminarán las depedencias de `github.com/rs/zerolog` ya que no se usan. Y si además se utiliza de nuevo `go mod vendor`, se eliminará el árbol `vendor`.
 
-# Paquetes
 
-Ahora, hablaremos sobre **paquetes**.
-
-## ¿Qué son los paquetes?
-
-Un **paquete** no es más que un directorio que contiene uno o más archivos fuente de Go, u otros paquetes de Go.
-
-Esto significa que todos los archivos fuente de Go deben pertenecer a un paquete, y la declaración del paquete se hace al inicio de cada archivo fuente así:
-
-
-```go
-package <nombre_paquete>
-```
-
-Hasta ahora, hemos hecho todo dentro de `package main`. Por convención, los programas ejecutables (es decir, los que tienen el paquete `main` package) se llaman _Commands_, los demás simplemente se llaman _Packages_.
-
-El paquete `main` también debe contener una función `main()` que es una función especial que actúa como el punto de entrada de un **programa ejecutable**.
-
-Veamos un ejemplo creando nuestro propio paquete `custom`  y añadiendo algunos archivos fuente como `code.go`.
-
-```go
-package custom
-```
-
-Antes de continuar, debemos hablar de **importaciones y exportaciones**. Al igual que otros lenguajes, Go también tiene un concepto de importaciones y exportaciones, pero es muy elegante.
-
-Básicamente, cualquier valor (como una variable o función) puede ser **exportado** y visible desde otros paquetes si se define con un **identificador en mayúscula**.
-
-Probemos un ejemplo en nuestro paquete `custom`.
-
-```go
-package custom
-
-var value int = 10 // NO será exportado
-var Value int = 20 // SÍ será exportado
-```
-
-Como vemos, los identificadores en **minúscula** NO se exportan y serán privados para el paquete en el que se definen. En nuestro caso, el paquete `custom`.
-
-Está muy bien, pero ¿cómo lo importamos o accedemos a él? Bueno, igual que hemos estado haciendo hasta ahora sin saberlo. Vamos a nuestro archivo `main.go` e importamos nuestro paquete `custom`.
-
-Aquí podemos referirnos a él usando el módulo que inicializamos en nuestro archivo `go.mod` anteriormente.
-
-```go
----go.mod---
-module example
-
-go 1.18
-
----main.go--
-package main
-
-import "example/custom"
-
-func main() {
-	custom.Value
-}
-```
-
-_Nota cómo el nombre del paquete es el último nombre de la ruta de importación._
-
-También podemos importar múltiples paquetes así:
-
-```go
-package main
-
-import (
-	"fmt"
-	"example/custom"
-)
-
-func main() {
-	fmt.Println(custom.Value)
-}
-```
-
-También podemos **poner alias** a nuestras importaciones para evitar colisiones así:
-
-```go
-package main
-
-import (
-	"fmt"
-	abcd "example/custom"
-)
-
-func main() {
-	fmt.Println(abcd.Value)
-}
-```
-
-## External Dependencies
-
-In Go, we are not only limited to working with local packages, we can also install external packages using `go install` command as we saw earlier.
-
-So let's download a simple logging package `github.com/rs/zerolog/log`.
-
-```bash
-$ go install github.com/rs/zerolog
-```
-
-```go
-package main
-
-import (
-	"github.com/rs/zerolog/log"
-
-	abcd "example/custom"
-)
-
-func main() {
-	log.Print(abcd.Value)
-}
-```
-
-Also, make sure to check out the go doc of packages you install, which is usually located in the project's readme file. go doc parses the source code and generates documentation in HTML format. Reference to It is usually located in readme files.
-
-Lastly, I will add that, Go doesn't have a particular _"folder structure"_ convention, always try to organize your packages in a simple and intuitive way.
-
-# Workspaces
+# Workspace
 
 In this tutorial, we will learn about multi-module workspaces that were introduced in Go 1.18.
 
