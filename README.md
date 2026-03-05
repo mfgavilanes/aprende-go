@@ -1774,46 +1774,51 @@ Se eliminarán las depedencias de `github.com/rs/zerolog` ya que no se usan. Y s
 
 # Workspace
 
-In this tutorial, we will learn about multi-module workspaces that were introduced in Go 1.18.
+Los espacios de trabajo nos permiten trabajar con múltiples módulos simultáneamente sin tener que editar los archivos `go.mod` de cada módulo. Cada módulo dentro de un espacio de trabajo se trata como un módulo raíz al resolver dependencias.
 
-Workspaces allow us to work with multiple modules simultaneously without having to edit `go.mod` files for each module. Each module within a workspace is treated as a root module when resolving dependencies.
-
-To understand this better, let's start by creating a `hello` module.
+Para entenderlo mejor, empecemos creando un módulo `hola`.
 
 ```bash
-$ mkdir workspaces && cd workspaces
-$ mkdir hello && cd hello
-$ go mod init hello
+$ mkdir workspaces
+$ cd workspaces
+$ mkdir hola
+$ cd hola
+$ go mod init hola
 ```
 
-For demonstration purposes, I will add a simple `main.go` and install an example package.
+Para fines de demostración, añadiré un simple `main.go` e instalaré un paquete de ejemplo.
+
 
 ```go
 package main
 
 import (
-	"fmt"
-
-	"golang.org/x/example/stringutil"
+  "fmt"
+  "github.com/fatih/color"
 )
 
 func main() {
-	result := stringutil.Reverse("Hello Workspace")
-	fmt.Println(result)
+  red := color.New(color.FgRed).SprintFunc()
+  fmt.Println(red("¡Hola espacio de trabajo de color ROJO!"))
 }
 ```
 
 ```bash
-$ go get golang.org/x/example
-go: downloading golang.org/x/example v0.0.0-20220412213650-2e68773dfca0
-go: added golang.org/x/example v0.0.0-20220412213650-2e68773dfca0
+$ go get github.com/fatih/color
+go: downloading github.com/fatih/color v1.18.0
+go: downloading github.com/mattn/go-isatty v0.0.20
+go: downloading golang.org/x/sys v0.25.0
+go: added github.com/fatih/color v1.18.0
+go: added github.com/mattn/go-colorable v0.1.13
+go: added github.com/mattn/go-isatty v0.0.20
+go: added golang.org/x/sys v0.25.0
 ```
 
 And if we run this, we should see our output in reverse.
 
 ```bash
 $ go run main.go
-ecapskroW olleH
+<span style="color:red">¡Hola espacio de trabajo de color ROJO!</span>
 ```
 
 This is great, but what if we want to modify the `stringutil` module that our code depends on?
