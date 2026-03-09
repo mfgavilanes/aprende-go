@@ -1969,7 +1969,7 @@ Ahora, para ejecutarlo, simplemente tenemos que lanzarlo.
 
 ```bash
 $ ./app
-I am a binary!
+¡Soy un binario!
 ```
 
 _Sí, ¡es así de simple!_
