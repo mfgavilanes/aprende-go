@@ -231,15 +231,26 @@ Si queremos ejecutar el programa de Go directamente sin generar el ejecutable.
 
 - ```$ go fmt ./... ```
 
-Es un comando que formatea automáticamente todo el código del proyecto (`./...`) siguiendo el estilo oficial del lenguaje.
+Es un comando que formatea automáticamente todo el código fuente del proyecto (`./...`) y está impuesto por el lenguaje para que podamos centrarnos en cómo funciona nuestro código en lugar de cómo se ve.
+
+Esto puede parecer un poco extraño al principio, pero francamente, es muy agradable no preocuparse por estas cuestiones.
 
 - ```$ go vet ```
 
-Es un comando que analiza el código y detecta posibles errores o cosas sospechosas que compilan pero probablemente están mal.
+Es un comando que analiza el código e informa sobre posibles errores o cosas sospechosas que compilan pero probablemente están mal.
 
-- ```$ godoc ```
+Si cometo un error de sintaxis y luego ejecuto `go vet`, debería notificármelo.
+
+
+- ```$ go doc ```
 
 Es la herramienta de Go para generar y ver documentación del código a partir de los comentarios que se escriben.
+
+También permite mostrar la documentación de un paquete o símbolo; aquí tienes un ejemplo con el paquete `fmt`.
+
+```bash
+$ go doc -src fmt Printf
+```
 
 - ```$ go get ```
 
@@ -1669,13 +1680,13 @@ Como antes, creamos un nuevo módulo usando el comando `go mod init`, que crea u
 ![gopath](images/gopath.png)
 
 ```bash
-$ go mod init example
+$ go mod init ejemplo
 ```
 
 Lo importante aquí es que un módulo de Go puede corresponder a un repositorio de GitHub si planeas publicarlo. Por ejemplo:
 
 ```bash
-$ go mod init github.com/tuusuario/example
+$ go mod init github.com/tuusuario/ejemplo
 ```
 
 Ahora exploremos `go.mod`, el archivo que define la _ruta del módulo_ y también la ruta de importación usada para el directorio raíz, junto con sus _requisitos de dependencias_:
@@ -1906,33 +1917,11 @@ _Esta es una característica muy infravalorada de Go, pero bastante útil en cie
 
 # Comandos útiles y compilación
 
-Durante nuestra discusión sobre módulos, hablamos de algunos comandos `go` relacionados con módulos de Go. Ahora veamos otros comandos importantes.
+Al comienzo de este tutorial y durante nuestra discusión sobre módulos, hemos hablamos de algunos comandos `go` relacionados con módulos de Go. Ahora veamos otros comandos importantes.
 
-Empezando con `go fmt`, que formatea el código fuente y está impuesto por el lenguaje para que podamos centrarnos en cómo funciona nuestro código en lugar de cómo se ve.
+Empezando con `go env`, que simplemente muestra toda la información del entorno de Go; aprenderemos sobre algunas de estas variables de tiempo de compilación más adelante.
 
-```bash
-$ go fmt
-```
-
-Esto puede parecer un poco extraño al principio, pero francamente, es muy agradable no preocuparse por estas cuestiones.
-
-A continuación, tenemos `go vet`, que informa sobre errores probables en nuestros paquetes.
-
-Si cometo un error de sintaxis y luego ejecuto `go vet`, debería notificármelo.
-
-```bash
-$ go vet
-```
-
-A continuación tenemos `go env`, que simplemente muestra toda la información del entorno de Go; aprenderemos sobre algunas de estas variables de tiempo de compilación más adelante.
-
-Por último, tenemos `go doc`, que muestra la documentación de un paquete o símbolo; aquí tienes un ejemplo con el paquete `fmt`.
-
-```bash
-$ go doc -src fmt Printf
-```
-
-Usemos el comando `go help` para ver qué otros comandos hay disponibles.
+También tenemos el comando `go help` para ver qué otros comandos hay disponibles.
 
 ```bash
 $ go help
@@ -1944,17 +1933,15 @@ Como podemos ver, tenemos:
 
 `go generate` se usa normalmente para la generación de código.
 
-`go install` compila e instala paquetes y dependencias.
-
 `go clean` se utiliza para limpiar archivos que han sido generados por los compiladores.
 
-Otros comandos muy importantes son `go build` y `go test`, pero aprenderemos sobre ellos en detalle más adelante en el curso.
+Otros comandos muy importantes son `go build` y `go test`, pero aprenderemos sobre ellos en detalle más adelante.
 
 ## Compilación
 
-Building static binaries is one of the best features of Go which enables us to ship our code efficiently.
+Construir binarios estáticos es una de las mejores características de Go, lo que nos permite distribuir nuestro código de forma eficiente.
 
-We can do this very easily using the `go build` command.
+Podemos hacerlo muy fácilmente usando el comando `go build`.
 
 ```go
 package main
@@ -1962,7 +1949,7 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("I am a binary!")
+  fmt.Println("¡Soy un binario!")
 }
 ```
 
@@ -1970,31 +1957,31 @@ func main() {
 $ go build
 ```
 
-This should produce a binary with the name of our module. For example, here we have `example`.
+Esto debería producir un binario con el nombre de nuestro módulo. Por ejemplo, aquí tenemos `example`.
 
-We can also specify the output.
+También podemos especificar el nombre de salida.
 
 ```bash
 $ go build -o app
 ```
 
-Now to run this, we simply need to execute it.
+Ahora, para ejecutarlo, simplemente tenemos que lanzarlo.
 
 ```bash
 $ ./app
 I am a binary!
 ```
 
-_Yes, it's as simple as that!_
+_Sí, ¡es así de simple!_
 
-Now, let's talk about some important build time variables, starting with:
+Ahora hablemos de algunas variables importantes de tiempo de compilación, empezando por:
 
-- `GOOS` and `GOARCH`
+- `GOOS` y `GOARCH`
 
-These environment variables help us build go programs for different [operating systems](https://en.wikipedia.org/wiki/Operating_system)
-and underlying processor [architectures](https://en.wikipedia.org/wiki/Microarchitecture).
+Estas variables de entorno nos ayudan a compilar programas en Go para distintos [sistemas operativos](https://en.wikipedia.org/wiki/Operating_system)
+y diferentes [arquitecturas](https://en.wikipedia.org/wiki/Microarchitecture) de procesador subyacentes..
 
-We can list all the supported architecture using `go tool` command.
+Podemos listar todas las arquitecturas soportadas usando el comando `go tool`.
 
 ```bash
 $ go tool dist list
@@ -2008,7 +1995,7 @@ windows/arm64
 .
 ```
 
-Here's an example for building a windows executable from macOS!
+Aquí tienes un ejemplo para construir un ejecutable de Windows desde macOS:
 
 ```bash
 $ GOOS=windows GOARCH=amd64 go build -o app.exe
@@ -2016,13 +2003,13 @@ $ GOOS=windows GOARCH=amd64 go build -o app.exe
 
 - `CGO_ENABLED`
 
-This variable allows us to configure [CGO](https://go.dev/blog/cgo), which is a way in Go to call C code.
+Esta variable nos permite configurar [CGO](https://go.dev/blog/cgo), que es la forma en Go de llamar a código en C.
 
-This helps us to produce a [statically linked binary](https://en.wikipedia.org/wiki/Static_build) that works without any external dependencies.
+Esto nos ayuda a producir un [binario enlazado estáticamente](https://en.wikipedia.org/wiki/Static_build) que funciona sin dependencias externas.
 
-This is quite helpful for, let's say when we want to run our go binaries in a docker container with minimum external dependencies.
+Esto es bastante útil, por ejemplo, cuando queremos ejecutar nuestros binarios de Go en un contenedor Docker con el mínimo de dependencias externas.
 
-Here's an example of how to use it:
+Aquí tienes un ejemplo de cómo usarlo:
 
 ```bash
 $ CGO_ENABLED=0 go build -o app
