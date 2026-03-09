@@ -1929,11 +1929,11 @@ $ go help
 
 Como podemos ver, tenemos:
 
-`go fix` encuentra programas en Go que usan APIs antiguas y los reescribe para que usen las nuevas.
+* `go fix` encuentra programas en Go que usan APIs antiguas y los reescribe para que usen las nuevas.
 
-`go generate` se usa normalmente para la generación de código.
+* `go generate` se usa normalmente para la generación de código.
 
-`go clean` se utiliza para limpiar archivos que han sido generados por los compiladores.
+* `go clean` se utiliza para limpiar archivos que han sido generados por los compiladores.
 
 Otros comandos muy importantes son `go build` y `go test`, pero aprenderemos sobre ellos en detalle más adelante.
 
