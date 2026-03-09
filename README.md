@@ -1772,7 +1772,7 @@ go: found github.com/rs/zerolog/log in github.com/rs/zerolog v1.34.0
 Se eliminarán las depedencias de `github.com/rs/zerolog` ya que no se usan. Y si además se utiliza de nuevo `go mod vendor`, se eliminará el árbol `vendor`.
 
 
-# Workspace
+# Workspaces
 
 Los espacios de trabajo nos permiten trabajar con múltiples módulos simultáneamente sin tener que editar los archivos `go.mod` de cada módulo. Cada módulo dentro de un espacio de trabajo se trata como un módulo raíz al resolver dependencias.
 
