@@ -25,8 +25,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Paquetes](#paquetes)
   - [Módulos](#módulos)
   - [Workspaces (espacios de trabajo)](#workspaces)
-  - [Comandos útiles](#useful-commands)
-  - [Compilación](#build)
+  - [Comandos útiles y compilación](#comandos-utiles-y-compilacion)
 
 - **Capítulo II**
 
@@ -1951,7 +1950,7 @@ Como podemos ver, tenemos:
 
 Otros comandos muy importantes son `go build` y `go test`, pero aprenderemos sobre ellos en detalle más adelante en el curso.
 
-# Build
+## Compilación
 
 Building static binaries is one of the best features of Go which enables us to ship our code efficiently.
 
