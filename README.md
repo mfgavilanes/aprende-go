@@ -25,11 +25,11 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Paquetes](#paquetes)
   - [Módulos](#módulos)
   - [Workspaces (espacios de trabajo)](#workspaces)
-  - [Comandos útiles y compilación](#comandos-utiles-y-compilacion)
+  - [Comandos útiles y compilación](#comandos-útiles-y-compilación)
 
 - **Capítulo II**
 
-  - [Punteros](#pointers)
+  - [Punteros](#punteros)
   - [Structs (estructuras)](#structs)
   - [Métodos](#methods)
   - [Arrays y slices](#arrays-and-slices)
@@ -2015,23 +2015,23 @@ Aquí tienes un ejemplo de cómo usarlo:
 $ CGO_ENABLED=0 go build -o app
 ```
 
-# Pointers
+# Punteros
 
-In this tutorial, we will discuss pointers. So what are Pointers?
+Ahora hablaremos sobre los punteros. ¿Qué son los punteros?
 
-Simply defined, a Pointer is a variable that is used to store the memory address of another variable.
+Simplemente, un puntero es una variable que se utiliza para almacenar la dirección de memoria de otra variable.
 
 ![pointers](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/pointers/pointers.png)
 
-It can be used like this:
+Se puede usar de la siguiente manera:
 
 ```go
 var x *T
 ```
 
-Where `T` is the type such as `int`, `string`, `float`, and so on.
+Donde `T` es el tipo, como `int`, `string`, `float`, y así sucesivamente.
 
-Let's try a simple example and see it in action.
+Probemos un ejemplo sencillo para verlo en acción.
 
 ```go
 package main
@@ -2050,13 +2050,14 @@ $ go run main.go
 nil
 ```
 
-Hmm, this prints `nil`, but what is `nil`?
+Hmm, esto imprime `nil`, pero ¿qué es `nil`?
 
-So nil is a predeclared identifier in Go that represents zero value for pointers, interfaces, channels, maps, and slices.
+Entonces, `nil` es un identificador predeclarado en Go que representa el valor cero para punteros, interfaces, canales, mapas y `slices`.
 
-This is just like what we learned in the variables and datatypes section, where we saw that uninitialized `int` has a zero value of 0, a `bool` has false, and so on.
+Esto es igual a lo que aprendimos en la sección de variables y tipos de datos, donde vimos que un `int` no inicializado tiene un valor cero de 0, un `bool` tiene false, y así sucesivamente.
 
-Okay, now let's assign a value to the pointer.
+Bien, ahora asignemos un valor al puntero.
+
 
 ```go
 package main
@@ -2068,18 +2069,17 @@ func main() {
 
 	var p *int = &a
 
-	fmt.Println("address:", p)
+	fmt.Println("dirección:", p)
 }
 ```
-
-We use the `&` ampersand operator to refer to a variable's memory address.
+Usamos el operador `&` para referirnos a la dirección de memoria de una variable.
 
 ```bash
 $ go run main.go
-0xc0000b8000
+0xc0000140a8
 ```
 
-This must be the value of the memory address of the variable `a`.
+Este debe ser el valor de la dirección de memoria de la variable `a`.
 
 ## Dereferencing
 
