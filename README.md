@@ -2081,34 +2081,12 @@ $ go run main.go
 
 Este debe ser el valor de la dirección de memoria de la variable `a`.
 
-## Dereferencing
+## Dereferenciación
 
-We can also use the `*` asterisk operator to retrieve the value stored in the variable that the pointer points to. This is also called **dereferencing**.
+También podemos usar el operador asterisco `*` para recuperar el valor almacenado en la variable a la que apunta el puntero. Esto también se llama **dereferenciación**.
 
-For example, we can access the value of the variable `a` through the pointer `p` using that `*` asterisk operator.
+Por ejemplo, podemos acceder al valor de la variable `a` a través del puntero `p` usando ese operador asterisco `*`.
 
-```go
-package main
-
-import "fmt"
-
-func main() {
-	a := 10
-
-	var p *int = &a
-
-	fmt.Println("address:", p)
-	fmt.Println("value:", *p)
-}
-```
-
-```bash
-$ go run main.go
-address: 0xc000018030
-value: 10
-```
-
-We can not only access it but change it as well through the pointer.
 
 ```go
 package main
@@ -2116,26 +2094,49 @@ package main
 import "fmt"
 
 func main() {
-	a := 10
+	a := 4
 
 	var p *int = &a
 
-	fmt.Println("before", a)
-	fmt.Println("address:", p)
-
-	*p = 20
-	fmt.Println("after:", a)
+	fmt.Println("dirección:", p)
+	fmt.Println("valor:", *p)
 }
 ```
 
 ```bash
 $ go run main.go
-before 10
-address: 0xc000192000
-after: 20
+address: 0xc00000a0f0
+value: 4
 ```
 
-I think this is pretty neat!
+No solo podemos acceder a ese valor, sino también cambiarlo a través del puntero.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	a := 4
+
+	var p *int = &a
+
+	fmt.Println("antes", a)
+	fmt.Println("dirección:", p)
+
+	*p = 8
+	fmt.Println("después:", a)
+}
+```
+
+```bash
+$ go run main.go
+before 4
+address: 0xc00000a0f0
+after: 8
+```
+
+¡Como véis, esto es bastante elegante!
 
 ## Pointers as function args
 
