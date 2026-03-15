@@ -2021,7 +2021,7 @@ Ahora hablaremos sobre los punteros. ¿Qué son los punteros?
 
 Simplemente, un puntero es una variable que se utiliza para almacenar la dirección de memoria de otra variable.
 
-![pointers](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/pointers/pointers.png)
+![pointers](images/puntero.png)
 
 Se puede usar de la siguiente manera:
 
