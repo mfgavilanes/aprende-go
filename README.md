@@ -121,10 +121,6 @@ Go solo tiene 25 palabras clave, lo que facilita su lectura, escritura y manteni
 
 Pero no te dejes engañar por su simplicidad, Go tiene varias características potentes que aprenderemos más adelante en el curso.
 
-## 4. Oportunidades laborales
-
-Go está creciendo muchísimo. Muchas empresas lo usan para cloud, backend, infraestructuras.
-
 # Instalación y Configuración
 
 En este tutorial, se instalará Go y se configurará el editor.
