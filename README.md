@@ -2222,7 +2222,7 @@ p1 := &a
 fmt.Println(p == p1)
 ```
 
-En este sentido Go es más seguro, ya que en C puedes hacer `p + 1000` y acceder a memoria inválida. Esto permite que Go evite:
+En este sentido Go es más seguro, ya que en C o C++ puedes hacer `p + 1000` y acceder a memoria inválida. Esto permite que Go evite:
 * Desbordamientos de buffer
 * Punteros "colgantes"
 * Errores del garbage collector
@@ -2237,88 +2237,92 @@ Finalmente, añadiré que si vienes de un lenguaje sin noción de punteros, no e
 
 # Structs
 
-In this tutorial, we will learn about structs.
+Una `struct` es un tipo definido por el usuario que contiene una colección de campos con nombre. Básicamente, se usa para agrupar datos relacionados en una sola unidad.
 
-So, a `struct` is a user-defined type that contains a collection of named fields. Basically, it is used to group related data together to form a single unit.
+Si vienes de un entorno de programación orientada a objetos, piensa en las estructuras como clases que soportan composición pero no herencia.
 
-If you're coming from an objected-oriented background, think of structs as lightweight classes which that support composition but not inheritance.
 
-## Defining
+## Definiendo una struct
 
-We can define a `struct` like this:
+Definimos una `struct` de la siguiente manera:
 
 ```go
-type Person struct {}
+type Producto struct {}
 ```
 
-We use the `type` keyword to introduce a new type, followed by the name and then the `struct` keyword to indicate that we're defining a struct.
+Usamos la palabra clave `type` para introducir un nuevo tipo, seguido del nombre y la palabra `struct` para indicar que estamos definiendo una estructura.
 
-Now, let's give it some fields:
+Ahora, agreguemos algunos campos:
 
 ```go
-type Person struct {
-	FirstName string
-	LastName  string
-	Age       int
+type Producto struct {
+    Nombre  string
+	Precio  float64
+	Stock   int
+	Disponible  bool
 }
 ```
 
-And, if the fields have the same type, we can collapse them as well.
+Y si los campos tienen el mismo tipo, podemos colapsarlos:
 
 ```go
-type Person struct {
-	FirstName, LastName string
-	Age                 int
+type Producto struct {
+    Nombre  string
+    Precio, Descuento float64
+    Stock             int
+    Disponible        bool
 }
 ```
 
-## Declaring and initializing
+## Declaración e inicialización
 
-Now that we have our struct, we can declare it the same as other datatypes.
+Ahora que tenemos nuestra `struct`, podemos declararla igual que otros tipos de datos.
 
 ```go
 func main() {
-	var p1 Person
+    var prod1 Producto
 
-	fmt.Println("Person 1:", p1)
+    fmt.Println("Producto 1:", prod1)
 }
 ```
 
 ```bash
 $ go run main.go
-Person 1: {  0}
+Producto 1: { 0 0 0 false}
 ```
 
-As we can see, all the struct fields are initialized with their zero values. So the `FirstName` and `LastName` are set to `""` empty string and `Age` is set to 0.
+Como vemos, todos los campos de la `struct` se inicializan con sus valores cero. Entonces `Nombre` se establece como `""` (cadena vacía), `Precio` y `Descuento` como 0.0, `Stock` como 0 y `Disponible` como false.
 
-We can also initialize it as _"struct literal"_.
+
+También podemos inicializarla como _"literal de struct literal"_.
 
 ```go
 func main() {
-	var p1 Person
+    var prod2 Producto
 
-	fmt.Println("Person 1:", p1)
+    fmt.Println("Producto 2:", prod1)
 
-	var p2 = Person{FirstName: "Karan", LastName: "Pratap Singh", Age: 22}
+    var prod3 = Producto{Nombre: "Laptop Dell", Precio: 1299.99, Stock: 15, Disponible: true}
 
-	fmt.Println("Person 2:", p2)
+    fmt.Println("Producto 3:", prod2)
 }
-```
+``
 
-For readability, we can separate by new line but this will also require a trailing comma.
+Para mejor legibilidad, podemos separar por líneas pero requiere coma final despues del valor `true` de `Disponible`.
 
 ```go
-	var p2 = Person{
-		FirstName: "Karan",
-		LastName:  "Pratap Singh",
-		Age:       22,
-	}
+	var prod3 = Producto{
+        Nombre:     "Laptop Dell",
+        Precio:     1299.99,
+        Stock:      15,
+        Disponible: true,
+}
 ```
 
 ```bash
 $ go run main.go
-Person 1: {  0}
-Person 2: {Karan Pratap Singh 22}
+Producto 2: { 0 0 0 false}
+Producto 3: {Laptop Dell 1299.99 0 15 true}
 ```
 
 We can also initialize only a subset of fields.
