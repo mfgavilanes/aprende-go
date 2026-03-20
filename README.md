@@ -2039,9 +2039,9 @@ package main
 import "fmt"
 
 func main() {
-	var p *int
+	var q *int
 
-	fmt.Println(p)
+	fmt.Println(q)
 }
 ```
 
@@ -2065,9 +2065,9 @@ package main
 import "fmt"
 
 func main() {
-	a := 10
+	var i int= 5
 
-	var p *int = &a
+	var p *int = &i
 
 	fmt.Println("dirección:", p)
 }
@@ -2076,16 +2076,16 @@ Usamos el operador `&` para referirnos a la dirección de memoria de una variabl
 
 ```bash
 $ go run main.go
-0xc0000140a8
+0xc00001203
 ```
 
-Este debe ser el valor de la dirección de memoria de la variable `a`.
+Este debe ser el valor de la dirección de memoria de la variable `i`.
 
 ## Dereferenciación
 
 También podemos usar el operador asterisco `*` para recuperar el valor almacenado en la variable a la que apunta el puntero. Esto también se llama **dereferenciación**.
 
-Por ejemplo, podemos acceder al valor de la variable `a` a través del puntero `p` usando ese operador asterisco `*`.
+Por ejemplo, podemos acceder al valor de la variable `i` a través del puntero `p` usando ese operador asterisco `*`.
 
 
 ```go
@@ -2094,9 +2094,9 @@ package main
 import "fmt"
 
 func main() {
-	a := 4
+	var i int =5
 
-	var p *int = &a
+	var p *int = &i
 
 	fmt.Println("dirección:", p)
 	fmt.Println("valor:", *p)
@@ -2105,8 +2105,8 @@ func main() {
 
 ```bash
 $ go run main.go
-address: 0xc00000a0f0
-value: 4
+dirección: 0xc00001203
+valor: 5
 ```
 
 No solo podemos acceder a ese valor, sino también cambiarlo a través del puntero.
@@ -2117,45 +2117,44 @@ package main
 import "fmt"
 
 func main() {
-	a := 4
+	var i int =5
 
-	var p *int = &a
+	var p *int = &i
 
-	fmt.Println("antes", a)
+	fmt.Println("antes", i)
 	fmt.Println("dirección:", p)
 
 	*p = 8
-	fmt.Println("después:", a)
+	fmt.Println("después:", i)
 }
 ```
 
 ```bash
 $ go run main.go
-before 4
-address: 0xc00000a0f0
-after: 8
+antes 5
+dirección: 0xc00001203
+después: 8
 ```
+¡Como véis, es bastante elegante!
 
-¡Como véis, esto es bastante elegante!
+## Punteros como argumentos de función
 
-## Pointers as function args
+Los punteros también pueden usarse como argumentos de una función cuando necesitamos pasar datos por referencia.
 
-Pointers can also be used as arguments for a function when we need to pass some data by reference.
-
-Here's an example:
+Aquí tienes un ejemplo:
 
 ```go
-myFunction(&a)
+miFuncion(&a)
 ...
 
-func myFunction(ptr *int) {}
+func miFuncion(ptr *int) {}
 ```
 
-## New function
+## Nueva función
 
-There's also another way to initialize a pointer. We can use the `new` function which takes a type as an argument, allocates enough memory to accommodate a value of that type, and returns a pointer to it.
+Existe otra forma de inicializar un puntero. Podemos usar la función incorporada `new`, que toma un tipo como argumento, asigna suficiente memoria para alojar un valor de ese tipo y devuelve un puntero a él.
 
-Here's an example:
+Aquí tienes un ejemplo:
 
 ```go
 package main
@@ -2164,22 +2163,22 @@ import "fmt"
 
 func main() {
 	p := new(int)
-	*p = 100
+	*p = 6
 
-	fmt.Println("value", *p)
-	fmt.Println("address", p)
+	fmt.Println("valor", *p)
+	fmt.Println("dirección", p)
 }
 ```
 
 ```bash
 $ go run main.go
-value 100
-address 0xc000018030
+valor 6
+dirección 0xc00001253
 ```
 
-## Pointer to a Pointer
+## Punteros a un punteros
 
-Here's an interesting idea...can we create a pointer to a pointer? The answer is yes! Yes, we can.
+¿Podemos crear un puntero a un puntero? ¡La respuesta es sí! Sí, podemos.
 
 ```go
 package main
@@ -2188,33 +2187,33 @@ import "fmt"
 
 func main() {
 	p := new(int)
-	*p = 100
+	*p = 6
 
 	p1 := &p
 
-	fmt.Println("P value", *p, " address", p)
-	fmt.Println("P1 value", *p1, " address", p)
+	fmt.Println("P valor", *p, " dirección", p)
+	fmt.Println("P1 valor", *p1, " dirección", p)
 
-	fmt.Println("Dereferenced value", **p1)
+	fmt.Println("Valor dereferenciado", **p1)
 }
 ```
 
 ```bash
 $ go run main.go
-P value 100  address 0xc0000be000
-P1 value 0xc0000be000  address 0xc0000be000
-Dereferenced value 100
+P valor 6  dirección 0xc0000be001
+P1 valor 0xc0000be001  dirección 0xc0000be001
+Valor dereferenciado 6
 ```
 
-_Notice how the value of `p1` matches the address of `p`._
+_Nota cómo el valor de `p1` coincide con la dirección de `p`._
 
-Also, it is important to know that pointers in Go do not support pointer arithmetic like in C or C++.
+También es importante saber que los punteros en Go no soportan **aritmética de punteros** como en C o C++. Esto es, la capacidad de realizar operaciones matemáticas (suma, resta, incremento, decremento) sobre punteros para navegar por la memoria.
 
 ```go
-	p1 := p * 2 // Compiler Error: invalid operation
+p1 := p * 2 // Error del compilador: operación inválida
 ```
 
-However, we can compare two pointers of the same type for equality using a `==` operator.
+Sin embargo, Go sí permite comparar dos punteros del mismo tipo para comparar si apuntan al mismo lugar mediante el operador `==`.
 
 ```go
 p := &a
@@ -2223,13 +2222,18 @@ p1 := &a
 fmt.Println(p == p1)
 ```
 
-## But Why?
+En este sentido Go es más seguro, ya que en C puedes hacer `p + 1000` y acceder a memoria inválida. Esto permite que Go evite:
+* Desbordamientos de buffer
+* Punteros "colgantes"
+* Errores del garbage collector
 
-This brings us to the million-dollar question, why do we need pointers?
+## ¿Pero por qué?
 
-Well, there's no definite answer for that, and pointers are just another useful feature that helps us mutate our data efficiently without copying a large amount of data.
+Esto nos lleva a la pregunta del millón: ¿por qué necesitamos punteros?
 
-Lastly, I will add that if you are coming from a language with no notion of pointers, don't panic and try to form a mental model of how pointers work.
+No hay una respuesta definitiva, y los punteros son simplemente otra característica útil que nos ayuda a modificar nuestros datos de manera eficiente sin copiar grandes cantidades de datos.
+
+Finalmente, añadiré que si vienes de un lenguaje sin noción de punteros, no entres en pánico e intenta formar un modelo mental de cómo funcionan los punteros.
 
 # Structs
 
