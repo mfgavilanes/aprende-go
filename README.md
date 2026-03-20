@@ -2302,7 +2302,7 @@ func main() {
 
     fmt.Println("Producto 3:", prod2)
 }
-``
+```
 
 Para mejor legibilidad, podemos separar por líneas pero requiere coma final despues del valor `true` de `Disponible`.
 
