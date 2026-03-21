@@ -2427,7 +2427,7 @@ func main() {
 }
 ```
 
-También podemos declarar una struct anónima.
+También podemos declarar una `struct` anónima.
 
 ```go
 func main() {
@@ -2439,66 +2439,72 @@ func main() {
 }
 ```
 
-## Accessing fields
+## Acceso a campos
 
-Let's clean up our example a bit and see how we can access individual fields.
+Vamos a limpiar un poco nuestro ejemplo y veamos cómo acceder a campos individuales.
 
 ```go
 func main() {
-	var p = Person{
-		FirstName: "Karan",
-		LastName:  "Pratap Singh",
-		Age:       22,
-	}
-
-	fmt.Println("FirstName", p.FirstName)
+    var prod = Producto{
+        Nombre:     "Laptop Dell",
+        Precio:     1299.99,
+        Stock:      15,
+        Disponible: true,
+    }
+    
+    fmt.Println("Nombre:", prod.Nombre)
+    fmt.Println("Precio:", prod.Precio)
 }
 ```
 
-We can also create a pointer to structs as well.
+También podemos crear punteros a structs.
 
 ```go
 func main() {
-	var p = Person{
-		FirstName: "Karan",
-		LastName:  "Pratap Singh",
-		Age:       22,
-	}
-
-	ptr := &p
-
-	fmt.Println((*ptr).FirstName)
-	fmt.Println(ptr.FirstName)
+    var prod = Producto{
+        Nombre:     "Laptop Dell",
+        Precio:     1299.99,
+        Stock:      15,
+		Descuento:  3,
+        Disponible: true,
+    }
+    
+    ptr := &prod
+    
+    fmt.Println((*ptr).Nombre)      // Desreferencia explícita
+    fmt.Println(ptr.Nombre)         // Sintaxis automática
 }
 ```
 
-Both statements are equal as in Go we don't need to explicitly dereference the pointer. We can also use the built-in `new` function.
+Ambas formas son equivalentes porque Go desreferencia automáticamente el puntero. También podemos usar la función `new`.
 
 ```go
 func main() {
-	p := new(Person)
-
-	p.FirstName = "Karan"
-	p.LastName = "Pratap Singh"
-	p.Age = 22
-
-	fmt.Println("Person", p)
+    prod := new(Producto)
+    
+    prod.Nombre = "Laptop Dell"
+    prod.Precio = 1299.99
+    prod.Stock = 15
+	prod.Descuento= 3
+    prod.Disponible = true
+    
+    fmt.Println("Producto:", prod)
 }
 ```
 
 ```bash
 $ go run main.go
-Person &{Karan Pratap Singh 22}
+Producto: &{Laptop Dell 1299.99 15 3 true}
 ```
 
-As a side note, two structs are equal if all their corresponding fields are equal as well.
+_**Nota importante:** Dos structs son iguales si todos sus campos correspondientes son iguales._
 
 ```go
 func main() {
-	var p1 = Person{"a", "b", 20}
-	var p2 = Person{"a", "b", 20}
-
-	fmt.Println(p1 == p2)
+    var prod1 = Producto{"Laptop", 1299.99, 15, true}
+    var prod2 = Producto{"Laptop", 1299.99, 15, true}
+    
+    fmt.Println(prod1 == prod2)  // true
 }
 ```
 
