@@ -29,20 +29,33 @@ func main() {
 	*p = 8
 	fmt.Println("después:", a)
 
-	var prod1 Producto
+	var p1 Producto
 
-	fmt.Println("Producto 1:", prod1)
+	fmt.Println("Producto 1:", p1)
 
-	var prod2 Producto
-
-	fmt.Println("Producto 2:", prod2)
-
-	var prod3 = Producto{
+	var p2 = Producto{
 		Nombre:     "Laptop Dell",
 		Precio:     1299.99,
 		Stock:      15,
 		Disponible: true,
 	}
 
-	fmt.Println("Producto 3:", prod3)
+	fmt.Println("Producto 2:", p2)
+
+	var p3 = Producto{
+		Nombre: "Teclado Mecánico",
+		Precio: 89.99,
+	}
+
+	fmt.Println("Producto 3:", p3)
+
+	var p4 = Producto{"Ratón Óptico", 25.50, 50, 0, true}
+
+	fmt.Println("Producto 4:", p4)
+
+	var b = struct {
+		Nombre string
+	}{"Golang"}
+
+	fmt.Println("Anónima:", b)
 }

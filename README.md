@@ -2287,7 +2287,7 @@ $ go run main.go
 Producto 1: { 0 0 0 false}
 ```
 
-Como vemos, todos los campos de la `struct` se inicializan con sus valores cero. Entonces `Nombre` se establece como `""` (cadena vacía), `Precio` y `Descuento` como 0.0, `Stock` como 0 y `Disponible` como false.
+Como vemos, todos los campos de la `struct` se inicializan con sus valores por defecto. Entonces `Nombre` se establece como `""` (cadena vacía), `Precio` y `Descuento` como 0.0, `Stock` como 0 y `Disponible` como false.
 
 
 También podemos inicializarla como _"literal de struct literal"_.
@@ -2321,43 +2321,44 @@ Producto 2: { 0 0 0 false}
 Producto 3: {Laptop Dell 1299.99 0 15 true}
 ```
 
-We can also initialize only a subset of fields.
+También podemos inicializar solo un **subconjunto de campos**.
 
 ```go
 func main() {
-	var p1 Person
+    var prod1b Producto
 
-	fmt.Println("Person 1:", p1)
+    fmt.Println("Producto 1b:", prod1b)
 
-	var p2 = Person{
-		FirstName: "Karan",
-		LastName:  "Pratap Singh",
-		Age:       22,
-	}
+    var prod2b = Producto{
+        Nombre:     "Laptop Dell",
+        Precio:     1299.99,
+        Stock:      15,
+    }
 
-	fmt.Println("Person 2:", p2)
+    fmt.Println("Producto 2b:", prod2b)
 
-	var p3 = Person{
-		FirstName: "Tony",
-		LastName:  "Stark",
-	}
+    var prod3b = Producto{
+        Nombre:     "Teclado Mecánico",
+        Precio:     89.99,
+    }
 
-	fmt.Println("Person 3:", p3)
+    fmt.Println("Producto 3b:", prod3b)
 }
 ```
 
 ```bash
 $ go run main.go
-Person 1: {  0}
-Person 2: {Karan Pratap Singh 22}
-Person 3: {Tony Stark 0}
+Producto 1b: { 0 0 0 false}
+Producto 2b: {Laptop Dell 1299.99 0 15 false}
+Producto 3b: {Teclado Mecánico 89.99 0 0 false}
 ```
 
-As we can see, the age field of person 3 has defaulted to the zero value.
 
-## Without field name
+Como vemos, los campos no especificados del producto 3b (`Stock` y `Disponible`) toman su valor cero por defecto.
 
-Go structs also supports initialization without field names.
+## Sin nombre de campo
+
+Las estructuras en Go también permiten inicializar sin usar nombres en los campos.
 
 ```go
 func main() {
@@ -2383,55 +2384,58 @@ func main() {
 	var p4 = Person{"Bruce", "Wayne"}
 
 	fmt.Println("Person 4:", p4)
+    var p1 Producto
+
+    fmt.Println("Producto 1:", p1)
+
+    var p2 = Producto{
+        Nombre:     "Laptop Dell",
+        Precio:     1299.99,
+        Stock:      15,
+        Disponible: true,
+    }
+
+    fmt.Println("Producto 2:", p2)
+
+    var p3 = Producto{
+        Nombre: "Teclado Mecánico",
+        Precio: 89.99,
+    }
+
+    fmt.Println("Producto 3:", p3)
+
+    var p4 = Producto{"Ratón Óptico", 25.50, 50, true}
+
+    fmt.Println("Producto 4:", p4)
 }
 ```
 
-But here's the catch, we will need to provide all the values during the initialization or it will fail.
+Pero aquí está el truco: debemos proporcionar todos los valores durante la inicialización o fallará.
 
 ```bash
 $ go run main.go
 # command-line-arguments
-./main.go:30:27: too few values in Person{...}
+.\main.go:68:49: cannot use true (untyped bool constant) as int value in struct literal
+.\main.go:68:53: too few values in struct literal of type Producto
 ```
-
-```go
-	var p4 = Person{"Bruce", "Wayne", 40}
-
-	fmt.Println("Person 4:", p4)
-```
-
-We can also declare an anonymous struct.
 
 ```go
 func main() {
-	var p1 Person
+    var p4 = Producto{"Ratón Óptico", 25.50, 50, 0true}
 
-	fmt.Println("Person 1:", p1)
+    fmt.Println("Producto 4:", p4)
+}
+```
 
-	var p2 = Person{
-		FirstName: "Karan",
-		LastName:  "Pratap Singh",
-		Age:       22,
-	}
+También podemos declarar una struct anónima.
 
-	fmt.Println("Person 2:", p2)
+```go
+func main() {
+    var b = struct {
+        Nombre string
+    }{"Golang"}
 
-	var p3 = Person{
-		FirstName: "Tony",
-		LastName:  "Stark",
-	}
-
-	fmt.Println("Person 3:", p3)
-
-	var p4 = Person{"Bruce", "Wayne", 40}
-
-	fmt.Println("Person 4:", p4)
-
-	var a = struct {
-		Name string
-	}{"Golang"}
-
-	fmt.Println("Anonymous:", a)
+    fmt.Println("Anónima:", b)
 }
 ```
 
