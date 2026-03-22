@@ -2513,149 +2513,167 @@ $ go run main.go
 true
 ```
 
-## Exported fields
+## Campos exportados
 
-Now let's learn what is exported and unexported fields in a struct. Same as the rules for variables and functions, if a struct field is declared with a lower case identifier, it will not be exported and only be visible to the package it is defined in.
+Ahora aprendamos qué son los campos exportados y no exportados en una struct. Las mismas reglas que para variables y funciones: si un campo de struct se declara con **minúscula inicial, NO se exporta** y solo es visible dentro del paquete donde se define.
 
 ```go
-type Person struct {
-	FirstName, LastName  string
-	Age                  int
-	zipCode              string
+type Producto struct {
+    Nombre, Color  string      // ✅ EXPORTADOS (mayúscula)
+    Precio         float64     // ✅ EXPORTADO
+    stock          int         // ❌ NO exportado (minúscula)
+    codigoBarras   string      // ❌ NO exportado
+}
+```
+Entonces, los campos `stock` y `codigoBarras` no se exportan. Lo mismo aplica a la struct completa: si la renombramos como `producto` (minúscula), la struct tampoco se exporta.
+
+```go
+type producto struct {        // ❌ NO exportada
+    Nombre, Color  string
+    Precio         float64
+    stock          int
+    codigoBarras   string
 }
 ```
 
-So, the `zipCode` field won't be exported. Also, the same goes for the `Person` struct, if we rename it as `person`, it won't be exported as well.
+**Regla simple: Mayúscula inicial = público/exportado. Minúscula = privado/paquete-local.**
+
+
+
+## Embebido y composición
+
+Como vimos antes, Go no soporta herencia como tal, pero podemos hacer algo parecido usando `embedding` (inclusión de structs).
 
 ```go
-type person struct {
-	FirstName, LastName  string
-	Age                  int
-	zipCode              string
+type Producto struct {
+    Nombre  string
+    Precio  float64
+}
+
+type ProductoDigital struct {
+    Producto
+    URLDescarga string
 }
 ```
 
-## Embedding and composition
-
-As we discussed earlier, Go doesn't necessarily support inheritance, but we can do something similar with embedding.
-
-```go
-type Person struct {
-	FirstName, LastName  string
-	Age                  int
-}
-
-type SuperHero struct {
-	Person
-	Alias string
-}
-```
-
-So, our new struct will have all the properties of the original struct. And it should behave the same as our normal struct.
+Nuestra nueva struct `ProductoDigital` tendrá todas las propiedades de `Producto` y se comportará igual que una struct normal.
 
 ```go
 func main() {
-	s := SuperHero{}
+    p := ProductoDigital{}
 
-	s.FirstName = "Bruce"
-	s.LastName = "Wayne"
-	s.Age = 40
-	s.Alias = "batman"
+    p.Nombre = "Curso de Go"
+    p.Precio = 49.99
+    p.URLDescarga = "https://ejemplo.com/curso-go"
 
-	fmt.Println(s)
+    fmt.Println(p)
 }
 ```
 
 ```bash
 $ go run main.go
-{{Bruce Wayne 40} batman}
+{{Curso de Go 49.99} https://ejemplo.com/curso-go}
 ```
 
-However, this is usually not recommended and in most cases, composition is preferred. So rather than embedding, we will just define it as a normal field.
+Sin embargo, esto no siempre se recomienda; en muchos casos se prefiere la **composición explícita**. En lugar de hacer `embedding`, definimos el campo como uno normal.
 
 ```go
-type Person struct {
-	FirstName, LastName  string
-	Age                  int
+type Producto struct {
+    Nombre  string
+    Precio  float64
 }
 
-type SuperHero struct {
-	Person Person
-	Alias  string
+type ProductoDigital struct {
+    Base        Producto
+    URLDescarga string
 }
 ```
 
-Hence, we can rewrite our example with composition as well.
+Así podemos reescribir el ejemplo usando composición:
 
 ```go
 func main() {
-	p := Person{"Bruce", "Wayne", 40}
-	s := SuperHero{p, "batman"}
+    base := Producto{"Curso de Go", 49.99}
+    p := ProductoDigital{base, "https://ejemplo.com/curso-go"}
 
-	fmt.Println(s)
+    fmt.Println(p)
 }
 ```
 
 ```bash
 $ go run main.go
-{{Bruce Wayne 40} batman}
+{{Curso de Go 49.99} https://ejemplo.com/curso-go}
 ```
 
-Again, there is no right or wrong here, but nonetheless, embedding comes in handy sometimes.
+No hay una opción absolutamente correcta o incorrecta, pero el embedding puede resultar muy útil en algunos casos.
 
-## Struct tags
+## Etiquetas de struct
 
-A struct tag is just a tag that allows us to attach metadata information to the field which can be used for custom behavior using the `reflect` package.
+Una **etiqueta de struct** es simplemente una etiqueta que nos permite asociar **metadatos** a un campo, que pueden usarse para comportamientos personalizados con el paquete reflect.
 
-Let's learn how we can define struct tags.
+Veamos cómo definir etiquetas de struct:
 
 ```go
-type Animal struct {
-	Name    string `key:"value1"`
-	Age     int    `key:"value2"`
+type Producto struct {
+    Nombre string `key:"value1"`
+    Precio float64 `key:"value2"`
+    Stock  int `key:"value3"`
 }
 ```
 
-You will often find tags in encoding packages, such as XML, JSON, YAML, ORMs, and Configuration management.
+Las encontrarás frecuentemente en paquetes de codificación como JSON, XML, YAML, ORMs y gestión de configuración.
 
-Here's a tags example for the JSON encoder.
+Aquí un ejemplo de etiquetas para el codificador JSON:
 
 ```go
-type Animal struct {
-	Name    string `json:"name"`
-	Age     int    `json:"age"`
+type Producto struct {
+    Nombre string `json:"nombre"`
+    Precio float64 `json:"precio"`
+    Stock  int `json:"stock"`
 }
 ```
+Uso práctico:
 
-## Properties
+```go
+func main() {
+    prod := Producto{"Laptop", 1299.99, 15}
+    jsonBytes, _ := json.Marshal(prod)
+    fmt.Println(string(jsonBytes))  // ← Usa jsonBytes
+}
+// Salida: {"nombre":"Laptop","precio":1299.99,"unidades_en_stock":15}
+```
 
-Finally, let's discuss the properties of structs.
+Las etiquetas **personalizan** cómo se serializa/deserializa cada campo.
 
-Structs are value types. When we assign one `struct` variable to another, a new copy of the `struct` is created and assigned.
+## Propiedades de las structs
 
-Similarly, when we pass a `struct` to another function, the function gets its own copy of the `struct`.
+Finalmente, hablemos de las propiedades de las structs.
+
+Las **structs son tipos por valor**. Cuando asignamos una variable `struct` a otra, se crea una **nueva copia** completa de la struct.
+
+De igual manera, cuando pasamos una `struct` a una función, la función recibe **su propia copia**.
 
 ```go
 package main
 
 import "fmt"
 
-type Point struct {
+type Punto struct {
 	X, Y float64
 }
 
 func main() {
-	p1 := Point{1, 2}
-	p2 := p1 // Copy of p1 is assigned to p2
+	p1 := Punto{1, 2}
+	p2 := p1 // Se copia p1 completa a p2
 
 	p2.X = 2
 
-	fmt.Println(p1) // Output: {1 2}
-	fmt.Println(p2) // Output: {2 2}
+	fmt.Println(p1) // Salida: {1 2} ✓ p1 NO cambia
+	fmt.Println(p2) // Salida: {2 2} ✓ p2 sí cambia
 }
 ```
 
-Empty struct occupies zero bytes of storage.
+Struct vacía ocupa 0 bytes de memoria.
 
 ```go
 package main
@@ -2667,133 +2685,132 @@ import (
 
 func main() {
 	var s struct{}
-	fmt.Println(unsafe.Sizeof(s)) // Output: 0
+	fmt.Println(unsafe.Sizeof(s)) // Salida: 0
 }
 ```
 
-# Methods
+# Métodos
 
-Let's talk about methods, sometimes also known as function receivers.
+Hablemos de métodos, también conocidos como **receptores de funciones**.
 
-Technically, Go is not an object-oriented programming language. It doesn't have classes, objects, and inheritance.
+Técnicamente, Go **NO es un lenguaje de programación orientado a objetos**. No tiene clases, objetos ni herencia tradicional. Sin embargo, Go **tiene tipos**. Y puedes definir métodos sobre tipos.
 
-However, Go has types. And, you can define **methods** on types.
+Un método es simplemente una **función con un receptor especial**. Veamos cómo declararlos:
 
-A method is nothing but a function with a special _receiver_ argument. Let's see how we can declare methods.
 
 ```go
-func (variable T) Name(params) (returnTypes) {}
+func (variable T) Nombre(params) (tiposRetorno) {}
 ```
 
-The _receiver_ argument has a name and a type. It appears between the `func` keyword and the method name.
+El _receptor_ tiene un nombre y un tipo. Aparece entre la palabra clave `func` y el nombre del método.
 
-For example, let's define a `Car` struct.
+Por ejemplo, definamos una struct `Libro`:
 
 ```go
-type Car struct {
-	Name string
-	Year int
+type Libro struct {
+    Titulo   string
+    Paginas  int
 }
 ```
 
-Now, let us define a method like `IsLatest` which will tell us if a car was manufactured within the last 5 years.
+Ahora definamos un método `EsLargo` que nos diga si un libro tiene más de 300 páginas:
 
 ```go
-func (c Car) IsLatest() bool {
-	return c.Year >= 2017
+func (l Libro) EsLargo() bool {
+    return l.Paginas > 300
 }
 ```
 
-As you can see, we can access the instance of `Car` using the receiver variable `c`. I like to think of it as `this` keyword from the object-oriented world.
+Como ves, accedemos a la instancia de `Libro` usando la variable receptora `l`. Piensa en ella como el `this` de los lenguajes orientados a objetos.
 
-Now we should be able to call this method after we initialize our struct, just like we do with classes in other languages.
+Ahora podemos llamar al método tras inicializar nuestra struct, igual que con clases en otros lenguajes:
 
 ```go
 func main() {
-	c := Car{"Tesla", 2021}
+    libro := Libro{"El Quijote", 950}
 
-	fmt.Println("IsLatest", c.IsLatest())
+    fmt.Println("¿Es largo?", libro.EsLargo())  // true
 }
 ```
 
-## Methods with Pointer receivers
+## Métodos con receptores por puntero
 
-All the examples that we saw previously had a value receiver.
+Todos los ejemplos anteriores usaban receptores por valor.
 
-With a value receiver, the method operates on a copy of the value passed to it. Therefore, any modifications done to the receiver inside the methods are not visible to the caller.
+Con un **receptor por valor**, el método trabaja sobre una **copia** del valor. Las modificaciones al receptor NO se ven reflejadas en el original.
 
-For example, let's make another method called `UpdateName` which will update the name of the `Car`.
+Por ejemplo, creemos un método `ActualizarNombre` que cambie el nombre del `Libro`:
 
 ```go
-func (c Car) UpdateName(name string) {
-	c.Name = name
+func (l Libro) ActualizarNombre(nuevoTitulo string) {
+    l.Titulo = nuevoTitulo  // Cambia la COPIA
 }
 ```
 
-Now, let's run this.
+Probémoslo:
 
 ```go
 func main() {
-	c := Car{"Tesla", 2021}
+    libro := Libro{"El Quijote", 950}
 
-	c.UpdateName("Toyota")
-	fmt.Println("Car:", c)
+    libro.ActualizarNombre("1984")
+    fmt.Println("Libro:", libro)  // ¡Sigue siendo "El Quijote"!
 }
 ```
 
 ```bash
 $ go run main.go
-Car: {Tesla 2021}
+Libro: {El Quijote 950}
 ```
 
-Seems like the name wasn't updated, so now let's switch our receiver to pointer type and try again.
+El nombre no cambió. Cambiemos el receptor a puntero:
 
 ```go
-func (c *Car) UpdateName(name string) {
-	c.Name = name
+func (l *Libro) ActualizarNombre(nuevoTitulo string) {
+    l.Titulo = nuevoTitulo  // Cambia el ORIGINAL
 }
 ```
 
 ```bash
 $ go run main.go
-Car: {Toyota 2021}
+Libro: {La Regenta 950}
 ```
 
-As expected, methods with pointer receivers can modify the value to which the receiver points. Such modifications are visible to the caller of the method as well.
+¡Perfecto! Los métodos con **receptores por puntero modifican el valor original**, y esos cambios son visibles para quien llama al método.
 
-## Properties
+## Propiedades de los métodos
 
-Let's also see some properties of the methods!
+Go tiene algunas características inteligentes:
 
-- Go is smart enough to interpret our function call correctly, and hence, pointer receiver method calls are just syntactic sugar provided by Go for convenience.
+- **Go interpreta automáticamente**: puedes llamar métodos de puntero tanto en valores como punteros
 
 ```go
-(&c).UpdateName(...)
+libro.ActualizarNombre("Nuevo")  // Go hace &libro por ti
+(&libro).ActualizarNombre("Nuevo")
 ```
 
-- We can omit the variable part of the receiver as well if we're not using it.
+- **Receptor sin nombre**: si no usas la variable del receptor
 
 ```go
-func (Car) UpdateName(...) {}
+func (_ *Libro) ActualizarNombre(nombre string) { ... }
 ```
 
-- Methods are not limited to structs but can also be used with non-struct types as well.
+- **Métodos NO solo para structs**: funcionan con cualquier tipo
 
 ```go
 package main
 
 import "fmt"
 
-type MyInt int
+type MiEntero int
 
-func (i MyInt) isGreater(value int) bool {
-	return i > MyInt(value)
+func (i MiEntero) EsMayor(valor int) bool {
+	return i > MiEntero(valor)
 }
 
 func main() {
-	i := MyInt(10)
-
-	fmt.Println(i.isGreater(5))
+	n := MiEntero(10)
+	fmt.Println(n.EsMayor(5))  // true
 }
 ```
 

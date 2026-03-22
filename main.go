@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // import "github.com/rs/zerolog/log"
 type Producto struct {
@@ -8,6 +11,12 @@ type Producto struct {
 	Precio, Descuento float64
 	Stock             int
 	Disponible        bool
+}
+
+type Producto2 struct {
+	Nombre string  `json:"nombre"`
+	Precio float64 `json:"precio"`
+	Stock  int     `json:"unidades_en_stock"`
 }
 
 func main() {
@@ -58,4 +67,9 @@ func main() {
 	}{"Golang"}
 
 	fmt.Println("Anónima:", b)
+
+	prod := Producto2{Nombre: "Laptop", Precio: 1299.99, Stock: 15}
+
+	jsonBytes, _ := json.Marshal(prod)
+	fmt.Println(string(jsonBytes)) // ← Usa jsonBytes
 }
