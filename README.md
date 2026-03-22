@@ -3331,29 +3331,28 @@ func add(values ...int) int {
 
 # Maps
 
-So, Go provides a built-in map type, and we'll learn how to use it.
+Go proporciona un tipo de dato incorporado llamado map, y vamos a aprender cómo usarlo.
 
-But, the question is what are maps? And why do we need them?
+Pero la pregunta es: ¿qué son los maps? ¿Y por qué los necesitamos?
 
 ![maps](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/maps/maps.png)
 
-Well, A map is an unordered collection of key-value pairs. It maps keys to values. The keys are unique within a map while the values may not be.
+Un map es una colección desordenada de pares clave-valor. Asocia claves con valores. Las claves son únicas dentro de un map, mientras que los valores no necesariamente lo son.
 
-It is used for fast lookups, retrieval, and deletion of data based on keys. It is one of the most used data structures.
+Se utiliza para búsquedas rápidas, recuperación y eliminación de datos basados en claves. Es una de las estructuras de datos más utilizadas.
 
-## Declaration
+## Declaración
 
-Let's start with the declaration.
+Empecemos con la declaración.
 
-A map is declared using the following syntax:
+Un map se declara usando la siguiente sintaxis:
 
 ```go
 var m map[K]V
 ```
+Donde `K` es el tipo de la clave y `V` es el tipo del valor.
 
-Where `K` is the key type and `V` is the value type.
-
-For example, here's how we can declare a map of `string` keys to `int` values.
+Por ejemplo, así podemos declarar un map con claves de tipo `string` y valores de tipo `int`:
 
 ```go
 func main() {
@@ -3368,17 +3367,17 @@ $ go run main.go
 nil
 ```
 
-As we can see, the zero value of a map is `nil`.
+Como podemos ver, el valor cero (zero value) de un map es `nil`.
 
-A `nil` map has no keys. Moreover, any attempt to add keys to a `nil` map will result in a runtime error.
+Un map `nil` no tiene claves. Además, cualquier intento de añadir claves a un map `nil` provocará un error en tiempo de ejecución.
 
-## Initialization
+## Inicialización
 
-There are multiple ways to initialize a map.
+Existen varias formas de inicializar un map.
 
-**make function**
+**función make**
 
-We can use the built-in `make` function, which allocates memory for referenced data types and initializes their underlying data structures.
+Podemos usar la función incorporada `make`, que reserva memoria para tipos de datos por referencia e inicializa sus estructuras de datos subyacentes.
 
 ```go
 func main() {
@@ -3393,9 +3392,9 @@ $ go run main.go
 map[]
 ```
 
-**map literal**
+**literal de map**
 
-Another way is using a map literal.
+Otra forma es usando un literal de map.
 
 ```go
 func main() {
@@ -3408,56 +3407,56 @@ func main() {
 }
 ```
 
-_Note that the trailing comma is required._
+_Nota: la coma final es obligatoria._
 
 ```bash
 $ go run main.go
 map[a:0 b:1]
 ```
 
-As always, we can use our custom types as well.
+Como siempre, también podemos usar nuestros propios tipos personalizados.
 
 ```go
-type User struct {
+type Usuario struct {
 	Name string
 }
 
 func main() {
-	var m = map[string]User{
-		"a": User{"Peter"},
-		"b": User{"Seth"},
+	var m = map[string]Usuario{
+		"a": Usuario{"Pedro"},
+		"b": Usuario{"Sebastián"},
 	}
 
 	fmt.Println(m)
 }
 ```
 
-We can even remove the value type and Go will figure it out!
+Incluso podemos omitir el tipo del valor y Go lo inferirá automáticamente:
 
 ```go
-var m = map[string]User{
-	"a": {"Peter"},
-	"b": {"Seth"},
+var m = map[string]Usuario{
+	"a": {"Pedro"},
+	"b": {"Sebastián"},
 }
 ```
 
 ```bash
 $ go run main.go
-map[a:{Peter} b:{Seth}]
+map[a:{Pedro} b:{Sebastián}]
 ```
 
-## Add
+## Añadir
 
-Now, let's see how we can add a value to our map.
+Ahora veamos cómo podemos añadir un valor a nuestro map.
 
 ```go
 func main() {
-	var m = map[string]User{
-		"a": {"Peter"},
-		"b": {"Seth"},
+	var m = map[string]Usuario{
+		"a": {"Pedro"},
+		"b": {"Sebastián"},
 	}
 
-	m["c"] = User{"Steve"}
+	m["c"] = Usuario{"Manuel"}
 
 	fmt.Println(m)
 }
@@ -3465,41 +3464,41 @@ func main() {
 
 ```bash
 $ go run main.go
-map[a:{Peter} b:{Seth} c:{Steve}]
+map[a:{Pedro} b:{Sebastián} c:{Manuel}]
 ```
 
-## Retrieve
+## Recuperar
 
-We can also retrieve our values from the map using the key.
+También podemos obtener valores del map usando su clave.
 
 ```go
 ...
 c := m["c"]
-fmt.Println("Key c:", c)
+fmt.Println("Clave c:", c)
 ```
 
 ```bash
 $ go run main.go
-key c: {Steve}
+key c: {Manuel}
 ```
 
-**What if we use a key that is not present in the map?**
+**¿Qué pasa si usamos una clave que no existe en el map?**
 
 ```go
 ...
 d := m["d"]
-fmt.Println("Key d:", d)
+fmt.Println("Clave d:", d)
 ```
 
-Yes, you guessed it! we will get the zero value of the map's value type.
+Como ya habrás imaginado, obtendremos el valor cero (zero value) del tipo de valor del map.
 
 ```bash
 $ go run main.go
-Key c: {Steve}
+Key c: {Manuel}
 Key d: {}
 ```
 
-## Exists
+## Existencia
 
 When you retrieve the value assigned to a given key, it returns an additional boolean value as well. The boolean variable will be `true` if the key exists, and `false` otherwise.
 
