@@ -2356,7 +2356,7 @@ Producto 3b: {Teclado Mecánico 89.99 0 0 false}
 
 Como vemos, los campos no especificados del producto 3b (`Stock` y `Disponible`) toman su valor cero por defecto.
 
-## Sin nombre de campo
+## Campo sin nombre
 
 Las estructuras en Go también permiten inicializar sin usar nombres en los campos.
 
@@ -2540,9 +2540,9 @@ type producto struct {        // ❌ NO exportada
 
 
 
-## Embebido y composición
+## Composición y embebido
 
-Como vimos antes, Go no soporta herencia como tal, pero podemos hacer algo parecido usando `embedding` (inclusión de structs).
+Como comentamos antes, Go no soporta herencia necesariamente, pero podemos hacer algo similar mediante el embebido (inclusión de structs).
 
 ```go
 type Producto struct {
@@ -2814,60 +2814,59 @@ func main() {
 }
 ```
 
-## Why methods instead of functions?
+## ¿Por qué métodos en lugar de funciones?
 
-So the question is, why use methods instead of functions?
+Entonces, la pregunta es: ¿por qué usar métodos en lugar de funciones?
 
-As always, there's no particular answer for this, and in no way one is better than the other. Instead, they should be used appropriately when the situation arrives.
+Como siempre, no hay una respuesta concreta para esto, y de ninguna manera uno es mejor que el otro. Más bien, deben usarse de forma adecuada según la situación.
 
-One thing I can think of right now is that methods can help us avoid naming conflicts.
+Una cosa que se me ocurre ahora mismo es que los métodos pueden ayudarnos a evitar conflictos de nombres.
 
-Since a method is tied to a particular type, we can have the same method names for multiple receivers.
+Dado que un método está asociado a un tipo en particular, podemos tener el mismo nombre de método para múltiples receptores.
 
-But in the end, it might just come down to preference, such as _"method calls are much easier to read and understand than function calls"_ or the other way around.
+Pero al final, puede reducirse simplemente a una cuestión de preferencia, como por ejemplo: _“las llamadas a métodos son mucho más fáciles de leer y entender que las llamadas a funciones”_, o al contrario.
 
-# Arrays and Slices
+# Arrays y Slices
 
-In this tutorial, we will learn about arrays and slices in Go.
+En este tutorial, aprenderemos sobre arrays y slices en Go.
 
 ## Arrays
 
-### What is an array?
+### ¿Qué es un array?
 
-An array is a fixed-size collection of elements of the same type. The elements of the array are stored sequentially and can be accessed using their `index`.
+Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
 
 ![array](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/arrays-and-slices/array.png)
 
-### Declaration
+### Declaración
 
-We can declare an array as follows:
+Podemos declarar un array de la siguiente manera:
 
 ```go
 var a [n]T
 ```
+Aquí, `n` es la longitud y `T` puede ser cualquier tipo como entero, string o estructuras definidas por el usuario.
 
-Here, `n` is the length and `T` can be any type like integer, string, or user-defined structs.
-
-Now, let's declare an array of integers with length 4 and print it.
+Ahora, declaremos un array de enteros con longitud 5 e imprimámoslo.
 
 ```go
 func main() {
-	var arr [4]int
+    var arr [5]int
 
-	fmt.Println(arr)
+    fmt.Println(arr)
 }
 ```
 
 ```bash
 $ go run main.go
-[0 0 0 0]
+[0 0 0 0 0]
 ```
 
-By default, all the array elements are initialized with the zero value of the corresponding array type.
+Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
 
-### Initialization
+### Inicialización
 
-We can also initialize an array using an array literal.
+También podemos inicializar un array usando un literal de array.
 
 ```go
 var a [n]T = [n]T{V1, V2, ... Vn}
@@ -2875,7 +2874,7 @@ var a [n]T = [n]T{V1, V2, ... Vn}
 
 ```go
 func main() {
-	var arr = [4]int{1, 2, 3, 4}
+	var arr = [5]int{1, 2, 3, 4, 5}
 
 	fmt.Println(arr)
 }
@@ -2883,23 +2882,23 @@ func main() {
 
 ```bash
 $ go run main.go
-[1 2 3 4]
+[1 2 3 4 5]
 ```
 
-We can even do a shorthand declaration.
+También podemos usar una declaración abreviada:
 
 ```go
 ...
-arr := [4]int{1, 2, 3, 4}
+arr := [5]int{1, 2, 3, 4, 5}
 ```
 
-### Access
+### Acceso
 
-And similar to other languages, we can access the elements using the `index` as they're stored sequentially.
+Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el índice, ya que están almacenados de manera secuencial.
 
 ```go
 func main() {
-	arr := [4]int{1, 2, 3, 4}
+	arr := [5]int{1, 2, 3, 4, 5}
 
 	fmt.Println(arr[0])
 }
@@ -2910,64 +2909,67 @@ $ go run main.go
 1
 ```
 
-### Iteration
+### Iteración
 
-Now, let's talk about iteration.
+Ahora, hablemos de la iteración.
 
-So, there are multiple ways to iterate over arrays.
+Existen varias formas de iterar sobre arrays.
 
-The first one is using the for loop with the `len` function which gives us the length of the array.
+La primera es usando un bucle for junto con la función `len, que nos da la longitud del array.
 
 ```go
 func main() {
-	arr := [4]int{1, 2, 3, 4}
+	arr := [5]int{1, 2, 3, 4, 5}
 
 	for i := 0; i < len(arr); i++ {
-		fmt.Printf("Index: %d, Element: %d\n", i, arr[i])
+		fmt.Printf("Índice: %d, Elemento: %d\n", i, arr[i])
 	}
 }
 ```
 
 ```bash
 $ go run main.go
-Index: 0, Element: 1
-Index: 1, Element: 2
-Index: 2, Element: 3
-Index: 3, Element: 4
+Índice: 0, Elemento: 1
+Índice: 1, Elemento: 2
+Índice: 2, Elemento: 3
+Índice: 3, Elemento: 4
+Índice: 4, Elemento: 5
 ```
 
-Another way is to use the `range` keyword with the `for` loop.
+Otra forma es usar la palabra clave `range` con el bucle `for`.
 
 ```go
 func main() {
-	arr := [4]int{1, 2, 3, 4}
+	arr := [5]int{1, 2, 3, 4,5}
 
 	for i, e := range arr {
-		fmt.Printf("Index: %d, Element: %d\n", i, e)
+fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
 	}
 }
 ```
 
 ```bash
 $ go run main.go
-Index: 0, Element: 1
-Index: 1, Element: 2
-Index: 2, Element: 3
-Index: 3, Element: 4
+Índice: 0, Elemento: 1
+Índice: 1, Elemento: 2
+Índice: 2, Elemento: 3
+Índice: 3, Elemento: 4
+Índice: 4, Elemento: 5
 ```
 
-As we can see, our example works the same as before.
+Como podemos ver, nuestro ejemplo funciona igual que antes.
 
-But the range keyword is quite versatile and can be used in multiple ways.
+Pero la palabra clave `range` es bastante versátil y puede usarse de varias maneras:
 
 ```go
-for i, e := range arr {} // Normal usage of range
+for i, e := range arr {} // Uso normal de range
 
-for _, e := range arr {} // Omit index with _ and use element
+for _, e := range arr {} // Omitir el índice con _ y usar solo el elemento
 
-for i := range arr {} // Use index only
+for i := range arr {} // Usar solo el índice
 
-for range arr {} // Simply loop over the array
+
+for range arr {} // Simplemente iterar sobre el array
 ```
 
 ### Multi dimensional
