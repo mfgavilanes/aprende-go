@@ -72,4 +72,12 @@ func main() {
 
 	jsonBytes, _ := json.Marshal(prod)
 	fmt.Println(string(jsonBytes)) // ← Usa jsonBytes
+
+	var a2 = [4]int{20, 15, 5, 25}
+	var s2 = a2[1:3]
+	// Salida: Array: [20 15 5 25], Longitud: 4, Capacidad: 4
+	fmt.Printf("Array: %v, Longitud: %d, Capacidad: %d\n", a2, len(a2), cap(a2))
+
+	// Output: Slice [15 5], Length: 2, Capacity: 3
+	fmt.Printf("Slice: %v, Longitud: %d, Capacidad: %d", s2, len(s2), cap(s2))
 }
