@@ -2928,7 +2928,7 @@ Sigamos con otro tipo de dato de referencia: los slices. Pero, ¿qué es un slic
 
 Un slice es una vista dinámica sobre un array. A diferencia de los arrays, los slices **no tienen un tamaño fijo**, por lo que son mucho más flexibles.
 
-![slice](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/arrays-and-slices/slice.png)
+![slice](images/slice.png)
 
 Un slice consta de tres cosas:
 
@@ -2985,7 +2985,7 @@ true
 
 Así que, a diferencia de los arrays, el valor por defecto de un slice es `nil`.
 
-### Inicialización
+## Inicialización
 
 Existen varias formas de inicializar un slice. Una de ellas es usando la función incorporada `make`.
 
@@ -3068,11 +3068,11 @@ var a = []string{
 }
 ```
 
-### Iteración
+## Iteración
 
 Podemos iterar sobre un slice de la misma forma que iteramos sobre un array, usando un bucle con la función `len` o palabra clave `range`.
 
-### Funciones
+## Funciones
 
 Ahora, veamos algunas funciones incorporadas para slices en Go.
 
@@ -3143,7 +3143,7 @@ Pero si el slice original no tiene suficiente capacidad para los nuevos elemento
 
 Todos los elementos del array subyacente del slice original se copian a este nuevo array, y luego se añaden los nuevos elementos.
 
-### Propiedades
+## Propiedades
 
 Finalmente, veamos algunas propiedades de los slices.
 
@@ -3190,8 +3190,6 @@ func add(values ...int) int {
 	return sum
 }
 ```
-
-
 
 # Maps
 
