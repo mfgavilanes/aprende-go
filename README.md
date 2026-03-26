@@ -2017,15 +2017,13 @@ $ CGO_ENABLED=0 go build -o app
 
 Sigamos ahora con los tipos de datos compuestos. Vamos a empezar con los arrays en Go.
 
-## Arrays
-
-### ¿Qué es un array?
+## ¿Qué es un array?
 
 Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
 
 ![array](images/array.png)
 
-### Declaración
+## Declaración
 
 Podemos declarar un array de la siguiente manera:
 
@@ -2051,7 +2049,7 @@ $ go run main.go
 
 Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
 
-### Inicialización
+## Inicialización
 
 También podemos inicializar un array usando un literal de array.
 
@@ -2079,7 +2077,7 @@ También podemos usar una declaración abreviada:
 arr := [5]int{1, 2, 3, 4, 5}
 ```
 
-### Acceso
+## Acceso
 
 Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el índice, ya que están almacenados de manera secuencial.
 
@@ -2096,7 +2094,7 @@ $ go run main.go
 1
 ```
 
-### Iteración
+## Iteración
 
 Ahora, hablemos de la iteración.
 
@@ -2159,7 +2157,7 @@ for i := range arr {} // Usar solo el índice
 for range arr {} // Simplemente iterar sobre el array
 ```
 
-### Multidimensional
+## Multidimensional
 
 Todos los arrays que hemos creado hasta ahora son unidimensionales. También podemos crear arrays multidimensionales en Go.
 
@@ -2208,7 +2206,7 @@ $ go run main.go
 Índice: 1, Elemento: [6 7 8 9 10]
 ```
 
-### Propiedades
+## Propiedades
 
 Ahora hablemos de algunas propiedades de los arrays.
 
