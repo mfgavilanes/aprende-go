@@ -15,28 +15,30 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Instalación y configuración](#instalación-y-configuración)
   - [Comandos básicos de Go](#comandos-básicos-de-go)
 
-- **Capítulo I**
+- **Tipos de datos básicos y control de flujo**
 
   - [Hola Mundo](#hola-mundo)
   - [Variables, constantes y tipos de datos](#variables-constantes-y-tipos-de-datos)
   - [Formato de cadenas](#formato-de-cadenas)
   - [Control de flujo](#control-de-flujo)
+
+- **Estructura y organización en Go**
   - [Funciones](#funciones)
   - [Paquetes](#paquetes)
   - [Módulos](#módulos)
   - [Workspaces (espacios de trabajo)](#workspaces)
   - [Comandos útiles y compilación](#comandos-útiles-y-compilación)
 
-- **Capítulo II**
-
-  - [Punteros](#punteros)
+- **Tipos de datos compuestos y de referencia**
+  - [Arrays](#arrays)
   - [Structs (estructuras)](#structs)
-  - [Métodos](#metodos)
-  - [Arrays y slices](#arrays-y-slices)
-  - [Maps](#maps)
+  - [Punteros](#punteros)
+  - [Slices](#slices)
+  - [Maps](#maps) 
 
+  
 - **Capítulo III**
-
+  - [Métodos](#metodos)
   - [Interfaces](#interfaces)
   - [Errores](#errores)
   - [Panic y Recover](#panic-and-recover)
@@ -2011,146 +2013,223 @@ Aquí tienes un ejemplo de cómo usarlo:
 $ CGO_ENABLED=0 go build -o app
 ```
 
-# Punteros
+# Arrays
 
-Ahora hablaremos sobre los punteros. ¿Qué son los punteros?
+Sigamos ahora con los tipos de datos compuestos. Vamos a aprender sobre arrays en Go.
 
-Simplemente, un puntero es una variable que se utiliza para almacenar la dirección de memoria de otra variable.
+## Arrays
 
-![pointers](images/puntero.png)
+### ¿Qué es un array?
 
-Se puede usar de la siguiente manera:
+Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
+
+![array](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/arrays-and-slices/array.png)
+
+### Declaración
+
+Podemos declarar un array de la siguiente manera:
 
 ```go
-var x *T
+var a [n]T
 ```
+Aquí, `n` es la longitud y `T` puede ser cualquier tipo como entero, string o estructuras definidas por el usuario.
 
-Donde `T` es el tipo, como `int`, `string`, `float`, y así sucesivamente.
-
-Probemos un ejemplo sencillo para verlo en acción.
+Ahora, declaremos un array de enteros con longitud 5 e imprimámoslo.
 
 ```go
-package main
-
-import "fmt"
-
 func main() {
-	var q *int
+    var arr [5]int
 
-	fmt.Println(q)
+    fmt.Println(arr)
 }
 ```
 
 ```bash
 $ go run main.go
-nil
+[0 0 0 0 0]
 ```
 
-Hmm, esto imprime `nil`, pero ¿qué es `nil`?
+Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
 
-Entonces, `nil` es un identificador predeclarado en Go que representa el valor cero para punteros, interfaces, canales, mapas y `slices`.
+### Inicialización
 
-Esto es igual a lo que aprendimos en la sección de variables y tipos de datos, donde vimos que un `int` no inicializado tiene un valor cero de 0, un `bool` tiene false, y así sucesivamente.
-
-Bien, ahora asignemos un valor al puntero.
-
+También podemos inicializar un array usando un literal de array.
 
 ```go
-package main
-
-import "fmt"
-
-func main() {
-	var i int= 5
-
-	var p *int = &i
-
-	fmt.Println("dirección:", p)
-}
+var a [n]T = [n]T{V1, V2, ... Vn}
 ```
-Usamos el operador `&` para referirnos a la dirección de memoria de una variable.
-
-```bash
-$ go run main.go
-0xc00001203
-```
-
-Este debe ser el valor de la dirección de memoria de la variable `i`.
-
-## Dereferenciación
-
-También podemos usar el operador asterisco `*` para recuperar el valor almacenado en la variable a la que apunta el puntero. Esto también se llama **dereferenciación**.
-
-Por ejemplo, podemos acceder al valor de la variable `i` a través del puntero `p` usando ese operador asterisco `*`.
-
 
 ```go
-package main
-
-import "fmt"
-
 func main() {
-	var i int =5
+	var arr = [5]int{1, 2, 3, 4, 5}
 
-	var p *int = &i
-
-	fmt.Println("dirección:", p)
-	fmt.Println("valor:", *p)
+	fmt.Println(arr)
 }
 ```
 
 ```bash
 $ go run main.go
-dirección: 0xc00001203
-valor: 5
+[1 2 3 4 5]
 ```
 
-No solo podemos acceder a ese valor, sino también cambiarlo a través del puntero.
+También podemos usar una declaración abreviada:
 
 ```go
-package main
-
-import "fmt"
-
-func main() {
-	var i int =5
-
-	var p *int = &i
-
-	fmt.Println("antes", i)
-	fmt.Println("dirección:", p)
-
-	*p = 8
-	fmt.Println("después:", i)
-}
-```
-
-```bash
-$ go run main.go
-antes 5
-dirección: 0xc00001203
-después: 8
-```
-¡Como véis, es bastante elegante!
-
-## Punteros como argumentos de función
-
-Los punteros también pueden usarse como argumentos de una función cuando necesitamos pasar datos por referencia.
-
-Aquí tienes un ejemplo:
-
-```go
-miFuncion(&a)
 ...
-
-func miFuncion(ptr *int) {}
+arr := [5]int{1, 2, 3, 4, 5}
 ```
 
-## Nueva función
+### Acceso
 
-Existe otra forma de inicializar un puntero. Podemos usar la función incorporada `new`, que toma un tipo como argumento, asigna suficiente memoria para alojar un valor de ese tipo y devuelve un puntero a él.
+Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el índice, ya que están almacenados de manera secuencial.
 
-Aquí tienes un ejemplo:
+```go
+func main() {
+	arr := [5]int{1, 2, 3, 4, 5}
+
+	fmt.Println(arr[0])
+}
+```
+
+```bash
+$ go run main.go
+1
+```
+
+### Iteración
+
+Ahora, hablemos de la iteración.
+
+Existen varias formas de iterar sobre arrays.
+
+La primera es usando un bucle for junto con la función `len, que nos da la longitud del array.
+
+```go
+func main() {
+	arr := [5]int{1, 2, 3, 4, 5}
+
+	for i := 0; i < len(arr); i++ {
+		fmt.Printf("Índice: %d, Elemento: %d\n", i, arr[i])
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: 1
+Índice: 1, Elemento: 2
+Índice: 2, Elemento: 3
+Índice: 3, Elemento: 4
+Índice: 4, Elemento: 5
+```
+
+Otra forma es usar la palabra clave `range` con el bucle `for`.
+
+```go
+func main() {
+	arr := [5]int{1, 2, 3, 4,5}
+
+	for i, e := range arr {
+        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: 1
+Índice: 1, Elemento: 2
+Índice: 2, Elemento: 3
+Índice: 3, Elemento: 4
+Índice: 4, Elemento: 5
+```
+
+Como podemos ver, nuestro ejemplo funciona igual que antes.
+
+Pero la palabra clave `range` es bastante versátil y puede usarse de varias maneras:
+
+```go
+for i, e := range arr {} // Uso normal de range
+
+for _, e := range arr {} // Omitir el índice con _ y usar solo el elemento
+
+for i := range arr {} // Usar solo el índice
+
+
+for range arr {} // Simplemente iterar sobre el array
+```
+
+### Multidimensional
+
+Todos los arrays que hemos creado hasta ahora son unidimensionales. También podemos crear arrays multidimensionales en Go.
+
+Veamos un ejemplo:
+
+```go
+func main() {
+	arr := [3][5]int{
+		{1, 2, 3, 4, 5},
+		{6, 7, 8, 9, 10},
+		{11, 12, 13, 14, 15},
+	}
+
+	for i, e := range arr {
+        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: [1 2 3 4 5]
+Índice: 1, Elemento: [6 7 8 9 10]
+Índice: 2, Elemento: [11 12 13 14 15]
+```
+
+También podemos dejar que el compilador infiera la longitud del array usando `...` (puntos suspensivos) en lugar de especificar la longitud.
+
+
+```go
+func main() {
+	arr := [...][5]int{
+		{1, 2, 3, 4, 5},
+		{6, 7, 8, 9, 10},
+	}
+
+	for i, e := range arr {
+        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: [1 2 3 4 5]
+Índice: 1, Elemento: [6 7 8 9 10]
+```
+
+### Propiedades
+
+Ahora hablemos de algunas propiedades de los arrays.
+
+La longitud de un array forma parte de su tipo. Por lo tanto, los arrays `a` y `b` son tipos completamente distintos, y no podemos asignar uno al otro.
+
+Esto también significa que no podemos redimensionar un array, porque hacerlo implicaría cambiar su tipo.
+
+```go
+package main
+
+func main() {
+	var a = [5]int{1, 2, 3, 4, 5}
+	var b [3]int = a // Error, no se puede usar a (tipo [5]int) como tipo [3]int en la asignación
+}
+```
+
+Los arrays en Go son tipos por valor, a diferencia de otros lenguajes como C, C++ y Java, donde los arrays son tipos por referencia.
+
+Esto significa que cuando asignamos un array a una nueva variable o lo pasamos a una función, se copia el array completo.
+
+Por lo tanto, si hacemos cambios en esta copia, el array original no se verá afectado y permanecerá sin cambios.
 
 ```go
 package main
@@ -2158,80 +2237,20 @@ package main
 import "fmt"
 
 func main() {
-	p := new(int)
-	*p = 6
+	var a = [7]string{"Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"}
+	var b = a // Se asigna a b una copia de a
 
-	fmt.Println("valor", *p)
-	fmt.Println("dirección", p)
+	b[0] = "Lunes"
+
+	fmt.Println(a) // Salida: [Lun Mar Mie Jue Vie Sab Dom]
+	fmt.Println(b) // Salida: [Lunes Mar Mie Jue Vie Sab Dom]
 }
 ```
 
-```bash
-$ go run main.go
-valor 6
-dirección 0xc00001253
-```
-
-## Punteros a un punteros
-
-¿Podemos crear un puntero a un puntero? ¡La respuesta es sí! Sí, podemos.
-
-```go
-package main
-
-import "fmt"
-
-func main() {
-	p := new(int)
-	*p = 6
-
-	p1 := &p
-
-	fmt.Println("P valor", *p, " dirección", p)
-	fmt.Println("P1 valor", *p1, " dirección", p)
-
-	fmt.Println("Valor dereferenciado", **p1)
-}
-```
-
-```bash
-$ go run main.go
-P valor 6  dirección 0xc0000be001
-P1 valor 0xc0000be001  dirección 0xc0000be001
-Valor dereferenciado 6
-```
-
-_Nota cómo el valor de `p1` coincide con la dirección de `p`._
-
-También es importante saber que los punteros en Go no soportan **aritmética de punteros** como en C o C++. Esto es, la capacidad de realizar operaciones matemáticas (suma, resta, incremento, decremento) sobre punteros para navegar por la memoria.
-
-```go
-p1 := p * 2 // Error del compilador: operación inválida
-```
-
-Sin embargo, Go sí permite comparar dos punteros del mismo tipo para comparar si apuntan al mismo lugar mediante el operador `==`.
-
-```go
-p := &a
-p1 := &a
-
-fmt.Println(p == p1)
-```
-
-En este sentido Go es más seguro, ya que en C o C++ puedes hacer `p + 1000` y acceder a memoria inválida. Esto permite que Go evite:
-* Desbordamientos de buffer
-* Punteros "colgantes"
-* Errores del garbage collector
-
-## ¿Pero por qué?
-
-Esto nos lleva a la pregunta del millón: ¿por qué necesitamos punteros?
-
-No hay una respuesta definitiva, y los punteros son simplemente otra característica útil que nos ayuda a modificar nuestros datos de manera eficiente sin copiar grandes cantidades de datos.
-
-Finalmente, añadiré que si vienes de un lenguaje sin noción de punteros, no entres en pánico e intenta formar un modelo mental de cómo funcionan los punteros.
 
 # Structs
+
+Siguiendo con los tipos compuestos, vamos ahora con los `struct`.
 
 Una `struct` es un tipo definido por el usuario que contiene una colección de campos con nombre. Básicamente, se usa para agrupar datos relacionados en una sola unidad.
 
@@ -2689,360 +2708,146 @@ func main() {
 }
 ```
 
-# Métodos
+# Punteros
 
-Hablemos de métodos, también conocidos como **receptores de funciones**.
+Ahora hablaremos sobre los punteros. ¿Qué son los punteros?
 
-Técnicamente, Go **NO es un lenguaje de programación orientado a objetos**. No tiene clases, objetos ni herencia tradicional. Sin embargo, Go **tiene tipos**. Y puedes definir métodos sobre tipos.
+Simplemente, un puntero es una variable que se utiliza para almacenar la dirección de memoria de otra variable.
 
-Un método es simplemente una **función con un receptor especial**. Veamos cómo declararlos:
+![pointers](images/puntero.png)
 
-
-```go
-func (variable T) Nombre(params) (tiposRetorno) {}
-```
-
-El _receptor_ tiene un nombre y un tipo. Aparece entre la palabra clave `func` y el nombre del método.
-
-Por ejemplo, definamos una struct `Libro`:
+Se puede usar de la siguiente manera:
 
 ```go
-type Libro struct {
-    Titulo   string
-    Paginas  int
-}
+var x *T
 ```
 
-Ahora definamos un método `EsLargo` que nos diga si un libro tiene más de 300 páginas:
+Donde `T` es el tipo, como `int`, `string`, `float`, y así sucesivamente.
 
-```go
-func (l Libro) EsLargo() bool {
-    return l.Paginas > 300
-}
-```
-
-Como ves, accedemos a la instancia de `Libro` usando la variable receptora `l`. Piensa en ella como el `this` de los lenguajes orientados a objetos.
-
-Ahora podemos llamar al método tras inicializar nuestra struct, igual que con clases en otros lenguajes:
-
-```go
-func main() {
-    libro := Libro{"El Quijote", 950}
-
-    fmt.Println("¿Es largo?", libro.EsLargo())  // true
-}
-```
-
-## Métodos con receptores por puntero
-
-Todos los ejemplos anteriores usaban receptores por valor.
-
-Con un **receptor por valor**, el método trabaja sobre una **copia** del valor. Las modificaciones al receptor NO se ven reflejadas en el original.
-
-Por ejemplo, creemos un método `ActualizarNombre` que cambie el nombre del `Libro`:
-
-```go
-func (l Libro) ActualizarNombre(nuevoTitulo string) {
-    l.Titulo = nuevoTitulo  // Cambia la COPIA
-}
-```
-
-Probémoslo:
-
-```go
-func main() {
-    libro := Libro{"El Quijote", 950}
-
-    libro.ActualizarNombre("1984")
-    fmt.Println("Libro:", libro)  // ¡Sigue siendo "El Quijote"!
-}
-```
-
-```bash
-$ go run main.go
-Libro: {El Quijote 950}
-```
-
-El nombre no cambió. Cambiemos el receptor a puntero:
-
-```go
-func (l *Libro) ActualizarNombre(nuevoTitulo string) {
-    l.Titulo = nuevoTitulo  // Cambia el ORIGINAL
-}
-```
-
-```bash
-$ go run main.go
-Libro: {La Regenta 950}
-```
-
-¡Perfecto! Los métodos con **receptores por puntero modifican el valor original**, y esos cambios son visibles para quien llama al método.
-
-## Propiedades de los métodos
-
-Go tiene algunas características inteligentes:
-
-- **Go interpreta automáticamente**: puedes llamar métodos de puntero tanto en valores como punteros
-
-```go
-libro.ActualizarNombre("Nuevo")  // Go hace &libro por ti
-(&libro).ActualizarNombre("Nuevo")
-```
-
-- **Receptor sin nombre**: si no usas la variable del receptor
-
-```go
-func (_ *Libro) ActualizarNombre(nombre string) { ... }
-```
-
-- **Métodos NO solo para structs**: funcionan con cualquier tipo
+Probemos un ejemplo sencillo para verlo en acción.
 
 ```go
 package main
 
 import "fmt"
 
-type MiEntero int
-
-func (i MiEntero) EsMayor(valor int) bool {
-	return i > MiEntero(valor)
-}
-
 func main() {
-	n := MiEntero(10)
-	fmt.Println(n.EsMayor(5))  // true
-}
-```
+	var q *int
 
-## ¿Por qué métodos en lugar de funciones?
-
-Entonces, la pregunta es: ¿por qué usar métodos en lugar de funciones?
-
-Como siempre, no hay una respuesta concreta para esto, y de ninguna manera uno es mejor que el otro. Más bien, deben usarse de forma adecuada según la situación.
-
-Una cosa que se me ocurre ahora mismo es que los métodos pueden ayudarnos a evitar conflictos de nombres.
-
-Dado que un método está asociado a un tipo en particular, podemos tener el mismo nombre de método para múltiples receptores.
-
-Pero al final, puede reducirse simplemente a una cuestión de preferencia, como por ejemplo: _“las llamadas a métodos son mucho más fáciles de leer y entender que las llamadas a funciones”_, o al contrario.
-
-# Arrays y Slices
-
-En este tutorial, aprenderemos sobre arrays y slices en Go.
-
-## Arrays
-
-### ¿Qué es un array?
-
-Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
-
-![array](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/arrays-and-slices/array.png)
-
-### Declaración
-
-Podemos declarar un array de la siguiente manera:
-
-```go
-var a [n]T
-```
-Aquí, `n` es la longitud y `T` puede ser cualquier tipo como entero, string o estructuras definidas por el usuario.
-
-Ahora, declaremos un array de enteros con longitud 5 e imprimámoslo.
-
-```go
-func main() {
-    var arr [5]int
-
-    fmt.Println(arr)
+	fmt.Println(q)
 }
 ```
 
 ```bash
 $ go run main.go
-[0 0 0 0 0]
+nil
 ```
 
-Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
+Hmm, esto imprime `nil`, pero ¿qué es `nil`?
 
-### Inicialización
+Entonces, `nil` es un identificador predeclarado en Go que representa el valor cero para punteros, interfaces, canales, mapas y `slices`.
 
-También podemos inicializar un array usando un literal de array.
+Esto es igual a lo que aprendimos en la sección de variables y tipos de datos, donde vimos que un `int` no inicializado tiene un valor cero de 0, un `bool` tiene false, y así sucesivamente.
+
+Bien, ahora asignemos un valor al puntero.
+
 
 ```go
-var a [n]T = [n]T{V1, V2, ... Vn}
-```
+package main
 
-```go
+import "fmt"
+
 func main() {
-	var arr = [5]int{1, 2, 3, 4, 5}
+	var i int= 5
 
-	fmt.Println(arr)
+	var p *int = &i
+
+	fmt.Println("dirección:", p)
+}
+```
+Usamos el operador `&` para referirnos a la dirección de memoria de una variable.
+
+```bash
+$ go run main.go
+0xc00001203
+```
+
+Este debe ser el valor de la dirección de memoria de la variable `i`.
+
+## Dereferenciación
+
+También podemos usar el operador asterisco `*` para recuperar el valor almacenado en la variable a la que apunta el puntero. Esto también se llama **dereferenciación**.
+
+Por ejemplo, podemos acceder al valor de la variable `i` a través del puntero `p` usando ese operador asterisco `*`.
+
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var i int =5
+
+	var p *int = &i
+
+	fmt.Println("dirección:", p)
+	fmt.Println("valor:", *p)
 }
 ```
 
 ```bash
 $ go run main.go
-[1 2 3 4 5]
+dirección: 0xc00001203
+valor: 5
 ```
 
-También podemos usar una declaración abreviada:
+No solo podemos acceder a ese valor, sino también cambiarlo a través del puntero.
 
 ```go
+package main
+
+import "fmt"
+
+func main() {
+	var i int =5
+
+	var p *int = &i
+
+	fmt.Println("antes", i)
+	fmt.Println("dirección:", p)
+
+	*p = 8
+	fmt.Println("después:", i)
+}
+```
+
+```bash
+$ go run main.go
+antes 5
+dirección: 0xc00001203
+después: 8
+```
+¡Como véis, es bastante elegante!
+
+## Punteros como argumentos de función
+
+Los punteros también pueden usarse como argumentos de una función cuando necesitamos pasar datos por referencia.
+
+Aquí tienes un ejemplo:
+
+```go
+miFuncion(&a)
 ...
-arr := [5]int{1, 2, 3, 4, 5}
+
+func miFuncion(ptr *int) {}
 ```
 
-### Acceso
+## Nueva función
 
-Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el índice, ya que están almacenados de manera secuencial.
+Existe otra forma de inicializar un puntero. Podemos usar la función incorporada `new`, que toma un tipo como argumento, asigna suficiente memoria para alojar un valor de ese tipo y devuelve un puntero a él.
 
-```go
-func main() {
-	arr := [5]int{1, 2, 3, 4, 5}
-
-	fmt.Println(arr[0])
-}
-```
-
-```bash
-$ go run main.go
-1
-```
-
-### Iteración
-
-Ahora, hablemos de la iteración.
-
-Existen varias formas de iterar sobre arrays.
-
-La primera es usando un bucle for junto con la función `len, que nos da la longitud del array.
-
-```go
-func main() {
-	arr := [5]int{1, 2, 3, 4, 5}
-
-	for i := 0; i < len(arr); i++ {
-		fmt.Printf("Índice: %d, Elemento: %d\n", i, arr[i])
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: 1
-Índice: 1, Elemento: 2
-Índice: 2, Elemento: 3
-Índice: 3, Elemento: 4
-Índice: 4, Elemento: 5
-```
-
-Otra forma es usar la palabra clave `range` con el bucle `for`.
-
-```go
-func main() {
-	arr := [5]int{1, 2, 3, 4,5}
-
-	for i, e := range arr {
-        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: 1
-Índice: 1, Elemento: 2
-Índice: 2, Elemento: 3
-Índice: 3, Elemento: 4
-Índice: 4, Elemento: 5
-```
-
-Como podemos ver, nuestro ejemplo funciona igual que antes.
-
-Pero la palabra clave `range` es bastante versátil y puede usarse de varias maneras:
-
-```go
-for i, e := range arr {} // Uso normal de range
-
-for _, e := range arr {} // Omitir el índice con _ y usar solo el elemento
-
-for i := range arr {} // Usar solo el índice
-
-
-for range arr {} // Simplemente iterar sobre el array
-```
-
-### Multidimensional
-
-Todos los arrays que hemos creado hasta ahora son unidimensionales. También podemos crear arrays multidimensionales en Go.
-
-Veamos un ejemplo:
-
-```go
-func main() {
-	arr := [3][5]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
-		{11, 12, 13, 14, 15},
-	}
-
-	for i, e := range arr {
-        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: [1 2 3 4 5]
-Índice: 1, Elemento: [6 7 8 9 10]
-Índice: 2, Elemento: [11 12 13 14 15]
-```
-
-También podemos dejar que el compilador infiera la longitud del array usando `...` (puntos suspensivos) en lugar de especificar la longitud.
-
-
-```go
-func main() {
-	arr := [...][5]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
-	}
-
-	for i, e := range arr {
-        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: [1 2 3 4 5]
-Índice: 1, Elemento: [6 7 8 9 10]
-```
-
-### Propiedades
-
-Ahora hablemos de algunas propiedades de los arrays.
-
-La longitud de un array forma parte de su tipo. Por lo tanto, los arrays `a` y `b` son tipos completamente distintos, y no podemos asignar uno al otro.
-
-Esto también significa que no podemos redimensionar un array, porque hacerlo implicaría cambiar su tipo.
-
-```go
-package main
-
-func main() {
-	var a = [5]int{1, 2, 3, 4, 5}
-	var b [3]int = a // Error, no se puede usar a (tipo [5]int) como tipo [3]int en la asignación
-}
-```
-
-Los arrays en Go son tipos por valor, a diferencia de otros lenguajes como C, C++ y Java, donde los arrays son tipos por referencia.
-
-Esto significa que cuando asignamos un array a una nueva variable o lo pasamos a una función, se copia el array completo.
-
-Por lo tanto, si hacemos cambios en esta copia, el array original no se verá afectado y permanecerá sin cambios.
+Aquí tienes un ejemplo:
 
 ```go
 package main
@@ -3050,15 +2855,78 @@ package main
 import "fmt"
 
 func main() {
-	var a = [7]string{"Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"}
-	var b = a // Se asigna a b una copia de a
+	p := new(int)
+	*p = 6
 
-	b[0] = "Lunes"
-
-	fmt.Println(a) // Salida: [Lun Mar Mie Jue Vie Sab Dom]
-	fmt.Println(b) // Salida: [Lunes Mar Mie Jue Vie Sab Dom]
+	fmt.Println("valor", *p)
+	fmt.Println("dirección", p)
 }
 ```
+
+```bash
+$ go run main.go
+valor 6
+dirección 0xc00001253
+```
+
+## Punteros a un punteros
+
+¿Podemos crear un puntero a un puntero? ¡La respuesta es sí! Sí, podemos.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	p := new(int)
+	*p = 6
+
+	p1 := &p
+
+	fmt.Println("P valor", *p, " dirección", p)
+	fmt.Println("P1 valor", *p1, " dirección", p)
+
+	fmt.Println("Valor dereferenciado", **p1)
+}
+```
+
+```bash
+$ go run main.go
+P valor 6  dirección 0xc0000be001
+P1 valor 0xc0000be001  dirección 0xc0000be001
+Valor dereferenciado 6
+```
+
+_Nota cómo el valor de `p1` coincide con la dirección de `p`._
+
+También es importante saber que los punteros en Go no soportan **aritmética de punteros** como en C o C++. Esto es, la capacidad de realizar operaciones matemáticas (suma, resta, incremento, decremento) sobre punteros para navegar por la memoria.
+
+```go
+p1 := p * 2 // Error del compilador: operación inválida
+```
+
+Sin embargo, Go sí permite comparar dos punteros del mismo tipo para comparar si apuntan al mismo lugar mediante el operador `==`.
+
+```go
+p := &a
+p1 := &a
+
+fmt.Println(p == p1)
+```
+
+En este sentido Go es más seguro, ya que en C o C++ puedes hacer `p + 1000` y acceder a memoria inválida. Esto permite que Go evite:
+* Desbordamientos de buffer
+* Punteros "colgantes"
+* Errores del garbage collector
+
+## ¿Pero por qué?
+
+Esto nos lleva a la pregunta del millón: ¿por qué necesitamos punteros?
+
+No hay una respuesta definitiva, y los punteros son simplemente otra característica útil que nos ayuda a modificar nuestros datos de manera eficiente sin copiar grandes cantidades de datos.
+
+Finalmente, añadiré que si vienes de un lenguaje sin noción de punteros, no entres en pánico e intenta formar un modelo mental de cómo funcionan los punteros.
 
 ## Slices
 
@@ -3328,6 +3196,8 @@ func add(values ...int) int {
 	return sum
 }
 ```
+
+
 
 # Maps
 
@@ -3615,6 +3485,144 @@ func main() {
 	fmt.Println(m2) // Output: map[a:{Peter} b:{Seth} c:{Steve}]
 }
 ```
+
+# Métodos
+
+Hablemos de métodos, también conocidos como **receptores de funciones**.
+
+Técnicamente, Go **NO es un lenguaje de programación orientado a objetos**. No tiene clases, objetos ni herencia tradicional. Sin embargo, Go **tiene tipos**. Y puedes definir métodos sobre tipos.
+
+Un método es simplemente una **función con un receptor especial**. Veamos cómo declararlos:
+
+
+```go
+func (variable T) Nombre(params) (tiposRetorno) {}
+```
+
+El _receptor_ tiene un nombre y un tipo. Aparece entre la palabra clave `func` y el nombre del método.
+
+Por ejemplo, definamos una struct `Libro`:
+
+```go
+type Libro struct {
+    Titulo   string
+    Paginas  int
+}
+```
+
+Ahora definamos un método `EsLargo` que nos diga si un libro tiene más de 300 páginas:
+
+```go
+func (l Libro) EsLargo() bool {
+    return l.Paginas > 300
+}
+```
+
+Como ves, accedemos a la instancia de `Libro` usando la variable receptora `l`. Piensa en ella como el `this` de los lenguajes orientados a objetos.
+
+Ahora podemos llamar al método tras inicializar nuestra struct, igual que con clases en otros lenguajes:
+
+```go
+func main() {
+    libro := Libro{"El Quijote", 950}
+
+    fmt.Println("¿Es largo?", libro.EsLargo())  // true
+}
+```
+
+## Métodos con receptores por puntero
+
+Todos los ejemplos anteriores usaban receptores por valor.
+
+Con un **receptor por valor**, el método trabaja sobre una **copia** del valor. Las modificaciones al receptor NO se ven reflejadas en el original.
+
+Por ejemplo, creemos un método `ActualizarNombre` que cambie el nombre del `Libro`:
+
+```go
+func (l Libro) ActualizarNombre(nuevoTitulo string) {
+    l.Titulo = nuevoTitulo  // Cambia la COPIA
+}
+```
+
+Probémoslo:
+
+```go
+func main() {
+    libro := Libro{"El Quijote", 950}
+
+    libro.ActualizarNombre("1984")
+    fmt.Println("Libro:", libro)  // ¡Sigue siendo "El Quijote"!
+}
+```
+
+```bash
+$ go run main.go
+Libro: {El Quijote 950}
+```
+
+El nombre no cambió. Cambiemos el receptor a puntero:
+
+```go
+func (l *Libro) ActualizarNombre(nuevoTitulo string) {
+    l.Titulo = nuevoTitulo  // Cambia el ORIGINAL
+}
+```
+
+```bash
+$ go run main.go
+Libro: {La Regenta 950}
+```
+
+¡Perfecto! Los métodos con **receptores por puntero modifican el valor original**, y esos cambios son visibles para quien llama al método.
+
+## Propiedades de los métodos
+
+Go tiene algunas características inteligentes:
+
+- **Go interpreta automáticamente**: puedes llamar métodos de puntero tanto en valores como punteros
+
+```go
+libro.ActualizarNombre("Nuevo")  // Go hace &libro por ti
+(&libro).ActualizarNombre("Nuevo")
+```
+
+- **Receptor sin nombre**: si no usas la variable del receptor
+
+```go
+func (_ *Libro) ActualizarNombre(nombre string) { ... }
+```
+
+- **Métodos NO solo para structs**: funcionan con cualquier tipo
+
+```go
+package main
+
+import "fmt"
+
+type MiEntero int
+
+func (i MiEntero) EsMayor(valor int) bool {
+	return i > MiEntero(valor)
+}
+
+func main() {
+	n := MiEntero(10)
+	fmt.Println(n.EsMayor(5))  // true
+}
+```
+
+## ¿Por qué métodos en lugar de funciones?
+
+Entonces, la pregunta es: ¿por qué usar métodos en lugar de funciones?
+
+Como siempre, no hay una respuesta concreta para esto, y de ninguna manera uno es mejor que el otro. Más bien, deben usarse de forma adecuada según la situación.
+
+Una cosa que se me ocurre ahora mismo es que los métodos pueden ayudarnos a evitar conflictos de nombres.
+
+Dado que un método está asociado a un tipo en particular, podemos tener el mismo nombre de método para múltiples receptores.
+
+Pero al final, puede reducirse simplemente a una cuestión de preferencia, como por ejemplo: _“las llamadas a métodos son mucho más fáciles de leer y entender que las llamadas a funciones”_, o al contrario.
+
 
 # Interfaces
 
