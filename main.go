@@ -19,6 +19,10 @@ type Producto2 struct {
 	Stock  int     `json:"unidades_en_stock"`
 }
 
+type Usuario struct {
+	Name string
+}
+
 func main() {
 	//log.Info().Msg("Hola")
 	fmt.Println("hola")
@@ -80,4 +84,18 @@ func main() {
 
 	// Output: Slice [15 5], Length: 2, Capacity: 3
 	fmt.Printf("Slice: %v, Longitud: %d, Capacidad: %d", s2, len(s2), cap(s2))
+
+	var m = map[string]Usuario{
+		"a": {"Pedro"},
+		"b": {"Sebastián"},
+	}
+
+	m["c"] = Usuario{"Manuel"}
+
+	fmt.Println(m)
+	c, ok := m["c"]
+	fmt.Println("Key c:", c, ok)
+
+	d, ok := m["d"]
+	fmt.Println("Key d:", d, ok)
 }

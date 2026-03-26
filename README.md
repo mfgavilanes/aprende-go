@@ -2704,7 +2704,7 @@ func main() {
 
 # Punteros
 
-Ahora hablaremos sobre los tipos de datos de referencia en los que los primeros que trataremos son los punteros. Pero, ¿qué son los punteros?
+Ahora hablaremos de los tipos de datos de referencia. Los primeros que trataremos son los punteros. Pero, ¿qué son los punteros?
 
 Simplemente, un puntero es una variable que se utiliza para almacenar la dirección de memoria de otra variable.
 
@@ -3193,13 +3193,13 @@ func add(values ...int) int {
 
 # Maps
 
-Go proporciona un tipo de dato incorporado llamado map, y vamos a aprender cómo usarlo.
+El último tipo de datos de referencia que proporciona Go es un tipo de dato llamado `map`, y vamos a aprender cómo usarlo.
 
-Pero la pregunta es: ¿qué son los maps? ¿Y por qué los necesitamos?
+Pero la pregunta es: ¿qué son los `maps`? ¿Y por qué los necesitamos?
 
-![maps](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/maps/maps.png)
+![maps](images/maps.png)
 
-Un map es una colección desordenada de pares clave-valor. Asocia claves con valores. Las claves son únicas dentro de un map, mientras que los valores no necesariamente lo son.
+Un `map` es una colección desordenada de pares clave-valor. Asocia claves con valores. Las claves son únicas dentro de un map, mientras que los valores no necesariamente lo son.
 
 Se utiliza para búsquedas rápidas, recuperación y eliminación de datos basados en claves. Es una de las estructuras de datos más utilizadas.
 
@@ -3362,62 +3362,62 @@ Key d: {}
 
 ## Existencia
 
-When you retrieve the value assigned to a given key, it returns an additional boolean value as well. The boolean variable will be `true` if the key exists, and `false` otherwise.
+Cuando recuperas el valor asignado a una clave determinada, también se devuelve un valor booleano adicional. La variable booleana será `true` si la clave existe, y `false` en caso contrario.
 
-Let's try this in an example:
+Probemos esto con un ejemplo:
 
 ```go
 ...
 c, ok := m["c"]
-fmt.Println("Key c:", c, ok)
+fmt.Println("Clave c:", c, ok)
 
 d, ok := m["d"]
-fmt.Println("Key d:", d, ok)
+fmt.Println("Clave d:", d, ok)
 ```
 
 ```bash
 $ go run main.go
-Key c: {Steve} Present: true
-Key d: {} Present: false
+Clave c: {Manuel} true
+Clave d: {} false
 ```
 
-## Update
+## Actualización
 
-We can also update the value for a key by simply re-assigning a key.
+También podemos actualizar el valor de una clave simplemente reasignándola.
 
 ```go
 ...
-m["a"] = "Roger"
+m["a"] = "Roberto"
 ```
 
 ```bash
 $ go run main.go
-map[a:{Roger} b:{Seth} c:{Steve}]
+map[a:{Roberto} b:{Sebastián} c:{Manuel}]
 ```
 
-## Delete
+## Eliminación
 
-Or, we can delete the key using the built-in `delete` function.
+O bien, podemos eliminar una clave usando la función incorporada `delete`.
 
-Here's how the syntax looks:
+Así es como se ve la sintaxis:
 
 ```go
 ...
 delete(m, "a")
 ```
 
-The first argument is the map, and the second is the key we want to delete.
+El primer argumento es el mapa, y el segundo es la clave que queremos eliminar.
 
-The `delete()` function doesn't return any value. Also, it doesn't do anything if the key doesn't exist in the map.
+La función `delete()` no devuelve ningún valor. Además, no hace nada si la clave no existe en el mapa.
 
 ```bash
 $ go run main.go
-map[a:{Roger} c:{Steve}]
+map[a:{Roberto} c:{Sebastián}]
 ```
 
-## Iteration
+## Iteración
 
-Similar to arrays or slices, we can iterate over maps with the `range` keyword.
+Al igual que con los arrays o slices, podemos iterar sobre mapas usando la palabra clave `range`.
 
 ```go
 package main
@@ -3425,56 +3425,56 @@ package main
 import "fmt"
 
 func main() {
-	var m = map[string]User{
-		"a": {"Peter"},
-		"b": {"Seth"},
+	var m = map[string]Usuario{
+		"a": {"Pedro"},
+		"b": {"Sebastián"},
 	}
 
-	m["c"] = User{"Steve"}
+	m["c"] = Usuario{"Manuel"}
 
 	for key, value := range m {
-		fmt.Println("Key: %s, Value: %v", key, value)
+		fmt.Println("Clave: %s, Valor: %v", key, value)
 	}
 }
 ```
 
 ```bash
 $ go run main.go
-Key: c, Value: {Steve}
-Key: a, Value: {Peter}
-Key: b, Value: {Seth}
+Clave: c, Valor: {Manuel}
+Clave: a, Valor: {Pedro}
+Clave: b, Valor: {Sebastián}
 ```
 
-Note that a map is an unordered collection, and therefore the iteration order of a map is not guaranteed to be the same every time we iterate over it.
+Ten en cuenta que un mapa es una colección no ordenada, y por lo tanto el orden de iteración no está garantizado y puede variar cada vez.
 
-## Properties
+## Propiedades
 
-Lastly, let's talk about map properties.
+Por último, hablemos de las propiedades de los mapas.
 
-Maps are reference types, which means when we assign a map to a new variable, they both refer to the same underlying data structure.
+Los mapas son tipos por referencia, lo que significa que cuando asignamos un mapa a una nueva variable, ambas se refieren a la misma estructura de datos subyacente.
 
-Therefore, changes done by one variable will be visible to the other.
+Por lo tanto, los cambios realizados por una variable serán visibles para la otra.
 
 ```go
 package main
 
 import "fmt"
 
-type User struct {
+type Usuario struct {
 	Name string
 }
 
 func main() {
-	var m1 = map[string]User{
-		"a": {"Peter"},
-		"b": {"Seth"},
+	var m1 = map[string]Usuario{
+		"a": {"Pedro"},
+		"b": {"Sebastián"},
 	}
 
 	m2 := m1
-	m2["c"] = User{"Steve"}
+	m2["c"] = Usuario{"Manuel"}
 
-	fmt.Println(m1) // Output: map[a:{Peter} b:{Seth} c:{Steve}]
-	fmt.Println(m2) // Output: map[a:{Peter} b:{Seth} c:{Steve}]
+	fmt.Println(m1) // Output: map[a:{Pedro} b:{Sebastián} c:{Manuel}]
+	fmt.Println(m2) // Output: map[a:{Pedro} b:{Sebastián} c:{Manuel}]
 }
 ```
 
