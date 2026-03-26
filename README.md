@@ -2015,7 +2015,7 @@ $ CGO_ENABLED=0 go build -o app
 
 # Arrays
 
-Sigamos ahora con los tipos de datos compuestos. Vamos a aprender sobre arrays en Go.
+Sigamos ahora con los tipos de datos compuestos. Vamos a empezar con los arrays en Go.
 
 ## Arrays
 
@@ -2023,7 +2023,7 @@ Sigamos ahora con los tipos de datos compuestos. Vamos a aprender sobre arrays e
 
 Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
 
-![array](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-II/arrays-and-slices/array.png)
+![array](images/array.png)
 
 ### Declaración
 
