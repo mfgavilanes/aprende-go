@@ -244,7 +244,7 @@ Si cometo un error de sintaxis y luego ejecuto `go vet`, debería notificármelo
 
 Es la herramienta de Go para generar y ver documentación del código a partir de los comentarios que se escriben.
 
-También permite mostrar la documentación de un paquete o símbolo; aquí tienes un ejemplo con el paquete `fmt`.
+También permite mostrar la documentación de un paquete o símbolo; aquí tenéis un ejemplo con el paquete `fmt`.
 
 ```bash
 $ go doc -src fmt Printf
@@ -1993,7 +1993,7 @@ windows/arm64
 .
 ```
 
-Aquí tienes un ejemplo para construir un ejecutable de Windows desde macOS:
+Aquí tenéis un ejemplo para construir un ejecutable de Windows desde macOS:
 
 ```bash
 $ GOOS=windows GOARCH=amd64 go build -o app.exe
@@ -2007,7 +2007,7 @@ Esto nos ayuda a producir un [binario enlazado estáticamente](https://en.wikipe
 
 Esto es bastante útil, por ejemplo, cuando queremos ejecutar nuestros binarios de Go en un contenedor Docker con el mínimo de dependencias externas.
 
-Aquí tienes un ejemplo de cómo usarlo:
+Aquí tenéis un ejemplo de cómo usarlo:
 
 ```bash
 $ CGO_ENABLED=0 go build -o app
@@ -2474,7 +2474,7 @@ func main() {
 
 # Arrays
 
-Sigamos ahora con los tipos de datos compuestos. Vamos a empezar con los arrays en Go.
+Sigamos ahora con otro tipo de datos compuestos. Se trata de los arrays en Go.
 
 ## ¿Qué es un array?
 
@@ -2491,11 +2491,11 @@ var a [n]T
 ```
 Aquí, `n` es la longitud y `T` puede ser cualquier tipo como entero, string o estructuras definidas por el usuario.
 
-Ahora, declaremos un array de enteros con longitud 5 e imprimámoslo.
+Ahora, declaremos un array de enteros con longitud 4 e imprimámoslo.
 
 ```go
 func main() {
-    var arr [5]int
+    var arr [4]int
 
     fmt.Println(arr)
 }
@@ -2503,7 +2503,7 @@ func main() {
 
 ```bash
 $ go run main.go
-[0 0 0 0 0]
+[0 0 0 0]
 ```
 
 Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
@@ -2518,7 +2518,7 @@ var a [n]T = [n]T{V1, V2, ... Vn}
 
 ```go
 func main() {
-	var arr = [5]int{1, 2, 3, 4, 5}
+	var arr = [4]int{45, 5, 8, 12}
 
 	fmt.Println(arr)
 }
@@ -2526,14 +2526,14 @@ func main() {
 
 ```bash
 $ go run main.go
-[1 2 3 4 5]
+[45 5 8 12]
 ```
 
 También podemos usar una declaración abreviada:
 
 ```go
 ...
-arr := [5]int{1, 2, 3, 4, 5}
+arr := [4]int{45, 5, 8, 12}
 ```
 
 ## Acceso
@@ -2542,7 +2542,7 @@ Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el 
 
 ```go
 func main() {
-	arr := [5]int{1, 2, 3, 4, 5}
+	arr := [4]int{45, 5, 8, 12}
 
 	fmt.Println(arr[0])
 }
@@ -2550,7 +2550,7 @@ func main() {
 
 ```bash
 $ go run main.go
-1
+45
 ```
 
 ## Iteración
@@ -2559,11 +2559,11 @@ Ahora, hablemos de la iteración.
 
 Existen varias formas de iterar sobre arrays.
 
-La primera es usando un bucle for junto con la función `len, que nos da la longitud del array.
+La primera es usando un bucle for junto con la función `len`, que nos da la longitud del array.
 
 ```go
 func main() {
-	arr := [5]int{1, 2, 3, 4, 5}
+	arr := [4]int{45, 5, 8, 12}
 
 	for i := 0; i < len(arr); i++ {
 		fmt.Printf("Índice: %d, Elemento: %d\n", i, arr[i])
@@ -2573,18 +2573,17 @@ func main() {
 
 ```bash
 $ go run main.go
-Índice: 0, Elemento: 1
-Índice: 1, Elemento: 2
-Índice: 2, Elemento: 3
-Índice: 3, Elemento: 4
-Índice: 4, Elemento: 5
+Índice: 0, Elemento: 45
+Índice: 1, Elemento: 5
+Índice: 2, Elemento: 8
+Índice: 3, Elemento: 12
 ```
 
 Otra forma es usar la palabra clave `range` con el bucle `for`.
 
 ```go
 func main() {
-	arr := [5]int{1, 2, 3, 4,5}
+	arr := [4]int{45, 5, 8, 12}
 
 	for i, e := range arr {
         fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
@@ -2594,11 +2593,10 @@ func main() {
 
 ```bash
 $ go run main.go
-Índice: 0, Elemento: 1
-Índice: 1, Elemento: 2
-Índice: 2, Elemento: 3
-Índice: 3, Elemento: 4
-Índice: 4, Elemento: 5
+Índice: 0, Elemento: 45
+Índice: 1, Elemento: 5
+Índice: 2, Elemento: 8
+Índice: 3, Elemento: 12
 ```
 
 Como podemos ver, nuestro ejemplo funciona igual que antes.
@@ -2624,10 +2622,10 @@ Veamos un ejemplo:
 
 ```go
 func main() {
-	arr := [3][5]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
-		{11, 12, 13, 14, 15},
+	arr := [3][4]int{
+		{45, 5, 8, 12},
+		{8, 7, 6, 5},
+		{12, 11, 10, 9},
 	}
 
 	for i, e := range arr {
@@ -2638,9 +2636,9 @@ func main() {
 
 ```bash
 $ go run main.go
-Índice: 0, Elemento: [1 2 3 4 5]
-Índice: 1, Elemento: [6 7 8 9 10]
-Índice: 2, Elemento: [11 12 13 14 15]
+Índice: 0, Elemento: [45 5 8 12]
+Índice: 1, Elemento: [8 7 6 5]
+Índice: 2, Elemento: [12 11 10 9]
 ```
 
 También podemos dejar que el compilador infiera la longitud del array usando `...` (puntos suspensivos) en lugar de especificar la longitud.
@@ -2648,9 +2646,9 @@ También podemos dejar que el compilador infiera la longitud del array usando `.
 
 ```go
 func main() {
-	arr := [...][5]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
+	arr := [...][4]int{
+		{45, 5, 8, 12},
+		{8, 7, 6, 5},
 	}
 
 	for i, e := range arr {
@@ -2661,8 +2659,8 @@ func main() {
 
 ```bash
 $ go run main.go
-Índice: 0, Elemento: [1 2 3 4 5]
-Índice: 1, Elemento: [6 7 8 9 10]
+Índice: 0, Elemento: [45 5 8 12]
+Índice: 1, Elemento: [8 7 6 5]
 ```
 
 ## Propiedades
@@ -2677,7 +2675,7 @@ Esto también significa que no podemos redimensionar un array, porque hacerlo im
 package main
 
 func main() {
-	var a = [5]int{1, 2, 3, 4, 5}
+	var a = [4]int{45, 5, 8, 12}
 	var b [3]int = a // Error, no se puede usar a (tipo [5]int) como tipo [3]int en la asignación
 }
 ```
@@ -2704,12 +2702,9 @@ func main() {
 }
 ```
 
-
-
-
 # Punteros
 
-Ahora hablaremos sobre los punteros. ¿Qué son los punteros?
+Ahora hablaremos sobre los tipos de datos de referencia en los que los primeros que trataremos son los punteros. Pero, ¿qué son los punteros?
 
 Simplemente, un puntero es una variable que se utiliza para almacenar la dirección de memoria de otra variable.
 
@@ -2744,7 +2739,7 @@ nil
 
 Hmm, esto imprime `nil`, pero ¿qué es `nil`?
 
-Entonces, `nil` es un identificador predeclarado en Go que representa el valor cero para punteros, interfaces, canales, mapas y `slices`.
+Entonces, `nil` es un identificador predeclarado en Go que representa el valor cero para punteros, interfaces, canales, mapas y `slices` (estos últimos se verán justo a continuación).
 
 Esto es igual a lo que aprendimos en la sección de variables y tipos de datos, donde vimos que un `int` no inicializado tiene un valor cero de 0, un `bool` tiene false, y así sucesivamente.
 
@@ -2833,7 +2828,7 @@ después: 8
 
 Los punteros también pueden usarse como argumentos de una función cuando necesitamos pasar datos por referencia.
 
-Aquí tienes un ejemplo:
+Aquí tenéis un ejemplo:
 
 ```go
 miFuncion(&a)
@@ -2846,7 +2841,7 @@ func miFuncion(ptr *int) {}
 
 Existe otra forma de inicializar un puntero. Podemos usar la función incorporada `new`, que toma un tipo como argumento, asigna suficiente memoria para alojar un valor de ese tipo y devuelve un puntero a él.
 
-Aquí tienes un ejemplo:
+Aquí tenéis un ejemplo:
 
 ```go
 package main
@@ -2927,9 +2922,9 @@ No hay una respuesta definitiva, y los punteros son simplemente otra caracterís
 
 Finalmente, añadiré que si vienes de un lenguaje sin noción de punteros, no entres en pánico e intenta formar un modelo mental de cómo funcionan los punteros.
 
-## Slices
+# Slices
 
-¿Qué es un slice?
+Sigamos con otro tipo de dato de referencia: los slices. Pero, ¿qué es un slice?
 
 Un slice es una vista dinámica sobre un array. A diferencia de los arrays, los slices **no tienen un tamaño fijo**, por lo que son mucho más flexibles.
 
@@ -2949,21 +2944,21 @@ package main
 import "fmt"
 
 func main() {
-	a := [4]int{20, 15, 5, 25}
+	a := [4]int{45, 5, 8, 12}
 
 	s := a[1:3]
 
-	// Salida: Array: [20 15 5 25], Longitud: 4, Capacidad: 4
+	// Salida: Array: [45 5 8 12], Longitud: 4, Capacidad: 4
 	fmt.Printf("Array: %v, Longitud: %d, Capacidad: %d\n", a, len(a), cap(a))
 
-	// Output: Slice [15 5], Length: 2, Capacity: 3
+	// Output: Slice [5 8], Length: 2, Capacity: 3
 	fmt.Printf("Slice: %v, Longitud: %d, Capacidad: %d", s, len(s), cap(s))
 }
 ```
 
 No te preocupes, vamos a explicar todo esto en detalle.
 
-### Declaración
+## Declaración
 
 Veamos cómo podemos declarar un slice.
 
