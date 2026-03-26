@@ -30,8 +30,8 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Comandos útiles y compilación](#comandos-útiles-y-compilación)
 
 - **Tipos de datos compuestos y de referencia**
-  - [Arrays](#arrays)
   - [Structs (estructuras)](#structs)
+  - [Arrays](#arrays)
   - [Punteros](#punteros)
   - [Slices](#slices)
   - [Maps](#maps) 
@@ -2013,242 +2013,8 @@ Aquí tienes un ejemplo de cómo usarlo:
 $ CGO_ENABLED=0 go build -o app
 ```
 
-# Arrays
-
-Sigamos ahora con los tipos de datos compuestos. Vamos a empezar con los arrays en Go.
-
-## ¿Qué es un array?
-
-Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
-
-![array](images/array.png)
-
-## Declaración
-
-Podemos declarar un array de la siguiente manera:
-
-```go
-var a [n]T
-```
-Aquí, `n` es la longitud y `T` puede ser cualquier tipo como entero, string o estructuras definidas por el usuario.
-
-Ahora, declaremos un array de enteros con longitud 5 e imprimámoslo.
-
-```go
-func main() {
-    var arr [5]int
-
-    fmt.Println(arr)
-}
-```
-
-```bash
-$ go run main.go
-[0 0 0 0 0]
-```
-
-Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
-
-## Inicialización
-
-También podemos inicializar un array usando un literal de array.
-
-```go
-var a [n]T = [n]T{V1, V2, ... Vn}
-```
-
-```go
-func main() {
-	var arr = [5]int{1, 2, 3, 4, 5}
-
-	fmt.Println(arr)
-}
-```
-
-```bash
-$ go run main.go
-[1 2 3 4 5]
-```
-
-También podemos usar una declaración abreviada:
-
-```go
-...
-arr := [5]int{1, 2, 3, 4, 5}
-```
-
-## Acceso
-
-Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el índice, ya que están almacenados de manera secuencial.
-
-```go
-func main() {
-	arr := [5]int{1, 2, 3, 4, 5}
-
-	fmt.Println(arr[0])
-}
-```
-
-```bash
-$ go run main.go
-1
-```
-
-## Iteración
-
-Ahora, hablemos de la iteración.
-
-Existen varias formas de iterar sobre arrays.
-
-La primera es usando un bucle for junto con la función `len, que nos da la longitud del array.
-
-```go
-func main() {
-	arr := [5]int{1, 2, 3, 4, 5}
-
-	for i := 0; i < len(arr); i++ {
-		fmt.Printf("Índice: %d, Elemento: %d\n", i, arr[i])
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: 1
-Índice: 1, Elemento: 2
-Índice: 2, Elemento: 3
-Índice: 3, Elemento: 4
-Índice: 4, Elemento: 5
-```
-
-Otra forma es usar la palabra clave `range` con el bucle `for`.
-
-```go
-func main() {
-	arr := [5]int{1, 2, 3, 4,5}
-
-	for i, e := range arr {
-        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: 1
-Índice: 1, Elemento: 2
-Índice: 2, Elemento: 3
-Índice: 3, Elemento: 4
-Índice: 4, Elemento: 5
-```
-
-Como podemos ver, nuestro ejemplo funciona igual que antes.
-
-Pero la palabra clave `range` es bastante versátil y puede usarse de varias maneras:
-
-```go
-for i, e := range arr {} // Uso normal de range
-
-for _, e := range arr {} // Omitir el índice con _ y usar solo el elemento
-
-for i := range arr {} // Usar solo el índice
-
-
-for range arr {} // Simplemente iterar sobre el array
-```
-
-## Multidimensional
-
-Todos los arrays que hemos creado hasta ahora son unidimensionales. También podemos crear arrays multidimensionales en Go.
-
-Veamos un ejemplo:
-
-```go
-func main() {
-	arr := [3][5]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
-		{11, 12, 13, 14, 15},
-	}
-
-	for i, e := range arr {
-        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: [1 2 3 4 5]
-Índice: 1, Elemento: [6 7 8 9 10]
-Índice: 2, Elemento: [11 12 13 14 15]
-```
-
-También podemos dejar que el compilador infiera la longitud del array usando `...` (puntos suspensivos) en lugar de especificar la longitud.
-
-
-```go
-func main() {
-	arr := [...][5]int{
-		{1, 2, 3, 4, 5},
-		{6, 7, 8, 9, 10},
-	}
-
-	for i, e := range arr {
-        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
-	}
-}
-```
-
-```bash
-$ go run main.go
-Índice: 0, Elemento: [1 2 3 4 5]
-Índice: 1, Elemento: [6 7 8 9 10]
-```
-
-## Propiedades
-
-Ahora hablemos de algunas propiedades de los arrays.
-
-La longitud de un array forma parte de su tipo. Por lo tanto, los arrays `a` y `b` son tipos completamente distintos, y no podemos asignar uno al otro.
-
-Esto también significa que no podemos redimensionar un array, porque hacerlo implicaría cambiar su tipo.
-
-```go
-package main
-
-func main() {
-	var a = [5]int{1, 2, 3, 4, 5}
-	var b [3]int = a // Error, no se puede usar a (tipo [5]int) como tipo [3]int en la asignación
-}
-```
-
-Los arrays en Go son tipos por valor, a diferencia de otros lenguajes como C, C++ y Java, donde los arrays son tipos por referencia.
-
-Esto significa que cuando asignamos un array a una nueva variable o lo pasamos a una función, se copia el array completo.
-
-Por lo tanto, si hacemos cambios en esta copia, el array original no se verá afectado y permanecerá sin cambios.
-
-```go
-package main
-
-import "fmt"
-
-func main() {
-	var a = [7]string{"Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"}
-	var b = a // Se asigna a b una copia de a
-
-	b[0] = "Lunes"
-
-	fmt.Println(a) // Salida: [Lun Mar Mie Jue Vie Sab Dom]
-	fmt.Println(b) // Salida: [Lunes Mar Mie Jue Vie Sab Dom]
-}
-```
-
-
 # Structs
-
-Siguiendo con los tipos compuestos, vamos ahora con los `struct`.
+Sigamos ahora con los tipos de datos compuestos. Empecemos con los `struct`.
 
 Una `struct` es un tipo definido por el usuario que contiene una colección de campos con nombre. Básicamente, se usa para agrupar datos relacionados en una sola unidad.
 
@@ -2705,6 +2471,241 @@ func main() {
 	fmt.Println(unsafe.Sizeof(s)) // Salida: 0
 }
 ```
+
+# Arrays
+
+Sigamos ahora con los tipos de datos compuestos. Vamos a empezar con los arrays en Go.
+
+## ¿Qué es un array?
+
+Un array es una colección de tamaño fijo de elementos del mismo tipo. Los elementos del array se almacenan de forma secuencial y se puede acceder a ellos usando su índice.
+
+![array](images/array.png)
+
+## Declaración
+
+Podemos declarar un array de la siguiente manera:
+
+```go
+var a [n]T
+```
+Aquí, `n` es la longitud y `T` puede ser cualquier tipo como entero, string o estructuras definidas por el usuario.
+
+Ahora, declaremos un array de enteros con longitud 5 e imprimámoslo.
+
+```go
+func main() {
+    var arr [5]int
+
+    fmt.Println(arr)
+}
+```
+
+```bash
+$ go run main.go
+[0 0 0 0 0]
+```
+
+Por defecto, todos los elementos del array se inicializan con el valor cero del tipo correspondiente.
+
+## Inicialización
+
+También podemos inicializar un array usando un literal de array.
+
+```go
+var a [n]T = [n]T{V1, V2, ... Vn}
+```
+
+```go
+func main() {
+	var arr = [5]int{1, 2, 3, 4, 5}
+
+	fmt.Println(arr)
+}
+```
+
+```bash
+$ go run main.go
+[1 2 3 4 5]
+```
+
+También podemos usar una declaración abreviada:
+
+```go
+...
+arr := [5]int{1, 2, 3, 4, 5}
+```
+
+## Acceso
+
+Y de forma similar a otros lenguajes, podemos acceder a los elementos usando el índice, ya que están almacenados de manera secuencial.
+
+```go
+func main() {
+	arr := [5]int{1, 2, 3, 4, 5}
+
+	fmt.Println(arr[0])
+}
+```
+
+```bash
+$ go run main.go
+1
+```
+
+## Iteración
+
+Ahora, hablemos de la iteración.
+
+Existen varias formas de iterar sobre arrays.
+
+La primera es usando un bucle for junto con la función `len, que nos da la longitud del array.
+
+```go
+func main() {
+	arr := [5]int{1, 2, 3, 4, 5}
+
+	for i := 0; i < len(arr); i++ {
+		fmt.Printf("Índice: %d, Elemento: %d\n", i, arr[i])
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: 1
+Índice: 1, Elemento: 2
+Índice: 2, Elemento: 3
+Índice: 3, Elemento: 4
+Índice: 4, Elemento: 5
+```
+
+Otra forma es usar la palabra clave `range` con el bucle `for`.
+
+```go
+func main() {
+	arr := [5]int{1, 2, 3, 4,5}
+
+	for i, e := range arr {
+        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: 1
+Índice: 1, Elemento: 2
+Índice: 2, Elemento: 3
+Índice: 3, Elemento: 4
+Índice: 4, Elemento: 5
+```
+
+Como podemos ver, nuestro ejemplo funciona igual que antes.
+
+Pero la palabra clave `range` es bastante versátil y puede usarse de varias maneras:
+
+```go
+for i, e := range arr {} // Uso normal de range
+
+for _, e := range arr {} // Omitir el índice con _ y usar solo el elemento
+
+for i := range arr {} // Usar solo el índice
+
+
+for range arr {} // Simplemente iterar sobre el array
+```
+
+## Multidimensional
+
+Todos los arrays que hemos creado hasta ahora son unidimensionales. También podemos crear arrays multidimensionales en Go.
+
+Veamos un ejemplo:
+
+```go
+func main() {
+	arr := [3][5]int{
+		{1, 2, 3, 4, 5},
+		{6, 7, 8, 9, 10},
+		{11, 12, 13, 14, 15},
+	}
+
+	for i, e := range arr {
+        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: [1 2 3 4 5]
+Índice: 1, Elemento: [6 7 8 9 10]
+Índice: 2, Elemento: [11 12 13 14 15]
+```
+
+También podemos dejar que el compilador infiera la longitud del array usando `...` (puntos suspensivos) en lugar de especificar la longitud.
+
+
+```go
+func main() {
+	arr := [...][5]int{
+		{1, 2, 3, 4, 5},
+		{6, 7, 8, 9, 10},
+	}
+
+	for i, e := range arr {
+        fmt.Printf("Índice: %d, Elemento: %d\n", i, e)
+	}
+}
+```
+
+```bash
+$ go run main.go
+Índice: 0, Elemento: [1 2 3 4 5]
+Índice: 1, Elemento: [6 7 8 9 10]
+```
+
+## Propiedades
+
+Ahora hablemos de algunas propiedades de los arrays.
+
+La longitud de un array forma parte de su tipo. Por lo tanto, los arrays `a` y `b` son tipos completamente distintos, y no podemos asignar uno al otro.
+
+Esto también significa que no podemos redimensionar un array, porque hacerlo implicaría cambiar su tipo.
+
+```go
+package main
+
+func main() {
+	var a = [5]int{1, 2, 3, 4, 5}
+	var b [3]int = a // Error, no se puede usar a (tipo [5]int) como tipo [3]int en la asignación
+}
+```
+
+Los arrays en Go son tipos por valor, a diferencia de otros lenguajes como C, C++ y Java, donde los arrays son tipos por referencia.
+
+Esto significa que cuando asignamos un array a una nueva variable o lo pasamos a una función, se copia el array completo.
+
+Por lo tanto, si hacemos cambios en esta copia, el array original no se verá afectado y permanecerá sin cambios.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var a = [7]string{"Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"}
+	var b = a // Se asigna a b una copia de a
+
+	b[0] = "Lunes"
+
+	fmt.Println(a) // Salida: [Lun Mar Mie Jue Vie Sab Dom]
+	fmt.Println(b) // Salida: [Lunes Mar Mie Jue Vie Sab Dom]
+}
+```
+
+
+
 
 # Punteros
 
