@@ -24,6 +24,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
 - **Estructura y organización en Go**
   - [Funciones](#funciones)
+  - [Métodos](#metodos)
   - [Paquetes](#paquetes)
   - [Módulos](#módulos)
   - [Workspaces (espacios de trabajo)](#workspaces)
@@ -37,8 +38,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Maps](#maps) 
 
   
-- **Capítulo III**
-  - [Métodos](#metodos)
+- **Características avanzadas del lenguaje Go**
   - [Interfaces](#interfaces)
   - [Errores](#errores)
   - [Panic y Recover](#panic-and-recover)
@@ -1537,6 +1537,143 @@ He terminado.
 Como podemos ver, las sentencias `defer` se apilan y se ejecutan siguiendo el principio "_último en entrar, primero en salir_".
 
 Por lo tanto, `defer` es increíblemente útil y se utiliza habitualmente para realizar tareas de limpieza o gestionar errores.
+
+# Métodos
+
+Hablemos de métodos, también conocidos como **receptores de funciones**.
+
+Técnicamente, Go **NO es un lenguaje de programación orientado a objetos**. No tiene clases, objetos ni herencia tradicional. Sin embargo, Go **tiene tipos**. Y puedes definir métodos sobre tipos.
+
+Un método es simplemente una **función con un receptor especial**. Veamos cómo declararlos:
+
+
+```go
+func (variable T) Nombre(params) (tiposRetorno) {}
+```
+
+El _receptor_ tiene un nombre y un tipo. Aparece entre la palabra clave `func` y el nombre del método.
+
+Por ejemplo, definamos una struct `Libro`:
+
+```go
+type Libro struct {
+    Titulo   string
+    Paginas  int
+}
+```
+
+Ahora definamos un método `EsLargo` que nos diga si un libro tiene más de 300 páginas:
+
+```go
+func (l Libro) EsLargo() bool {
+    return l.Paginas > 300
+}
+```
+
+Como ves, accedemos a la instancia de `Libro` usando la variable receptora `l`. Piensa en ella como el `this` de los lenguajes orientados a objetos.
+
+Ahora podemos llamar al método tras inicializar nuestra struct, igual que con clases en otros lenguajes:
+
+```go
+func main() {
+    libro := Libro{"El Quijote", 950}
+
+    fmt.Println("¿Es largo?", libro.EsLargo())  // true
+}
+```
+
+## Métodos con receptores por puntero
+
+Todos los ejemplos anteriores usaban receptores por valor.
+
+Con un **receptor por valor**, el método trabaja sobre una **copia** del valor. Las modificaciones al receptor NO se ven reflejadas en el original.
+
+Por ejemplo, creemos un método `ActualizarNombre` que cambie el nombre del `Libro`:
+
+```go
+func (l Libro) ActualizarNombre(nuevoTitulo string) {
+    l.Titulo = nuevoTitulo  // Cambia la COPIA
+}
+```
+
+Probémoslo:
+
+```go
+func main() {
+    libro := Libro{"El Quijote", 950}
+
+    libro.ActualizarNombre("1984")
+    fmt.Println("Libro:", libro)  // ¡Sigue siendo "El Quijote"!
+}
+```
+
+```bash
+$ go run main.go
+Libro: {El Quijote 950}
+```
+
+El nombre no cambió. Cambiemos el receptor a puntero:
+
+```go
+func (l *Libro) ActualizarNombre(nuevoTitulo string) {
+    l.Titulo = nuevoTitulo  // Cambia el ORIGINAL
+}
+```
+
+```bash
+$ go run main.go
+Libro: {La Regenta 950}
+```
+
+¡Perfecto! Los métodos con **receptores por puntero modifican el valor original**, y esos cambios son visibles para quien llama al método.
+
+## Propiedades de los métodos
+
+Go tiene algunas características inteligentes:
+
+- **Go interpreta automáticamente**: puedes llamar métodos de puntero tanto en valores como punteros
+
+```go
+libro.ActualizarNombre("Nuevo")  // Go hace &libro por ti
+(&libro).ActualizarNombre("Nuevo")
+```
+
+- **Receptor sin nombre**: si no usas la variable del receptor
+
+```go
+func (_ *Libro) ActualizarNombre(nombre string) { ... }
+```
+
+- **Métodos NO solo para structs**: funcionan con cualquier tipo
+
+```go
+package main
+
+import "fmt"
+
+type MiEntero int
+
+func (i MiEntero) EsMayor(valor int) bool {
+	return i > MiEntero(valor)
+}
+
+func main() {
+	n := MiEntero(10)
+	fmt.Println(n.EsMayor(5))  // true
+}
+```
+
+## ¿Por qué métodos en lugar de funciones?
+
+Entonces, la pregunta es: ¿por qué usar métodos en lugar de funciones?
+
+Como siempre, no hay una respuesta concreta para esto, y de ninguna manera uno es mejor que el otro. Más bien, deben usarse de forma adecuada según la situación.
+
+Una cosa que se me ocurre ahora mismo es que los métodos pueden ayudarnos a evitar conflictos de nombres.
+
+Dado que un método está asociado a un tipo en particular, podemos tener el mismo nombre de método para múltiples receptores.
+
+Pero al final, puede reducirse simplemente a una cuestión de preferencia, como por ejemplo: _“las llamadas a métodos son mucho más fáciles de leer y entender que las llamadas a funciones”_, o al contrario.
 
 # Paquetes
 
@@ -3477,144 +3614,6 @@ func main() {
 	fmt.Println(m2) // Output: map[a:{Pedro} b:{Sebastián} c:{Manuel}]
 }
 ```
-
-# Métodos
-
-Hablemos de métodos, también conocidos como **receptores de funciones**.
-
-Técnicamente, Go **NO es un lenguaje de programación orientado a objetos**. No tiene clases, objetos ni herencia tradicional. Sin embargo, Go **tiene tipos**. Y puedes definir métodos sobre tipos.
-
-Un método es simplemente una **función con un receptor especial**. Veamos cómo declararlos:
-
-
-```go
-func (variable T) Nombre(params) (tiposRetorno) {}
-```
-
-El _receptor_ tiene un nombre y un tipo. Aparece entre la palabra clave `func` y el nombre del método.
-
-Por ejemplo, definamos una struct `Libro`:
-
-```go
-type Libro struct {
-    Titulo   string
-    Paginas  int
-}
-```
-
-Ahora definamos un método `EsLargo` que nos diga si un libro tiene más de 300 páginas:
-
-```go
-func (l Libro) EsLargo() bool {
-    return l.Paginas > 300
-}
-```
-
-Como ves, accedemos a la instancia de `Libro` usando la variable receptora `l`. Piensa en ella como el `this` de los lenguajes orientados a objetos.
-
-Ahora podemos llamar al método tras inicializar nuestra struct, igual que con clases en otros lenguajes:
-
-```go
-func main() {
-    libro := Libro{"El Quijote", 950}
-
-    fmt.Println("¿Es largo?", libro.EsLargo())  // true
-}
-```
-
-## Métodos con receptores por puntero
-
-Todos los ejemplos anteriores usaban receptores por valor.
-
-Con un **receptor por valor**, el método trabaja sobre una **copia** del valor. Las modificaciones al receptor NO se ven reflejadas en el original.
-
-Por ejemplo, creemos un método `ActualizarNombre` que cambie el nombre del `Libro`:
-
-```go
-func (l Libro) ActualizarNombre(nuevoTitulo string) {
-    l.Titulo = nuevoTitulo  // Cambia la COPIA
-}
-```
-
-Probémoslo:
-
-```go
-func main() {
-    libro := Libro{"El Quijote", 950}
-
-    libro.ActualizarNombre("1984")
-    fmt.Println("Libro:", libro)  // ¡Sigue siendo "El Quijote"!
-}
-```
-
-```bash
-$ go run main.go
-Libro: {El Quijote 950}
-```
-
-El nombre no cambió. Cambiemos el receptor a puntero:
-
-```go
-func (l *Libro) ActualizarNombre(nuevoTitulo string) {
-    l.Titulo = nuevoTitulo  // Cambia el ORIGINAL
-}
-```
-
-```bash
-$ go run main.go
-Libro: {La Regenta 950}
-```
-
-¡Perfecto! Los métodos con **receptores por puntero modifican el valor original**, y esos cambios son visibles para quien llama al método.
-
-## Propiedades de los métodos
-
-Go tiene algunas características inteligentes:
-
-- **Go interpreta automáticamente**: puedes llamar métodos de puntero tanto en valores como punteros
-
-```go
-libro.ActualizarNombre("Nuevo")  // Go hace &libro por ti
-(&libro).ActualizarNombre("Nuevo")
-```
-
-- **Receptor sin nombre**: si no usas la variable del receptor
-
-```go
-func (_ *Libro) ActualizarNombre(nombre string) { ... }
-```
-
-- **Métodos NO solo para structs**: funcionan con cualquier tipo
-
-```go
-package main
-
-import "fmt"
-
-type MiEntero int
-
-func (i MiEntero) EsMayor(valor int) bool {
-	return i > MiEntero(valor)
-}
-
-func main() {
-	n := MiEntero(10)
-	fmt.Println(n.EsMayor(5))  // true
-}
-```
-
-## ¿Por qué métodos en lugar de funciones?
-
-Entonces, la pregunta es: ¿por qué usar métodos en lugar de funciones?
-
-Como siempre, no hay una respuesta concreta para esto, y de ninguna manera uno es mejor que el otro. Más bien, deben usarse de forma adecuada según la situación.
-
-Una cosa que se me ocurre ahora mismo es que los métodos pueden ayudarnos a evitar conflictos de nombres.
-
-Dado que un método está asociado a un tipo en particular, podemos tener el mismo nombre de método para múltiples receptores.
-
-Pero al final, puede reducirse simplemente a una cuestión de preferencia, como por ejemplo: _“las llamadas a métodos son mucho más fáciles de leer y entender que las llamadas a funciones”_, o al contrario.
-
 
 # Interfaces
 
