@@ -31,14 +31,14 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
   - [Punteros](#punteros)
   - [Structs (estructuras)](#structs)
-  - [Métodos](#methods)
-  - [Arrays y slices](#arrays-and-slices)
+  - [Métodos](#metodos)
+  - [Arrays y slices](#arrays-y-slices)
   - [Maps](#maps)
 
 - **Capítulo III**
 
   - [Interfaces](#interfaces)
-  - [Errores](#errors)
+  - [Errores](#errores)
   - [Panic y Recover](#panic-and-recover)
   - [Testing (pruebas)](#testing)
   - [Genéricos](#generics)
