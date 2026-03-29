@@ -3708,126 +3708,130 @@ Como podemos ver, esto produce un error. Esto ocurre porque el método `Usar` so
 
 Esto es exactamente el punto donde entran las interfaces.
 
-**What should we do now? Define another method? Such as `PlugLaptop`?**
+**¿Qué deberíamos hacer ahora? ¿Definir otro método? Como `UsarAireAcondicionado`?**
 
-Sure, but then every time we add a new device type we will need to add a new method to the socket type as well and that's not ideal.
+Claro, pero entonces cada vez que añadamos un nuevo tipo de dispositivo tendríamos que añadir también un nuevo método al tipo `controlRemoto`, y eso no es lo ideal.
 
-This is where the `interface` comes in. Essentially, we want to define a **contract** that, in the future, must be implemented.
+Aquí es donde entra la **interfaz**. Básicamente, queremos definir un **contrato** que, a partir de ese momento, deba implementarse.
 
-We can simply define an interface such as `PowerDrawer` and use it in our `Plug` function to allow any device that satisfies the criteria, which is that the type must have a `Draw` method matching the signature that the interface requires.
+Podemos definir simplemente una interfaz, por ejemplo `Controlable`, y usarla en nuestro método `Usar` para permitir cualquier dispositivo que cumpla el requisito, es decir, que el tipo tenga un método `Encender` con la firma que exige la interfaz.
 
-And anyways, the socket doesn't need to know anything about our device and can simply call the `Draw` method.
+Y además, el control remoto no necesita saber nada más sobre el dispositivo; simplemente puede llamar al método `Encender`.
 
-![interface](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-III/interfaces/interface.png)
+![interface](images/interface2.png)
 
-Now let's try to implement our `PowerDrawer` interface. Here's how it will look.
+Ahora vamos a intentar implementar nuestra interfaz `Controlable`. Así es como se vería.
 
-The convention is to use **"-er"** as a suffix in the name. And as we discussed earlier, an interface should only describe the **expected behavior**. Which in our case is the `Draw` method.
+La convención es usar el sufijo **"-er"** en el nombre. Y como comentamos antes, una interfaz solo debe describir el comportamiento esperado. En nuestro caso, ese comportamiento es el método `Encender` (y opcionalmente `Apagar`).
 
-![interface-implementation](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-III/interfaces/interface-implementation.png)
+![interface-implementation](images/interface3.png)
 
 ```go
-type PowerDrawer interface {
-	Draw(power int)
+type Controlable interface {
+    Encender(power int)
+    Apagar()
 }
 ```
 
-Now, we need to update our `Plug` method to accept a device that implements the `PowerDrawer` interface as an argument.
+Ahora necesitamos actualizar nuestro método `Usar` para que acepte un dispositivo que implemente la interfaz `Controlable`.
 
 ```go
-func (socket) Plug(device PowerDrawer, power int) {
-	device.Draw(power)
+func (controlRemoto) Usar(device Controlable, power int) {
+    device.Encender(power)
 }
 ```
 
-And to satisfy the interface, we can simply add `Draw` methods to all the device types.
+Para cumplir la interfaz, simplemente añadimos los métodos `Encender` (y `Apagar`) a todos los dispositivos.
 
 ```go
-type mobile struct {
-	brand string
+type television struct {
+    brand string
 }
 
-func (m mobile) Draw(power int) {
-	fmt.Printf("%T -> brand: %s, power: %d\n", m, m.brand, power)
+func (t television) Encender(power int) {
+    fmt.Printf("%T -> marca: %s, potencia: %d\n", t, t.brand, power)
 }
 
-type laptop struct {
-	cpu string
+func (t television) Apagar() {
+    fmt.Println("Televisión apagada")
 }
 
-func (l laptop) Draw(power int) {
-	fmt.Printf("%T -> cpu: %s, power: %d\n", l, l.cpu, power)
+type aireAcondicionado struct {
+    mode string
 }
 
-type toaster struct {
-	amount int
+func (a aireAcondicionado) Encender(power int) {
+    fmt.Printf("%T -> modo: %s, potencia: %d\n", a, a.mode, power)
 }
 
-func (t toaster) Draw(power int) {
-	fmt.Printf("%T -> amount: %d, power: %d\n", t, t.amount, power)
+func (a aireAcondicionado) Apagar() {
+    fmt.Println("Aire acondicionado apagado")
 }
 
-type kettle struct {
-	quantity string
+type altavoz struct {
+    volume int
 }
 
-func (k kettle) Draw(power int) {
-	fmt.Printf("%T -> quantity: %s, power: %d\n", k, k.quantity, power)
+func (s altavoz) Encender(power int) {
+    fmt.Printf("%T -> volumen: %d, potencia: %d\n", s, s.volume, power)
+}
+
+func (s altavoz) Apagar() {
+    fmt.Println("Altavoz apagado")
 }
 ```
 
-Now, we can connect all our devices to the socket with the help of our interface!
+Ahora podemos usar todos los dispositivos con el control remoto gracias a la interfaz.
 
 ```go
 func main() {
-	m := mobile{"Apple"}
-	l := laptop{"Intel i9"}
-	t := toaster{4}
-	k := kettle{"50%"}
-
-	s := socket{}
-
-	s.Plug(m, 10)
-	s.Plug(l, 50)
-	s.Plug(t, 30)
-	s.Plug(k, 25)
+  tv := television{"Samsung"}
+  ac := aireAcondicionado{"frío"}
+  sp := altavoz{20}
+  
+  rc := controlRemoto{}
+  
+  rc.Usar(tv, 10)
+  rc.Usar(ac, 20)
+  rc.Usar(sp, 15)
 }
 ```
 
-And it works just as we expected.
+El resultado es el siguiente:
 
 ```bash
 $ go run main.go
-main.mobile -> brand: Apple, power: 10
-main.laptop -> cpu: Intel i9, power: 50
-main.toaster -> amount: 4, power: 30
-main.kettle -> quantity: Half Empty, power: 25
+main.television -> marca: Samsung, potencia: 10
+main.aireAcondicionado -> modo: frío, potencia: 20
+main.altavoz -> volumen: 20, potencia: 15
 ```
 
-**But why is this considered such a powerful concept?**
+![interface-implementation](images/interface4.png)
 
-Well, an interface can help us decouple our types. For example, because we have the interface, we don't need to update our `socket` implementation. We can just define a new device type with a `Draw` method.
+**¿Pero por qué se considera un concepto tan poderoso?**
 
-Unlike other languages, Go Interfaces are implemented **implicitly**, so we don't need something like an `implements` keyword. This means that a type satisfies an interface automatically when it has _"all the methods"_ of the interface.
+Bueno, una interfaz puede ayudarnos a desacoplar nuestros tipos. Por ejemplo, gracias a la interfaz, no necesitamos modificar la implementación de nuestro `controlRemoto`. Simplemente podemos definir un nuevo tipo de dispositivo con un método `Encender`.
 
-## Empty Interface
+A diferencia de otros lenguajes, las interfaces en Go se implementan de forma implícita, por lo que no necesitamos algo como la palabra clave **implements**. Esto significa que un tipo satisface una interfaz automáticamente cuando tiene todos los métodos que la interfaz define.
 
-Next, let's talk about the empty interface. An empty interface can take on a value of any type.
+## Interfaz vacía
 
-Here's how we declare it.
+Ahora hablemos de la interfaz vacía. Una interfaz vacía puede contener un valor de cualquier tipo.
+
+Así es como se declara:
 
 ```go
 var x interface{}
 ```
 
-**But why do we need it?**
+**¿Pero para qué sirve?**
 
-Empty interfaces can be used to handle values of unknown types.
+Las interfaces vacías se pueden usar para manejar valores de tipo desconocido.
 
-Some examples are:
+Algunos ejemplos son:
 
-- Reading heterogeneous data from an API.
-- Variables of an unknown type, like in the `fmt.Println` function.
+- Leer datos heterogéneos de una API.
+- Variables de tipo desconocido, como en la función `fmt.Println`.
 
 To use a value of type empty `interface{}`, we can use _type assertion_ or a _type switch_ to determine the type of the value.
 
