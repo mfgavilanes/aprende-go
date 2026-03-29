@@ -3833,59 +3833,62 @@ Algunos ejemplos son:
 - Leer datos heterogéneos de una API.
 - Variables de tipo desconocido, como en la función `fmt.Println`.
 
-To use a value of type empty `interface{}`, we can use _type assertion_ or a _type switch_ to determine the type of the value.
+Para usar un valor de tipo `interface{}` vacío, podemos emplear una _aserción de tipo_ o un _switch de tipos_ para determinar el tipo del valor.
 
-## Type Assertion
+## Asertion de tipo
 
-A _type assertion_ provides access to an interface value's underlying concrete value.
+Una _aserción de tipo_ permite acceder al valor concreto subyacente de una interfaz.
 
-For example:
+Por ejemplo:
 
 ```go
 func main() {
-	var i interface{} = "hello"
+	var i interface{} = "hola"
 
 	s := i.(string)
 	fmt.Println(s)
 }
 ```
 
-This statement asserts that the interface value holds a concrete type and assigns the underlying type value to the variable.
+Esta instrucción afirma que el valor de la interfaz contiene un tipo concreto y asigna ese valor a la variable.
 
-We can also test whether an interface value holds a specific type.
+También podemos comprobar si un valor de una interfaz contiene un tipo específico.
 
-A type assertion can return two values:
+Una aserción de tipo puede devolver dos valores:
 
-- The first one is the underlying value.
-- The second is a boolean value that reports whether the assertion succeeded.
+- El primero es el valor subyacente.
+- El segundo es un booleano que indica si la conversión fue exitosa.
 
 ```go
 s, ok := i.(string)
 fmt.Println(s, ok)
 ```
 
-This can help us test whether an interface value holds a specific type or not.
+Esto nos ayuda a verificar si la interfaz contiene un tipo concreto o no..
 
-In a way, this is similar to how we read values from a map.
+Esto es similar a cómo leemos valores de un mapa.
 
-And If this is not the case then, `ok` will be false and the value will be the zero value of the type, and no panic will occur.
+Si no es el caso:
+- `ok` será `false`
+- el valor será el valor cero del tipo
+- no ocurrirá ningún error
 
 ```go
 f, ok := i.(float64)
 fmt.Println(f, ok)
 ```
 
-But if the interface does not hold the type, the statement will trigger a panic.
+Pero si la interfaz no contiene ese tipo y no usamos el booleano, se producirá un error:
 
 ```go
 f = i.(float64)
-fmt.Println(f) // Panic!
+fmt.Println(f) // error!
 ```
 
 ```bash
 $ go run main.go
-hello
-hello true
+hola
+hola true
 0 false
 panic: interface conversion: interface {} is string, not float64
 ```
@@ -3896,7 +3899,7 @@ Here, a `switch` statement can be used to determine the type of a variable of ty
 
 ```go
 var t interface{}
-t = "hello"
+t = "hola"
 
 switch t := t.(type) {
 case string:
