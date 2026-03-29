@@ -3665,10 +3665,7 @@ func (controlRemoto) Usar(device television, power int) {
     device.Encender(power)
 }
 ```
-
-Probemos _"conectar"_ el `router` al `rack`:
-
-Let's try to _"connect"_ or _"plug in"_ the `mobile` type to our `socket` type in the `main` function.
+Intentemos ahora _“usar”_ la `televisión` con nuestro `controlRemoto` en la función `main`.
 
 ```go
 package main
@@ -3676,21 +3673,21 @@ package main
 import "fmt"
 
 func main() {
-	m := mobile{"Apple"}
-
-	s := socket{}
-	s.Plug(m, 10)
+	tv := television{"Samsung"}
+	
+	rc := remoteControl{}
+	rc.Usar(tv, 10)
 }
 ```
 
-And if we run this we'll see the following.
+Y si ejecutamos esto, veremos lo siguiente:
 
 ```bash
 $ go run main.go
-main.mobile -> brand: Apple, power: 10
+main.television -> marca: Samsung, potencia: 10
 ```
 
-This is interesting, but let's say now we want to connect our `laptop` type.
+Esto funciona bien, pero ahora supongamos que queremos `Usar` también el `aireAcondicionado`.
 
 ```go
 package main
@@ -3698,17 +3695,18 @@ package main
 import "fmt"
 
 func main() {
-	m := mobile{"Apple"}
-	l := laptop{"Intel i9"}
-
-	s := socket{}
-
-	s.Plug(m, 10)
-	s.Plug(l, 50) // Error: cannot use l as mobile value in argument
+	tv := television{"Samsung"}
+	ac := airConditioner{"frío"}
+	
+	rc := remoteControl{}
+	rc.Usar(tv, 10)
+	rc.Usar(ac, 20) // Error: no se puede usar ac como television
 }
 ```
 
-As we can see, this will throw an error.
+Como podemos ver, esto produce un error. Esto ocurre porque el método `Usar` solo acepta `television`, no otros dispositivos. El control remoto solo funciona con televisores, no es genérico por lo que tenemos un **problema**.
+
+Esto es exactamente el punto donde entran las interfaces.
 
 **What should we do now? Define another method? Such as `PlugLaptop`?**
 

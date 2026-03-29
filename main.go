@@ -42,11 +42,33 @@ type kettle struct {
 type socket struct{}
 
 func (m mobile) Draw(power int) {
-	fmt.Printf("%T -> brand: %s, power: %d", m, m.brand, power)
+	fmt.Printf("%T -> brand: %s, power: %d\n", m, m.brand, power)
 }
 
 func (socket) Plug(device mobile, power int) {
 	device.Draw(power)
+}
+
+type television struct {
+	brand string
+}
+
+type aireAcondicionado struct {
+	mode string
+}
+
+type altavoz struct {
+	power int
+}
+
+type controlRemoto struct{}
+
+func (t television) Encender(power int) {
+	fmt.Printf("%T -> marca: %s, potencia: %d\n", t, t.brand, power)
+}
+
+func (controlRemoto) Usar(device television, power int) {
+	device.Encender(power)
 }
 
 func main() {
@@ -132,10 +154,14 @@ func main() {
 	fmt.Println("Key d:", d, ok)
 
 	m2 := mobile{"Apple"}
-	l2 := laptop{"Intel i9"}
+	//l2 := laptop{"Intel i9"}
 
 	s3 := socket{}
 
 	s3.Plug(m2, 10)
-	s3.Plug(l2, 50) // Error: cannot use l as mobile value in argument
+	//s3.Plug(l2, 50) // Error: cannot use l as mobile value in argument
+	tv := television{"Samsung"}
+
+	rc := controlRemoto{}
+	rc.Usar(tv, 10)
 }
