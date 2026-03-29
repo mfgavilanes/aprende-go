@@ -35,8 +35,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Arrays](#arrays)
   - [Punteros](#punteros)
   - [Slices](#slices)
-  - [Maps](#maps) 
-
+  - [Maps](#maps)
   
 - **Características avanzadas del lenguaje Go**
   - [Interfaces](#interfaces)
@@ -3399,7 +3398,7 @@ Otra forma es usando un literal de map.
 func main() {
 	var m = map[string]int{
 		"a": 0,
-    "b": 1,
+        "b": 1,
 	}
 
 	fmt.Println(m)
@@ -3617,57 +3616,57 @@ func main() {
 
 # Interfaces
 
-In this section, let's talk about the interfaces.
+En esta sección, vamos a hablar sobre las interfaces.
 
-## What is an interface?
+## ¿Qué es una interfaz?
 
-So, an interface in Go is an **abstract type** that is defined using a set of method signatures. The interface defines the **behavior** for similar types of objects.
+Una interfaz en Go es un **tipo abstracto** que se define mediante un conjunto de firmas de métodos. La interfaz define el **comportamiento** de tipos de objetos similares.
 
-_Here, **behavior** is a key term that we will discuss shortly._
+_Aquí, **comportamiento** es un término clave que veremos en breve._
 
-Let's take a look at an example to understand this better.
+Veamos un ejemplo para entenderlo mejor.
 
-One of the best real-world examples of interfaces is the power socket. Imagine that we need to connect different devices to the power socket.
+Imagina un **control remoto** que puede usarse con distintos dispositivos:
 
-![no-interface](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-III/interfaces/no-interface.png)
+![no-interface](images/interfaces-img.png)
 
-Let's try to implement this. Here are the device types we will be using.
+Todos son diferentes, pero comparten el mismo comportamiento:
 
-```go
-type mobile struct {
-	brand string
-}
-
-type laptop struct {
-	cpu string
-}
-
-type toaster struct {
-	amount int
-}
-
-type kettle struct {
-	quantity string
-}
-
-type socket struct{}
-```
-
-Now, let's define a `Draw` method on a type, let's say `mobile`. Here we will simply print the properties of the type.
+Intentemos implementar esto. Estos son los tipos de dispositivos que vamos a usar.
 
 ```go
-func (m mobile) Draw(power int) {
-	fmt.Printf("%T -> brand: %s, power: %d", m, m.brand, power)
+type television struct {
+    brand string
 }
+
+type aireAcondicionado struct {
+    mode string
+}
+
+type altavoz struct {
+    power int
+}
+
+type controlRemoto struct{}
 ```
 
-Great, now we will define the `Plug` method on the `socket` type which accepts our `mobile` type as an argument.
+Ahora definimos un método, por ejemplo `Encender`, sobre el tipo `television`. Aquí simplemente imprimimos las propiedades del dispositivo:
 
 ```go
-func (socket) Plug(device mobile, power int) {
-	device.Draw(power)
+func (t television) Encender(power int) {
+    fmt.Printf("%T -> marca: %s, potencia: %d\n", t, t.brand, power)
 }
 ```
+
+Perfecto, ahora definimos el método `Usar` en el tipo `controlRemoto`, que recibe una televisión como argumento.
+
+```go
+func (controlRemoto) Usar(device television, power int) {
+    device.Encender(power)
+}
+```
+
+Probemos _"conectar"_ el `router` al `rack`:
 
 Let's try to _"connect"_ or _"plug in"_ the `mobile` type to our `socket` type in the `main` function.
 

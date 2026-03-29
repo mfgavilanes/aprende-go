@@ -23,9 +23,41 @@ type Usuario struct {
 	Name string
 }
 
+type mobile struct {
+	brand string
+}
+
+type laptop struct {
+	cpu string
+}
+
+type toaster struct {
+	amount int
+}
+
+type kettle struct {
+	quantity string
+}
+
+type socket struct{}
+
+func (m mobile) Draw(power int) {
+	fmt.Printf("%T -> brand: %s, power: %d", m, m.brand, power)
+}
+
+func (socket) Plug(device mobile, power int) {
+	device.Draw(power)
+}
+
 func main() {
+
+	s := "ñ"
+	fmt.Println(len(s))
+	fmt.Println(len([]rune(s)))
+
 	//log.Info().Msg("Hola")
-	fmt.Println("hola")
+	var z string = "Hola"
+	fmt.Println(z, z[0])
 
 	a := 4
 
@@ -98,4 +130,12 @@ func main() {
 
 	d, ok := m["d"]
 	fmt.Println("Key d:", d, ok)
+
+	m2 := mobile{"Apple"}
+	l2 := laptop{"Intel i9"}
+
+	s3 := socket{}
+
+	s3.Plug(m2, 10)
+	s3.Plug(l2, 50) // Error: cannot use l as mobile value in argument
 }
