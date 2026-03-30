@@ -40,9 +40,9 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 - **Características avanzadas del lenguaje Go**
   - [Interfaces](#interfaces)
   - [Errores](#errores)
-  - [Panic y Recover](#panic-and-recover)
+  - [Panic y Recover](#panic-y-recover)
   - [Testing (pruebas)](#testing)
-  - [Genéricos](#generics)
+  - [Genéricos](#genéricos)
 
 - **Capítulo IV**
 
