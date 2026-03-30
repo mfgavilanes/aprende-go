@@ -610,9 +610,9 @@ Y, como podemos ver, imprime el tipo como `float64` y `uint`.
 _Ten en cuenta que esto es diferente del análisis sintáctico._
 
 
-## Valores por defecto
+## Valores por defecto o valores cero
 
-Ahora hablemos de los valores por defecto. En Go, cualquier variable declarada sin un valor inicial explícito recibe un valor por defecto. Por ejemplo, declaremos algunas variables y veamos:
+Ahora hablemos de los valores por defecto o valores cero. En Go, cualquier variable declarada sin un valor inicial explícito recibe un valor por defecto o también denominado valor cero. Por ejemplo, declaremos algunas variables y veamos:
 
 ```go
 var i int
@@ -812,7 +812,7 @@ A modo de resumen tenemos:
 
 | Verbo | Descripción                                                          |
 |-------|----------------------------------------------------------------------|
-| %v    | Valor en el formato por defecto                                      |
+| %v    | Valor en el formato por defecto o valor cero                         |
 | %T    | Tipos de datos                                                       |
 | %d    | Valor numérico en base decimal                                       |
 | %b   | Valor numérico en base binario                                       |
@@ -2206,7 +2206,7 @@ $ go run main.go
 Producto 1: { 0 0 0 false}
 ```
 
-Como vemos, todos los campos de la `struct` se inicializan con sus valores por defecto. Entonces `Nombre` se establece como `""` (cadena vacía), `Precio` y `Descuento` como 0.0, `Stock` como 0 y `Disponible` como false.
+Como vemos, todos los campos de la `struct` se inicializan con sus valores por defecto o valores cero. Entonces `Nombre` se establece como `""` (cadena vacía), `Precio` y `Descuento` como 0.0, `Stock` como 0 y `Disponible` como false.
 
 
 También podemos inicializarla como _"literal de struct literal"_.
@@ -2273,7 +2273,7 @@ Producto 3b: {Teclado Mecánico 89.99 0 0 false}
 ```
 
 
-Como vemos, los campos no especificados del producto 3b (`Stock` y `Disponible`) toman su valor cero por defecto.
+Como vemos, los campos no especificados del producto 3b (`Stock` y `Disponible`) toman su valor por defecto o valor cero.
 
 ## Campo sin nombre
 
@@ -2459,7 +2459,7 @@ type producto struct {        // ❌ NO exportada
 
 
 
-## Composición y embebido
+## Composición y embedding
 
 Como comentamos antes, Go no soporta herencia necesariamente, pero podemos hacer algo similar mediante el embebido (inclusión de structs).
 
@@ -3119,7 +3119,7 @@ $ go run main.go
 true
 ```
 
-Así que, a diferencia de los arrays, el valor por defecto de un slice es `nil`.
+Así que, a diferencia de los arrays, el valor por defecto o valor cero de un slice es `nil`.
 
 ## Inicialización
 
@@ -3833,7 +3833,7 @@ Algunos ejemplos son:
 - Leer datos heterogéneos de una API.
 - Variables de tipo desconocido, como en la función `fmt.Println`.
 
-Para usar un valor de tipo `interface{}` vacío, podemos emplear una _aserción de tipo_ o un _switch de tipos_ para determinar el tipo del valor.
+Para usar un valor de tipo `interface{}` vacío, podemos emplear una _aserción de tipo_ o un _switch de tipo_ para determinar el tipo del valor.
 
 ## Asertion de tipo
 
@@ -3864,7 +3864,7 @@ s, ok := i.(string)
 fmt.Println(s, ok)
 ```
 
-Esto nos ayuda a verificar si la interfaz contiene un tipo concreto o no..
+Esto nos ayuda a verificar si la interfaz contiene un tipo concreto o no.
 
 Esto es similar a cómo leemos valores de un mapa.
 
@@ -3893,9 +3893,19 @@ hola true
 panic: interface conversion: interface {} is string, not float64
 ```
 
-## Type Switch
+## Switch de tipo
 
-Here, a `switch` statement can be used to determine the type of a variable of type empty `interface{}`.
+Un _switch de tipo_ en Go es una construcción que se usa para **saber qué tipo concreto** tiene un valor almacenado en una interfaz, especialmente en una `interface{}` vacía.
+
+Sirve para tratar distintos tipos de forma diferente dentro del mismo bloque de código.
+
+Si una variable puede contener valores de varios tipos, el switch de tipo te permite preguntar:
+- ¿es un string?
+- ¿es un int?
+- ¿es un bool?
+
+Veamos un ejemplo:
+
 
 ```go
 var t interface{}
@@ -3913,120 +3923,122 @@ default:
 }
 ```
 
-And if we run this, we can verify that we have a `string` type.
+Y si lo ejecutamos, podremos verificar que tenemos un tipo `string`.
 
 ```bash
 $ go run main.go
-string: hello
+string: hola
 ```
 
-## Properties
+En resumen, es una forma elegante de **desempaquetar** una interfaz y actuar según el tipo real del valor.
 
-Let's discuss some properties of interfaces.
+## Propiedades
 
-### Zero value
+Hablemos de algunas propiedades de las interfaces.
 
-The zero value of an interface is `nil`.
+### Valor por defecto o valor cero
+
+El valor por defecto o valor cero de una interfaz es `nil`.
 
 ```go
 package main
 
 import "fmt"
 
-type MyInterface interface {
-	Method()
+type MiInterfaz interface {
+	Metodo()
 }
 
 func main() {
-	var i MyInterface
-
-	fmt.Println(i) // Output: <nil>
+	var i MiInterfaz
+	
+	fmt.Println(i) // Salida: <nil>
 }
 ```
 
 ### Embedding
 
-We can embed interfaces like structs. For example:
+Podemos embeber interfaces como hacemos con structs. Por ejemplo:
 
 ```go
-type interface1 interface {
-    Method1()
+type interfaz1 interface {
+    Metodo1()
 }
 
-type interface2 interface {
-    Method2()
+type interfaz2 interface {
+    Metodo2()
 }
 
-type interface3 interface {
-    interface1
-    interface2
+type interfaz3 interface {
+    interfaz1
+    interfaz2
 }
 ```
 
-### Values
+### Valores
 
-Interface values are comparable.
-
-```go
-package main
-
-import "fmt"
-
-type MyInterface interface {
-	Method()
-}
-
-type MyType struct{}
-
-func (MyType) Method() {}
-
-func main() {
-	t := MyType{}
-	var i MyInterface = MyType{}
-
-	fmt.Println(t == i)
-}
-```
-
-### Interface Values
-
-Under the hood, an interface value can be thought of as a tuple consisting of a value and a concrete type.
+Los valores de interfaz son comparables.
 
 ```go
 package main
 
 import "fmt"
 
-type MyInterface interface {
-	Method()
+type MiInterfaz interface {
+	Metodo()
 }
 
-type MyType struct {
-	property int
-}
+type MiTipo struct{}
 
-func (MyType) Method() {}
+func (MiTipo) Metodo() {}
 
 func main() {
-	var i MyInterface
-
-	i = MyType{10}
-
-	fmt.Printf("(%v, %T)\n", i, i) // Output: ({10}, main.MyType)
+	t := MiTipo{}
+	var i MiInterfaz = MiTipo{}
+	
+	fmt.Println(t == i)  // true
 }
 ```
 
-With that, we covered interfaces in Go.
+### Valores de interfaz
 
-It's a really powerful feature, but remember, _"Bigger the interface, the weaker the abstraction"_ - Rob Pike.
+Por debajo, un valor de interfaz se puede pensar como una **tupla** que consiste en un **valor** y un **tipo concreto**.
 
-# Errors
+```go
+package main
 
-In this tutorial, let's talk about error handling.
+import "fmt"
 
-Notice how I said errors and not exceptions as there is no exception handling in Go.
+type MiInterfaz interface {
+	Metodo()
+}
 
-Instead, we can just return a built-in `error` type which is an interface type.
+type MiTipo struct {
+	propiedad int
+}
+
+func (MiTipo) Metodo() {}
+
+func main() {
+	var i MiInterfaz
+	
+	i = MiTipo{10}
+	
+	fmt.Printf("(%v, %T)\n", i, i)  // Salida: ({10}, main.MiTipo)
+}
+```
+
+¡Con esto hemos cubierto las interfaces en Go!
+
+Es una característica muy potente, pero recuerda: _"A mayor interfaz, menor abstracción"_.
+
+# Manejo de errores
+
+Hablemos ahora del manejo de errores.
+
+Observa que dije errores y no excepciones, porque Go no tiene manejo de excepciones.
+
+En su lugar, simplemente devolvemos un tipo `error`, que es un tipo de interfaz:
 
 ```go
 type error interface {
@@ -4034,9 +4046,10 @@ type error interface {
 }
 ```
 
-We will circle back to this shortly. First, let's try to understand the basics.
+Volveremos a esto más adelante. Primero, entendamos los conceptos básicos.
 
-So, let's declare a simple `Divide` function which, as the name suggests, will divide integer `a` by `b`.
+Declaramos una función simple `Divide` que, como su nombre indica, dividirá el entero `a` entre `b`.
+
 
 ```go
 func Divide(a, b int) int {
@@ -4044,15 +4057,15 @@ func Divide(a, b int) int {
 }
 ```
 
-Great. Now, we want to return an error, let's say, to prevent the division by zero. This brings us to error construction.
+Perfecto. Ahora queremos devolver un error, por ejemplo, para evitar la división por cero. Esto nos lleva a la construcción de errores.
 
-## Constructing Errors
+## Construcción de errores
 
-There are multiple ways to do this, but we will look at the two most common ones.
+Hay varias formas de hacerlo, pero veremos las dos más comunes.
 
-### `errors` package
+### Paquete `errors`
 
-The first is by using the `New` function provided by the `errors` package.
+La primera es usando la función `New` del paquete `errors`:
 
 ```go
 package main
@@ -4063,16 +4076,16 @@ func main() {}
 
 func Divide(a, b int) (int, error) {
 	if b == 0 {
-		return 0, errors.New("cannot divide by zero")
+		return 0, errors.New("no se puede dividir por cero")
 	}
 
 	return a/b, nil
 }
 ```
 
-Notice, how we return an `error` with the result. And if there is no error we simply return `nil` as it is the zero value of an error because after all, it's an interface.
+Notar que devolvemos un error junto al resultado. Si no hay error, devolvemos `nil` (valor cero de interfaces).
 
-But how do we handle it? So, for that, let's call the `Divide` function in our `main` function.
+¿Cómo manejarlo? Llamamos la función `Divide` desde la función `main`:
 
 ```go
 package main
@@ -4083,16 +4096,15 @@ import (
 )
 
 func main() {
-	result, err := Divide(4, 0)
+	resultado, err := Divide(4, 0)
 
 	if err != nil {
-		fmt.Println(err)
-		// Do something with the error
+		fmt.Println(err) //Manejar error
+		
 		return
 	}
 
-	fmt.Println(result)
-	// Use the result
+	fmt.Println(resultado) // Usar resultado
 }
 
 func Divide(a, b int) (int, error) {...}
@@ -4100,38 +4112,35 @@ func Divide(a, b int) (int, error) {...}
 
 ```bash
 $ go run main.go
-cannot divide by zero
+no se puede dividir por cero
 ```
 
-As you can see, we simply check if the error is `nil` and build our logic accordingly. This is considered quite idiomatic in Go and you will see this being used a lot.
+Como podemos ver, simplemente verificamos `err != nil` y construimos la lógica en consecuencia. Esto se conoce como **Go Idiomático**.
 
-Another way to construct our errors is by using the `fmt.Errorf` function.
+Otra forma es `fmt.Errorf`, similar a la función `fmt.Sprintf ` pero devuelve `error`:
 
-This function is similar to `fmt.Sprintf` and it lets us format our error. But instead of returning a string, it returns an error.
-
-It is often used to add some context or detail to our errors.
 
 ```go
 ...
 func Divide(a, b int) (int, error) {
 	if b == 0 {
-		return 0, fmt.Errorf("cannot divide %d by zero", a)
+		return 0, fmt.Errorf("no se puede dividir %d por cero", a)
 	}
 
 	return a/b, nil
 }
 ```
 
-And it should work similarly.
+Debería funcionar de manera similar.
 
 ```bash
 $ go run main.go
-cannot divide 4 by zero
+no se puede dividir 4 por cero
 ```
 
-### Sentinel Errors
+### Errores centinela
 
-Another important technique in Go is defining expected Errors so they can be checked explicitly in other parts of the code. These are sometimes referred to as sentinel errors.
+Otra técnica importante en Go es definir **errores esperados** para poder verificarlos explícitamente en otras partes del código. A estos se les llama **errores centinela**.
 
 ```go
 package main
@@ -4141,26 +4150,24 @@ import (
 	"fmt"
 )
 
-var ErrDivideByZero = errors.New("cannot divide by zero")
+var ErrDividirPorCero = errors.New("no se puede dividir por cero")
 
 func main() {...}
 
 func Divide(a, b int) (int, error) {
 	if b == 0 {
-		return 0, ErrDivideByZero
+		return 0, ErrDividirPorCero
 	}
 
 	return a/b, nil
 }
 ```
 
-In Go, it is considered conventional to prefix the variable with `Err`. For example, `ErrNotFound`.
+En Go, se considera convencional usar el prefijo `Err` en la variable (ej. `ErrNotFound`).
 
-**But what's the point?**
+**¿Cuál es la ventaja?**
 
-So, this becomes useful when we need to execute a different branch of code if a certain kind of error is encountered.
-
-For example, now we can check explicitly which error occurred using the `errors.Is` function.
+Es útil cuando necesitamos ejecutar **ramas de código diferentes** según el tipo de error (usando la función `errors.Is`):
 
 ```go
 package main
@@ -4171,22 +4178,19 @@ import (
 )
 
 func main() {
-	result, err := Divide(4, 0)
+	resultado, err := Divide(4, 0)
 
 	if err != nil {
 		switch {
-    case errors.Is(err, ErrDivideByZero):
-        fmt.Println(err)
-				// Do something with the error
-    default:
-        fmt.Println("no idea!")
-    }
-
+		case errors.Is(err, ErrDividirPorCero):
+			fmt.Println("Error específico:", err)
+			// Acción específica para división por cero
+		default:
+			fmt.Println("¡Error desconocido!")
+		}
 		return
 	}
-
-	fmt.Println(result)
-	// Use the result
+	fmt.Println("Resultado:", resultado)
 }
 
 func Divide(a, b int) (int, error) {...}
@@ -4194,16 +4198,16 @@ func Divide(a, b int) (int, error) {...}
 
 ```bash
 $ go run main.go
-cannot divide by zero
+Error específico: no se puede dividir por cero
 ```
 
-## Custom Errors
+## Errores personalizados
 
-This strategy covers most of the error handling use cases. But sometimes we need additional functionalities such as dynamic values inside of our errors.
+Esta estrategia cubre la mayoría de casos de manejo de errores. Pero a veces necesitamos **valores dinámicos** dentro de nuestros errores.
 
-Earlier, we saw that `error` is just an interface. So basically, anything can be an `error` as long as it implements the `Error()` method which returns an error message as a string.
+Recordemos que `error` es solo una interfaz. Cualquier cosa puede ser `error` si implementa el método `Error()` que devuelve un string.
 
-So, let's define our custom `DivisionError` struct which will contain an error code and a message.
+Definamos ahora nuestro `DivisionError`. Para ellos creamos un struct personalizado con código de error y mensaje:
 
 ```go
 package main
@@ -4219,7 +4223,7 @@ type DivisionError struct {
 }
 
 func (d DivisionError) Error() string {
-	return fmt.Sprintf("code %d: %s", d.Code, d.Msg)
+	return fmt.Sprintf("código %d: %s", d.Code, d.Msg)
 }
 
 func main() {...}
@@ -4228,7 +4232,7 @@ func Divide(a, b int) (int, error) {
 	if b == 0 {
 		return 0, DivisionError{
 			Code: 2000,
-			Msg:  "cannot divide by zero",
+			Msg:  "no se puede dividir por cero",
 		}
 	}
 
@@ -4236,28 +4240,26 @@ func Divide(a, b int) (int, error) {
 }
 ```
 
-Here, we will use `errors.As` instead of `errors.Is` function to convert the error to the correct type.
+Aquí usaremos `errors.As` en lugar de la función `errors.Is` para convertir el error al tipo correcto.
 
 ```go
 func main() {
-	result, err := Divide(4, 0)
+	resultado, err := Divide(4, 0)
 
 	if err != nil {
 		var divErr DivisionError
 
 		switch {
 		case errors.As(err, &divErr):
-			fmt.Println(divErr)
-			// Do something with the error
+			fmt.Printf("Error: %s (Código: %d)\n", divErr.Msg, divErr.Code)
+			// Acción específica con el error
 		default:
-			fmt.Println("no idea!")
+			fmt.Println("¡Error desconocido!")
 		}
 
 		return
 	}
-
-	fmt.Println(result)
-	// Use the result
+    fmt.Println("Resultado:", resultado)
 }
 
 func Divide(a, b int) (int, error) {...}
@@ -4265,29 +4267,14 @@ func Divide(a, b int) (int, error) {...}
 
 ```bash
 $ go run main.go
-code 2000: cannot divide by zero
+Error: no se puede dividir por cero (Código: 2000)
 ```
 
-**But what's the difference between `errors.Is` and `errors.As`?**
+**¿Pero, cuál es la diferencia entre `errors.Is` y `errors.As`?**
 
-The difference is that this function checks whether the error has a specific type, unlike the [`Is`](https://pkg.go.dev/errors#Is) function, which examines if it is a particular error object.
+La diferencia es que esta función verifica si el error tiene un tipo específico, a diferencia de la función [`Is`](https://pkg.go.dev/errors#Is), que examina si es un objeto de error particular.
 
-We can also use type assertions but it's not preferred.
-
-```go
-func main() {
-	result, err := Divide(4, 0)
-
-	if e, ok := err.(DivisionError); ok {
-		fmt.Println(e.Code, e.Msg) // Output: 2000 cannot divide by zero
-		return
-	}
-
-	fmt.Println(result)
-}
-```
-
-Lastly, I will say that error handling in Go is quite different compared to the traditional `try/catch` idiom in other languages. But it is very powerful as it encourages the developer to actually handle the error in an explicit way, which improves readability as well.
+Finalmente, diré que el manejo de errores en Go es bastante diferente al paradigma tradicional try/catch de otros lenguajes. Pero es muy poderoso porque fomenta al desarrollador a manejar el error de forma explícita, lo que mejora la legibilidad del código.
 
 # Panic and Recover
 
