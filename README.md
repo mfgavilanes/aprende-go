@@ -4484,7 +4484,7 @@ func TestMultiply(t *testing.T) {
 ¡Genial! Nuestro test se ejecuta correctamente y pasa sin errores.
 
 ```bash
-$ go test ./utils
+$ go test utils
 ok      example/utils    0.3s
 ```
 
@@ -4639,82 +4639,17 @@ Esto abrirá un informe en el navegador donde podremos ver claramente qué parte
 
 Lo mejor es que todo esto viene incluido directamente en las herramientas estándar de Go.
 
-## Fuzz testing
+# Genéricos
 
-Finalmente, veamos el fuzz testing, una funcionalidad introducida en Go 1.18.
+En esta sección, aprenderemos sobre los Genéricos, una función muy esperada que se incorporó en la versión 1.18 de Go.
 
-El fuzzing es una técnica de testing automático que genera entradas aleatorias para encontrar errores en el programa.
+## ¿Qué son los Genéricos?
 
-Go utiliza la cobertura de código para explorar diferentes caminos de ejecución y detectar fallos, incluyendo casos extremos que normalmente se nos escaparían.
+Los genéricos significan tipos parametrizados. En pocas palabras, los genéricos permiten a los programadores escribir código donde el tipo puede especificarse más adelante, porque el tipo no es inmediatamente relevante.
 
-Veamos un ejemplo:
+Veamos un ejemplo para entenderlo mejor.
 
-```go
-func FuzzTestMultiply(f *testing.F) {
-    f.Fuzz(func(t *testing.T, a, b int) {
-        utils.Multiply(a, b)
-    })
-}
-```
-Si ejecutamos esto:
-
-```bash
-$ go test -fuzz FuzzTestMultiply ./utils
-```
-
-Go generará automáticamente múltiples casos de prueba.
-
-If we run this, we'll see that it'll automatically create test cases. Because our `Add` function is quite simple, tests will pass.
-
-```bash
-$ go test -fuzz FuzzTestAdd example/math
-fuzz: elapsed: 0s, gathering baseline coverage: 0/192 completed
-fuzz: elapsed: 0s, gathering baseline coverage: 192/192 completed, now fuzzing with 8 workers
-fuzz: elapsed: 3s, execs: 325017 (108336/sec), new interesting: 11 (total: 202)
-fuzz: elapsed: 6s, execs: 680218 (118402/sec), new interesting: 12 (total: 203)
-fuzz: elapsed: 9s, execs: 1039901 (119895/sec), new interesting: 19 (total: 210)
-fuzz: elapsed: 12s, execs: 1386684 (115594/sec), new interesting: 21 (total: 212)
-PASS
-ok      foo 12.692s
-```
-
-But if we update our `Add` function with a random edge case such that the program will panic if `b + 10` is greater than `a`.
-
-```go
-func Add(a, b int) int {
-	if a > b + 10 {
-		panic("B must be greater than A")
-	}
-
-	return a + b
-}
-```
-
-And if we re-run the test, this edge case will be caught by fuzz testing.
-
-```bash
-$ go test -fuzz FuzzTestAdd example/math
-warning: starting with empty corpus
-fuzz: elapsed: 0s, execs: 0 (0/sec), new interesting: 0 (total: 0)
-fuzz: elapsed: 0s, execs: 1 (25/sec), new interesting: 0 (total: 0)
---- FAIL: FuzzTestAdd (0.04s)
-    --- FAIL: FuzzTestAdd (0.00s)
-        testing.go:1349: panic: B is greater than A
-```
-
-I think this is a really cool feature of Go 1.18. You can learn more about fuzz testing from the [official Go blog](https://go.dev/doc/fuzz).
-
-# Generics
-
-In this section, we will learn about Generics which is a much awaited feature that was released with Go version 1.18.
-
-## What are Generics?
-
-Generics means parameterized types. Put simply, generics allow programmers to write code where the type can be specified later because the type isn't immediately relevant.
-
-Let's take a look at an example to understand this better.
-
-For our example, we have simple sum functions for different types such as `int`, `float64`, and `string`. Since method overriding is not allowed in Go we usually have to create new functions.
+En nuestro ejemplo, tenemos funciones simples de suma para diferentes tipos como `int`, `float64`, y `string`. Dado que la sobrecarga de métodos no está permitida en Go, normalmente debemos crear nuevas funciones.
 
 ```go
 package main
@@ -4740,9 +4675,9 @@ func main() {
 }
 ```
 
-As we can see, apart from the types, these functions are pretty similar.
+Como podemos ver, aparte de los tipos, estas funciones son muy similares.
 
-Let's see how we can define a generic function.
+Veamos cómo podemos definir una función genérica.
 
 ```go
 func fnName[T constraint]() {
@@ -4750,11 +4685,11 @@ func fnName[T constraint]() {
 }
 ```
 
-Here, `T` is our type parameter and `constraint` will be the interface that allows any type implementing the interface.
+Aquí, `T` es nuestro **parámetro de tipo**, y `constraint` será la **interfaz** que permitirá cualquier tipo que implemente dicha interfaz.
 
-I know, I know, this is confusing. So, let's start building our generic `sum` function.
+Lo sé ... suena confuso. Así que empecemos a construir nuestra función genérica `sum`.
 
-Here, we will use `T` as our type parameter with an empty `interface{}` as our constraint.
+En este caso, usaremos `T` como parámetro de tipo, con una interfaz vacía `interface{}` como restricción.
 
 ```go
 func sum[T interface{}](a, b T) T {
@@ -4762,7 +4697,7 @@ func sum[T interface{}](a, b T) T {
 }
 ```
 
-Also, starting with Go 1.18 we can use `any`, which is pretty much equivalent to the empty interface.
+Además, a partir de Go 1.18 podemos usar `any`, que es prácticamente equivalente a la interfaz vacía.
 
 ```go
 func sum[T any](a, b T) T {
@@ -4770,15 +4705,15 @@ func sum[T any](a, b T) T {
 }
 ```
 
-With type parameters, comes the need to pass type arguments, which can make our code verbose.
+Cuando usamos **parámetros de tipo**, también necesitamos pasar argumentos de tipo, lo cual puede hacer que nuestro código sea más verboso.
 
 ```go
-sum[int](1, 2) // explicit type argument
+sum[int](1, 2) // argumento de tipo explícito
 sum[float64](4.0, 2.0)
 sum[string]("a", "b")
 ```
 
-Luckily, Go 1.18 comes with **type inference** which helps us to write code that calls generic functions without explicit types.
+Por suerte, Go 1.18 incorpora la inferencia de tipos, lo que nos permite escribir código que llama a funciones genéricas sin especificar explícitamente los tipos.
 
 ```go
 sum(1, 2)
@@ -4786,7 +4721,7 @@ sum(4.0, 2.0)
 sum("a", "b")
 ```
 
-Let's run this and see if it works.
+Ejecutemos esto para ver si funciona.
 
 ```bash
 $ go run main.go
@@ -4795,7 +4730,7 @@ $ go run main.go
 a b
 ```
 
-Now, let's update the `sum` function to add our variables.
+Ahora, actualicemos la función `sum` para sumar nuestras variables.
 
 ```go
 func sum[T any](a, b T) T {
@@ -4809,20 +4744,20 @@ fmt.Println(sum(4.0, 2.0))
 fmt.Println(sum("a", "b"))
 ```
 
-But now if we run this, we will get an error that operator `+` is not defined in the constraint.
+Pero si ejecutamos esto ahora, obtendremos un error indicando que el operador `+` no está definido en la restricción.
 
 ```bash
 $ go run main.go
 ./main.go:6:9: invalid operation: operator + not defined on a (variable of type T constrained by any)
 ```
 
-While constraint of type `any` generally works it does not support operators.
+Aunque la restricción del tipo `any` funciona en general, no admite operadores.
 
-So let's define our own custom constraint using an interface. Our interface should define a type set containing `int`, `float`, and `string`.
+Por lo tanto, definamos nuestra propia restricción personalizada usando una interfaz. Nuestra interfaz debe definir un conjunto de tipos que contenga `int`, `float`, y `string`.
 
-![typeset](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-III/generics/typeset.png)
+![typeset](images/typeset.png)
 
-Here's how our `SumConstraint` interface looks.
+Así es como se ve nuestra interfaz `SumConstraint`:
 
 ```go
 type SumConstraint interface {
@@ -4840,7 +4775,7 @@ func main() {
 }
 ```
 
-And this should work as expected.
+Y esto debería funcionar como esperamos.
 
 ```bash
 $ go run main.go
@@ -4848,8 +4783,7 @@ $ go run main.go
 6
 ab
 ```
-
-We can also use the `constraints` package which defines a set of useful constraints to be used with type parameters.
+También podemos usar el paquete `constraints`, que define un conjunto de restricciones útiles para usar con parámetros de tipo.
 
 ```go
 type Signed interface {
@@ -4877,7 +4811,7 @@ type Ordered interface {
 }
 ```
 
-For that, we will need to install the `constraints` package.
+Para ello, necesitaremos instalar el paquete `constraints`.
 
 ```bash
 $ go get golang.org/x/exp/constraints
@@ -4902,7 +4836,7 @@ func main() {
 }
 ```
 
-Here we are using the `Ordered` constraint.
+Aquí estamos usando la restricción `Ordered`.
 
 ```go
 type Ordered interface {
@@ -4910,9 +4844,9 @@ type Ordered interface {
 }
 ```
 
-`~` is a new token added to Go and the expression `~string` means the set of all types whose underlying type is `string`.
+El símbolo `~` es un nuevo token añadido a Go, y la expresión `~string` significa el conjunto de todos los tipos cuyo tipo subyacente es `string`.
 
-And it still works as expected.
+Y, como podemos comprobar, sigue funcionando correctamente.
 
 ```bash
 $ go run main.go
@@ -4921,19 +4855,19 @@ $ go run main.go
 ab
 ```
 
-Generics is an amazing feature because it permits writing abstract functions that can drastically reduce code duplication in certain cases.
+Los genéricos son una característica increíble, ya que permiten escribir funciones abstractas que pueden reducir drásticamente la duplicación de código en muchos casos.
 
-## When to use generics
+## Cuándo usar genéricos
 
-So, when to use generics? We can take the following use cases as an example:
+Entonces, ¿cuándo deberíamos usar genéricos? Podemos tomar los siguientes casos de uso como ejemplo:
 
-- Functions that operate on arrays, slices, maps, and channels.
-- General purpose data structures like stack or linked list.
-- To reduce code duplication.
+- Funciones que operan sobre arrays, slices, maps y channels.
+- Estructuras de datos de propósito general, como pilas (_stacks_) o listas enlazadas (_linked lists_).
+- Para reducir la duplicación de código.
 
-Lastly, I will add that while generics are a great addition to the language, they should be used sparingly.
+Por último, aunque los genéricos son una excelente incorporación al lenguaje, deberían usarse con moderación.
 
-And, it is advised to start simple and only write generic code once we have written very similar code at least 2 or 3 times.
+Se recomienda empezar por lo simple y solo escribir código genérico cuando hayamos implementado código muy similar al menos dos o tres veces.
 
 # Concurrency
 
