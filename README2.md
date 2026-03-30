@@ -4276,11 +4276,11 @@ La diferencia es que esta función verifica si el error tiene un tipo específic
 
 Finalmente, diré que el manejo de errores en Go es bastante diferente al paradigma tradicional try/catch de otros lenguajes. Pero es muy poderoso porque fomenta al desarrollador a manejar el error de forma explícita, lo que mejora la legibilidad del código.
 
-# Panic y Recover
+# Panic and Recover
 
-Como vimos antes, la forma idiomática de manejar condiciones anómalas en un programa Go es mediante errores. Aunque los errores son suficientes en la mayoría de los casos, hay situaciones en las que el programa no puede continuar.
+So earlier, we learned that the idiomatic way of handling abnormal conditions in a Go program is using errors. While errors are sufficient for most cases, there are some situations where the program cannot continue.
 
-En esos casos, podemos usar la función incorporada `panic`.
+In those cases, we can use the built-in `panic` function.
 
 ## Panic
 
@@ -4288,11 +4288,11 @@ En esos casos, podemos usar la función incorporada `panic`.
 func panic(interface{})
 ```
 
-`panic` es una función incorporada que detiene la ejecución normal de la `goroutine` actual. Cuando una función llama a `panic`, la ejecución normal de esa función se detiene inmediatamente y el control se devuelve al llamador. Este proceso se repite hasta que el programa termina mostrando el mensaje de panic y la traza de la pila (_stack trace_).
+The panic is a built-in function that stops the normal execution of the current `goroutine`. When a function calls `panic`, the normal execution of the function stops immediately and the control is returned to the caller. This is repeated until the program exits with the panic message and stack trace.
 
-_Nota: Veremos las `goroutines` más adelante en el curso._
+_Note: We will discuss `goroutines` later in the course._
 
-Veamos cómo podemos usar la función `panic`.
+So, let's see how we can use the `panic` function.
 
 ```go
 package main
@@ -4306,7 +4306,7 @@ func WillPanic() {
 }
 ```
 
-Y si ejecutamos esto, podemos ver `panic` en acción:
+And if we run this, we can see `panic` in action.
 
 ```bash
 $ go run main.go
@@ -4320,18 +4320,19 @@ main.main()
 exit status 2
 ```
 
-Como era de esperar, nuestro programa imprimió el mensaje de panic, seguido de la traza de la pila, y luego terminó su ejecución.
+As expected, our program printed the panic message, followed by the stack trace, and then it was terminated.
 
-Entonces, la pregunta es: ¿qué hacer cuando ocurre un panic inesperado?
+So, the question is, what to do when an unexpected panic happens?
 
 ## Recover
 
-Es posible recuperar el control de un programa que ha entrado en _panic_ usando la función incorporada `recover`, junto con la palabra clave `defer`.
+Well, it is possible to regain control of a panicking program using the built-in `recover` function, along with the `defer` keyword.
+
 ```go
 func recover() interface{}
 ```
 
-Veamos un ejemplo creando una función `handlePanic`. Luego podemos llamarla usando `defer`.
+Let's try an example by creating a `handlePanic` function. And then, we can call it using `defer`.
 
 ```go
 package main
@@ -4344,7 +4345,7 @@ func main() {
 
 func handlePanic() {
 	data := recover()
-	fmt.Println("Recuperado:", data)
+	fmt.Println("Recovered:", data)
 }
 
 func WillPanic() {
@@ -4356,313 +4357,278 @@ func WillPanic() {
 
 ```bash
 $ go run main.go
-Recuperado: Woah
+Recovered: Woah
 ```
 
-Como podemos ver, el _panic_ fue recuperado y ahora nuestro programa puede continuar su ejecución.
+As we can see, our panic was recovered and now our program can continue execution.
 
-Por último, cabe mencionar que `panic` y `recover` pueden considerarse similares al patrón `try/catch` en otros lenguajes. Pero un punto importante es que debemos evitar usar `panic` y `recover` siempre que sea posible y utilizar **errores** en su lugar.
+Lastly, I will mention that `panic` and `recover` can be considered similar to the `try/catch` idiom in other languages. But one important factor is that we should avoid panic and recover and use [errors](https://karanpratapsingh.com/courses/go/errors) when possible.
 
-Entonces, surge la pregunta: ¿cuándo deberíamos usar `panic`?
+If so, then this brings us to the question, when should we use `panic`?
 
-## Casos de uso
+## Use Cases
 
-Existen dos casos válidos para usar `panic`:
+There are two valid use cases for `panic`:
 
-- **Un error irrecuperable**
+- **An unrecoverable error**
 
-Es una situación en la que el programa no puede continuar su ejecución.
+Which can be a situation where the program cannot simply continue its execution.
 
-Por ejemplo, al leer un archivo de configuración necesario para iniciar el programa, ya que no hay nada más que hacer si la lectura del archivo falla.
+For example, reading a configuration file which is important to start the program, as there is nothing else to do if the file read itself fails.
 
-- **Error del desarrollador**
+- **Developer error**
 
-Es la situación más común. Por ejemplo, desreferenciar un puntero cuyo valor es `nil` provocará un _panic_.
+This is the most common situation. For example, dereferencing a pointer when the value is `nil` will cause a panic.
 
 # Testing
 
-Ahora hablaremos sobre el testing en Go. Empecemos con un ejemplo sencillo.
+In this tutorial, we will talk about testing in Go. So, let's start using a simple example.
 
-Supongamos que tenemos un paquete llamado `utils` que contiene una función `Multiply`, encargada de multiplicar dos números enteros.
-
-Hemos creado un paquete `math` que contiene una función `Add` que, como su nombre indica, suma dos enteros.
+We have created a `math` package that contains an `Add` function Which as the name suggests, adds two integers.
 
 ```go
-package utils
+package math
 
-func Multiply(a, b int) int {
-	return a * b
+func Add(a, b int) int {
+	return a + b
 }
 ```
 
-Podemos usar esta función en nuestro programa principal:
+It's being used in our `main` package like this.
 
 ```go
 package main
 
 import (
-	"example/utils"
+	"example/math"
 	"fmt"
 )
 
 func main() {
-	result := utils.Multiply(3, 4)
+	result := math.Add(2, 2)
 	fmt.Println(result)
 }
 
 ```
 
-Si ejecutamos el programa:
+And, if we run this, we should see the result.
 
 ```bash
 $ go run main.go
-12
+4
 ```
-Para probar esta función `Multiply`, creamos un archivo de test con el sufijo `_test.go`.
+
+Now, we want to test our `Add` function. So, in Go, we declare test files with `_test` suffix in the file name. So for our `add.go`, we will create a test as `add_test.go`. Our project structure should look like this.
 
 ```bash
 .
 ├── go.mod
 ├── main.go
-└── utils
-    ├── multiply.go
-    └── multiply_test.go
+└── math
+    ├── add.go
+    └── add_test.go
 ```
 
-Comenzaremos utilizando el paquete `utils_test` e importando el paquete `testing` de la librería estándar. ¡Así es! Go ya incluye herramientas de testing integradas, a diferencia de muchos otros lenguajes.
+We will start by using a `math_test` package, and importing the `testing` package from the standard library. That's right! Testing is built into Go, unlike many other languages.
 
-Pero… ¿por qué usar `utils_test` como paquete? ¿No podríamos usar directamente el paquete `utils`?
+But wait...why do we need to use `math_test` as our package, can't we just use the same `math` package?
 
-Sí, podríamos escribir los tests en el mismo paquete si quisiéramos. Sin embargo, hacerlo en un paquete separado nos ayuda a mantener los tests más desacoplados del código original.
+Well yes, we can write our test in the same package if we wanted, but I personally think doing this in a separate package helps us write tests in a more decoupled way.
 
-Ahora podemos crear nuestra función `TestMultiply`. Esta recibirá un argumento de tipo `testing.T`, que nos proporciona métodos útiles para verificar los resultados de nuestras pruebas.
+Now, we can create our `TestAdd` function. It will take an argument of type `testing.T` which will provide us with helpful methods.
 
 ```go
-package utils_test
+package math_test
 
 import "testing"
 
-func TestMultiply(t *testing.T) {}
+func TestAdd(t *testing.T) {}
 ```
-Antes de añadir lógica de prueba, vamos a intentar ejecutar los tests. Esta vez no utilizamos el comando `go run`, sino `go test`.
+
+Before we add any testing logic, let's try to run it. But this time, we cannot use `go run` command, instead, we will use the `go test` command.
 
 ```bash
-$ go test ./utils
-ok      example/utils    0.3s
+$ go test ./math
+ok      example/math 0.429s
 ```
 
-Aquí estamos ejecutando los tests del paquete `utils`. También podemos usar la ruta relativa `./...` para ejecutar los tests de todos los paquetes del proyecto.
+Here, we will have our package name which is `math`, but we can also use the relative path `./...` to test all packages.
 
 ```bash
 $ go test ./...
 ?       example [no test files]
-ok      example/utils    0.3s
+ok      example/math 0.348s
 ```
 
-Si Go no encuentra tests en algún paquete, nos lo indicará.
+And if Go doesn't find any test in a package, it will let us know.
 
-Perfecto, ahora vamos a escribir código de prueba. Para ello, comparamos el resultado obtenido con el valor esperado. Si no coinciden, podemos usar métodos como `t.Errorf` para marcar el test como fallido.
+Perfect, let's write some test code. To do this, we will check our result with an expected value and if they do not match, we can use the `t.Fail` method to fail the test.
 
 ```go
-package utils_test
+package math_test
 
-import (
-	"example/utils"
-	"testing"
-)
+import "testing"
 
-func TestMultiply(t *testing.T) {
-	result := utils.Multiply(2, 3)
-	expected := 6
-	
-	if result != expected {
-		t.Errorf("esperado %d pero obtenido %d", expected, result)
+func TestAdd(t *testing.T) {
+	got := math.Add(1, 1)
+	expected := 2
+
+	if got != expected {
+		t.Fail()
 	}
 }
 ```
 
-¡Genial! Nuestro test se ejecuta correctamente y pasa sin errores.
+Great! Our test seems to have passed.
 
 ```bash
-$ go test ./utils
-ok      example/utils    0.3s
+$ go test math
+ok      example/math    0.412s
 ```
 
-Ahora veamos qué ocurre cuando un test falla. Para ello, basta con cambiar el valor esperado en nuestro test.
+Let's also see what happens if we fail the test, for that, we can simply change our expected result.
 
 ```go
-package utils_test
+package math_test
 
-import (
-  "example/utils"
-  "testing"
-)
+import "testing"
 
-func TestMultiply(t *testing.T) {
-  result := utils.Multiply(2, 3)
-  expected := 5
+func TestAdd(t *testing.T) {
+	got := math.Add(1, 1)
+	expected := 3
 
-  if result != expected {
-    t.Fail()
-  }
+	if got != expected {
+		t.Fail()
+	}
 }
 ```
 
 ```bash
-$ go test ./utils
-ok      example/utils    (cached)
+$ go test ./math
+ok      example/math    (cached)
 ```
 
-Si ves esto, no te preocupes. Por motivos de optimización, Go almacena en caché los resultados de los tests. Para forzar su ejecución nuevamente, podemos limpiar la caché:
+If you see this, don't worry. For optimization, our tests are cached. We can use the `go clean` command to clear our cache and then re-run the test.
 
 ```bash
 $ go clean -testcache
-$ go test ./utils
---- FAIL: TestMultiply (0.00s)
+$ go test ./math
+--- FAIL: TestAdd (0.00s)
 FAIL
-FAIL    example/utils    0.3s
+FAIL    example/math    0.354s
 FAIL
 ```
 
-Así es como se ve un test fallido.
+So, this is what a test failure will look like.
 
-## Table-driven tests (tests basados en tablas)
+## Table driven tests
 
-Esto nos lleva a los _table-driven tests_. ¿Pero qué son exactamente?
+This brings us to table-driven tests. But what exactly are they?
 
-Antes comparábamos directamente los argumentos de la función con un único valor esperado. Pero, ¿y si definimos varios casos de prueba en una estructura y los recorremos? Esto hace que nuestros tests sean más flexibles y nos permite probar múltiples casos fácilmente.
+So earlier, we had function arguments and expected variables which we compared to determine if our tests passed or fail. But what if we defined all that in a slice and iterate over that? This will make our tests a little bit more flexible and help us run multiple cases easily.
 
-Vamos a verlo con un ejemplo. Primero definimos una estructura `multiplyTestCase`.
+Don't worry, we will learn this by example. So we will start by defining our `addTestCase` struct.
 
 ```go
-package utils_test
+package math_test
 
 import (
-  "example/utils"
-  "testing"
+	"example/math"
+	"testing"
 )
 
-type multiplyTestCase struct {
-  a, b, expected int
+type addTestCase struct {
+	a, b, expected int
 }
 
-var testCases = []multiplyTestCase{
-  {2, 2, 4},
-  {3, 3, 9},
-  {2, 5, 10},
-  {4, 0, 0},
+var testCases = []addTestCase{
+	{1, 1, 3},
+	{25, 25, 50},
+	{2, 1, 3},
+	{1, 10, 11},
 }
 
-func TestMultiply(t *testing.T) {
-  for _, tc := range testCases {
-    result := utils.Multiply(tc.a, tc.b)
+func TestAdd(t *testing.T) {
 
-    if result != tc.expected {
-      t.Errorf("esperado %d pero obtenido %d", tc.expected, result)
-    }
-  }
+	for _, tc := range testCases {
+		got := math.Add(tc.a, tc.b)
+
+		if got != tc.expected {
+			t.Errorf("Expected %d but got %d", tc.expected, got)
+		}
+	}
 }
 ```
 
-Fíjate en que `multiplyTestCase` está en minúsculas. Esto es porque no necesitamos exportarlo fuera del archivo de test.
-
-Ejecutemos el test:
+Notice, how we declared `addTestCase` with a lower case. That's right we don't want to export it as it's not useful outside our testing logic. Let's run our test.
 
 ```bash
-$ go test ./utils
-```
-Supongamos ahora que uno de los casos está mal:
-
-```go
-var testCases = []multiplyTestCase{
-	{2, 2, 5}, // error aquí
-	{3, 3, 9},
-	{2, 5, 10},
-	{4, 0, 0},
-}
-```
-
-Al ejecutar:
-
-```bash
-$ go test ./utils
---- FAIL: TestMultiply (0.00s)
-    multiply_test.go:15: esperado 5 pero obtenido 4
+$ go run main.go
+--- FAIL: TestAdd (0.00s)
+    add_test.go:25: Expected 3 but got 2
 FAIL
-FAIL    example/utils    0.3s
+FAIL    example/math    0.334s
 FAIL
 ```
 
-Corregimos el caso:
+Seems like our tests broke, let's fix them by updating our test cases.
 
 ```go
-var testCases = []multiplyTestCase{
-	{2, 2, 4},
-	{3, 3, 9},
-	{2, 5, 10},
-	{4, 0, 0},
+var testCases = []addTestCase{
+	{1, 1, 2},
+	{25, 25, 50},
+	{2, 1, 3},
+	{1, 10, 11},
 }
 ```
 
-Y ahora todo funciona correctamente:
+Perfect, it's working!
 
 ```bash
-$ go test ./utils
-ok      example/utils    0.3s
+$ go run main.go
+ok      example/math    0.589s
 ```
 
-## Cobertura de código
+## Code coverage
 
-Por último, hablemos de la **cobertura de código** (_code coverage_).
+Finally, let's talk about code coverage. When writing tests, it is often important to know how much of your actual code the tests cover. This is generally referred to as code coverage.
 
-Cuando escribimos tests, es importante saber qué porcentaje de nuestro código está siendo realmente probado.
-
-Para calcular y guardar la cobertura, podemos usar la opción `-coverprofile` junto con el comando `go test`.
-
+To calculate and export the coverage for our test, we can simply use the `-coverprofile` argument with the `go test` command.
 
 ```bash
-$ go test ./utils -coverprofile=coverage.out
-ok      example/utils    0.3s  coverage: 100.0% of statements
+$ go test ./math -coverprofile=coverage.out
+ok      example/math    0.385s  coverage: 100.0% of statements
 ```
 
-Esto indica qué porcentaje del código ha sido ejecutado durante las pruebas.
-
-También podemos generar un informe más visual usando:
+Seems like we have great coverage. Let's also check the report using the `go tool cover` command which gives us a detailed report.
 
 ```bash
 $ go tool cover -html=coverage.out
 ```
 
-![cobertura](images/cobertura.png)
+![coverage](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-III/testing/coverage.png)
 
-Esto abrirá un informe en el navegador donde podremos ver claramente qué partes del código están cubiertas y cuáles no.
-
-Lo mejor es que todo esto viene incluido directamente en las herramientas estándar de Go.
+As we can see, this is a much more readable format. And best of all, it is built right into standard tooling.
 
 ## Fuzz testing
 
-Finalmente, veamos el fuzz testing, una funcionalidad introducida en Go 1.18.
+Lastly, let's look at fuzz testing which was introduced in Go version 1.18.
 
-El fuzzing es una técnica de testing automático que genera entradas aleatorias para encontrar errores en el programa.
+Fuzzing is a type of automated testing that continuously manipulates inputs to a program to find bugs.
 
-Go utiliza la cobertura de código para explorar diferentes caminos de ejecución y detectar fallos, incluyendo casos extremos que normalmente se nos escaparían.
+Go fuzzing uses coverage guidance to intelligently walk through the code being fuzzed to find and report failures to the user.
 
-Veamos un ejemplo:
+Since it can reach edge cases that humans often miss, fuzz testing can be particularly valuable for finding bugs and security exploits.
+
+Let's try an example:
 
 ```go
-func FuzzTestMultiply(f *testing.F) {
-    f.Fuzz(func(t *testing.T, a, b int) {
-        utils.Multiply(a, b)
-    })
+func FuzzTestAdd(f *testing.F) {
+	f.Fuzz(func(t *testing.T, a, b int) {
+		math.Add(a , b)
+	})
 }
 ```
-Si ejecutamos esto:
-
-```bash
-$ go test -fuzz FuzzTestMultiply ./utils
-```
-
-Go generará automáticamente múltiples casos de prueba.
 
 If we run this, we'll see that it'll automatically create test cases. Because our `Add` function is quite simple, tests will pass.
 
