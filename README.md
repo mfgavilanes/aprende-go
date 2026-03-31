@@ -366,7 +366,7 @@ El tipo se omite, pero se inferirá:
 var foo = 0
 ```
 
-Declaración abreviada: aquí omitimos la palabra clave `var` y el tipo siempre es implícito. Así es como veremos declaradas las variables la mayoría de las veces. También usamos `:=` para la declaración más la asignación.
+**Declaración abreviada**: aquí omitimos la palabra clave `var` y el tipo siempre es implícito. Así es como veremos declaradas las variables la mayoría de las veces. También usamos `:=` para la declaración más la asignación.
 
 ```go
 foo := 2
@@ -445,8 +445,8 @@ Podemos utilizar los siguientes operadores en tipos cadena.
 A modo de ejemplo tenemos:
 
 ```go
-s1 := "apple"
-s2 := "banana"
+s1 := "manzana"
+s2 := "platano"
 
 fmt.Println(s1 < s2)       // true (a < b)
 fmt.Println("abc" < "abd") // true (diferencia en último carácter)
@@ -470,6 +470,11 @@ Podemos utilizar los siguientes operadores en tipos booleanos.
 |----------|-----------------|
 | Lógicos  | `&&` `\|\|` `!` |
 | Igualdad | `==` `!=`       |
+
+En Go, los operadores `&&` y `||` poseen **evaluación perezosa** (short-circuit). Eso significa que:
+- con `&&` solo evalúan la segunda parte si la primera es verdadera.
+- Con `||` la segunda no se evalúa si la primera ya hace que el resultado sea verdadero.
+
 
 ### Tipos numéricos
 
@@ -665,7 +670,7 @@ func main() {
 
 **Pero espera... ¿cuál es la diferencia?**
 
-Por lo tanto, los tipos definidos hacen más que simplemente dar un nombre a un tipo.
+Los tipos definidos hacen más que simplemente dar un nombre a un tipo.
 
 En primer lugar, definen un nuevo tipo con nombre con un tipo subyacente. Sin embargo, este tipo definido es diferente de cualquier otro tipo, incluido su tipo subyacente.
 
@@ -688,7 +693,7 @@ func main() {
 	// ok
 	var copy1 string = alias
 
-	// ko No se puede utilizar def (variable de tipo MyDefined) como valor de cadena en la variable
+	// ko No se puede utilizar def (variable de tipo EstadoDefinido) como valor de cadena en la variable
 	var copy2 string = def
 
 	fmt.Println(copy1, copy2)
