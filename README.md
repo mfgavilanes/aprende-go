@@ -1510,10 +1510,10 @@ func main() {
 
 ```go
 func main() {
-defer fmt.Println("He terminado")
-defer fmt.Println("¿Y tú?")
+    defer fmt.Println("He terminado")
+    defer fmt.Println("¿Y tú?")
 
-fmt.Println("Trabajando...")
+    fmt.Println("Trabajando...")
 }
 ```
 
