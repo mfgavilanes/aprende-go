@@ -152,13 +152,13 @@ _Nota: Es posible que tengas que ejecutar el comando como root o mediante sudo._
 **No descomprimas** el archivo en un árbol `/usr/local/go` existente. Se sabe que esto provoca instalaciones defectuosas de Go.
 
 2. Añade `/usr/local/go/bin` a la variable de entorno PATH.
-   Puedes hacerlo añadiendo la siguiente línea a tu `$HOME/.profile` o `/etc/profile` (para una instalación en todo el sistema):
+   Puedes hacerlo añadiendo la siguiente línea a tu `$HOME/.profile` o `/etc/profile` (para una instalación en todo el sistema) o en tu `$HOME/.bashrc` (para una instalación únicamente en la cuenta del usuario):
 
 ```
 export PATH=$PATH:/usr/local/go/bin
 ```
 
-_Nota: Es posible que los cambios realizados en un archivo de perfil no se apliquen hasta la próxima vez que inicie sesión en su ordenador. Para aplicar los cambios inmediatamente, simplemente ejecute los comandos del shell directamente o ejecútelos desde el perfil utilizando un comando como source `$HOME/.profile`._
+_Nota: Es posible que los cambios realizados en un archivo de perfil no se apliquen hasta la próxima vez que inicie sesión en su ordenador. Para aplicar los cambios inmediatamente, simplemente ejecute los comandos del shell directamente o ejecútelos desde el perfil utilizando un comando como `source $HOME/.profile`._
 
 3. Comprueba que has instalado Go abriendo un símbolo del sistema y escribiendo el siguiente comando:
 
@@ -170,9 +170,9 @@ $ go version
 
 ### Windows
 
-1. Abre el archivo MSI que has descargado y sigue las instrucciones para instalar Go.
+1. Abre el archivo _MSI_ que has descargado y sigue las instrucciones para instalar Go.
 
-De forma predeterminada, el instalador instalará Go en Archivos de programa o Archivos de programa (x86).
+De forma predeterminada, el instalador instalará Go en _Archivos de programa_ o _Archivos de programa (x86)_.
 Puedes cambiar la ubicación según sea necesario. Después de la instalación, deberás cerrar y volver a abrir cualquier símbolo del sistema abierto para que los cambios en el entorno realizados por el instalador se reflejen en el símbolo del sistema.
 
 2. Comprueba que has instalado Go.
@@ -2275,28 +2275,6 @@ Las estructuras en Go también permiten inicializar sin usar nombres en los camp
 
 ```go
 func main() {
-	var p1 Person
-
-	fmt.Println("Person 1:", p1)
-
-	var p2 = Person{
-		FirstName: "Karan",
-		LastName:  "Pratap Singh",
-		Age:       22,
-	}
-
-	fmt.Println("Person 2:", p2)
-
-	var p3 = Person{
-		FirstName: "Tony",
-		LastName:  "Stark",
-	}
-
-	fmt.Println("Person 3:", p3)
-
-	var p4 = Person{"Bruce", "Wayne"}
-
-	fmt.Println("Person 4:", p4)
     var p1 Producto
 
     fmt.Println("Producto 1:", p1)
