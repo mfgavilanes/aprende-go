@@ -1386,11 +1386,11 @@ Un ejemplo aquí sería una función que puede sumar un conjunto de valores.
 
 ```go
 func main() {
-	sum := add(1, 2, 3, 5)
+	sum := suma(1, 2, 3, 5)
 	fmt.Println(sum)
 }
 
-func add(values ...int) int {
+func suma(values ...int) int {
 	sum := 0
 
 	for _, v := range values {
