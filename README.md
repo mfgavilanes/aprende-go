@@ -150,13 +150,13 @@ $sudo rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
 **No descomprimas** el archivo en un árbol `/usr/local/go` existente. Se sabe que esto provoca instalaciones defectuosas de Go.
 
 2. Añade `/usr/local/go/bin` a la variable de entorno PATH.
-   Puedes hacerlo añadiendo la siguiente línea a tu `$HOME/.profile` o `/etc/profile` (para una instalación en todo el sistema) o en tu `$HOME/.bashrc` (para una instalación únicamente en la cuenta del usuario):
+   Puedes hacerlo añadiendo la siguiente línea a tu `$HOME/.profile` o `/etc/profile` (para una instalación en todo el sistema) o en tu `$HOME/.bashrc` (para una instalación únicamente en la cuenta del usuario), donde `$HOME` es la ruta por defecto del usuario:
 
 ```
 export PATH=$PATH:/usr/local/go/bin
 ```
 
-_Nota: Es posible que los cambios realizados en un archivo de perfil no se apliquen hasta la próxima vez que inicie sesión en su ordenador. Para aplicar los cambios inmediatamente, simplemente ejecute los comandos del shell directamente o ejecútelos desde el perfil utilizando un comando como `source $HOME/.profile`._
+_Nota: Es posible que los cambios realizados en un archivo de perfil no se apliquen hasta la próxima vez que inicies sesión en tu ordenador. Para aplicar los cambios inmediatamente, simplemente ejecuta los comandos del terminal directamente o ejecútelos desde el perfil utilizando un comando como `source $HOME/.profile` (si es `.profile`) o `source $HOME/.bashrc` (si es `.bashrc`)._
 
 3. Comprueba que has instalado Go abriendo un símbolo del sistema y escribiendo el siguiente comando:
 
@@ -1435,6 +1435,18 @@ func MaxMin(a,b:int) (int,int) {
 ```
 
 En el ejemplo anterior, guardará en la variable `m` el primer valor retornado por la función, y descartaría el segundo valor.
+
+Otra cuestión importante es que en Go, todas las variables declaradas deben utilizarse, de lo contrario el compilador genera un error. Una forma de evitar que de un error es que, aunque se definen variables de distintos tipos (`int, float64, bool y string`), si no se usan posteriormente en ninguna operación o salida, se puede emplear el identificador vacío, que permite realizar una asignación sin necesidad de almacenarlos ni procesarlos. De este modo, se le indica al compilador que las variables han sido utilizadas, aunque realmente se estén descartando.
+
+```go
+func main() {
+    var a int = 10
+    var b float64 = 3.14
+    var c bool = true
+    var d string = "Go"
+    _, _, _, _ = a, b, c, d
+}
+```
 
 ## Inicialización
 
