@@ -1041,19 +1041,6 @@ letra a
 letra b
 ```
 
-We can also use it without any condition, which is the same as `switch true`.
-
-```go
-x := 10
-
-switch {
-	case x > 5:
-		fmt.Println("x es mayor que 5")
-	default:
-		fmt.Println("x no es mayor")
-}
-```
-
 ## Bloques iterativos
 
 Ahora, vamos a ver los bucles. Se trata de un conjunto de órdenes que se repite.
