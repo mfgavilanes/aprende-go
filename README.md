@@ -39,7 +39,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   
 - **Características avanzadas del lenguaje Go**
   - [Interfaces](#interfaces)
-  - [Errores](#errores)
+  - [Errores](#manejo-de-errores)
   - [Panic y Recover](#panic-y-recover)
   - [Testing (pruebas)](#testing)
   - [Genéricos](#genéricos)
