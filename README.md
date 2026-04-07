@@ -144,10 +144,8 @@ $ go version
    y, a continuación, extrae el archivo que acabas de descargar en `/usr/local`, creando un nuevo árbol Go en `/usr/local/go`:
 
 ```
-$ rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
+$sudo rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
 ```
-
-_Nota: Es posible que tengas que ejecutar el comando como root o mediante sudo._
 
 **No descomprimas** el archivo en un árbol `/usr/local/go` existente. Se sabe que esto provoca instalaciones defectuosas de Go.
 
