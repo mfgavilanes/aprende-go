@@ -403,10 +403,13 @@ También es importante señalar que solo las constantes pueden asignarse a otras
 
 ```go
 const num1 = 10
-const num2 = a // ok
+const num2 = num1 // ok
+```
 
+
+```go
 var num1 = 10
-const num2 = a // ko (variable de tipo int) no es constante (InvalidConstInit)
+const num2 = num1 // ko (variable de tipo int) no es constante (InvalidConstInit)
 ```
 
 ## Tipos de datos
