@@ -2385,7 +2385,7 @@ func main() {
 
 ```bash
 $ go run main.go
-Producto: \\&{Laptop Dell 1299.99 15 3 true}
+Producto: &{Laptop Dell 1299.99 15 3 true}
 ```
 
 _**Nota importante:** Dos structs son iguales si todos sus campos correspondientes son iguales._
