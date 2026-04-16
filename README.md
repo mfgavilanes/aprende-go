@@ -2788,11 +2788,11 @@ func main() {
 }
 ```
 
-Los arrays en Go son tipos por valor, a diferencia de otros lenguajes como C, C++ y Java, donde los arrays son tipos por referencia.
+Además, los arrays en Go son tipos por valor. Esto significa que, al asignarlos a otra variable o pasarlos como argumento a una función, se realiza una copia completa del array.
 
-Esto significa que cuando asignamos un array a una nueva variable o lo pasamos a una función, se copia el array completo.
+Como consecuencia, cualquier modificación realizada sobre la copia no afecta al array original.
 
-Por lo tanto, si hacemos cambios en esta copia, el array original no se verá afectado y permanecerá sin cambios.
+Este comportamiento difiere de otros lenguajes como Java, donde los arrays son objetos y se manejan mediante referencias, y de lenguajes como C, donde los arrays suelen tratarse como punteros al pasarse a funciones.
 
 ```go
 package main
