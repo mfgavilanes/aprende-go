@@ -4841,6 +4841,183 @@ Por último, aunque los genéricos son una excelente incorporación al lenguaje,
 
 Se recomienda empezar por lo simple y solo escribir código genérico cuando hayamos implementado código muy similar al menos dos o tres veces.
 
+# Concurrencia  
+
+Ahora aprenderemos sobre la concurrencia, que es una de las características más potentes de Go.
+
+Así que empecemos preguntándonos: ¿qué es la _“concurrencia”_?
+
+## ¿Qué es la concurrencia?
+
+La concurrencia, por definición, es la capacidad de dividir un programa informático o algoritmo en partes individuales que pueden ejecutarse de forma independiente.
+
+El resultado final de un programa concurrente es el mismo que el de un programa que se ha ejecutado de forma secuencial.
+
+Mediante la concurrencia, podemos obtener los mismos resultados en menos tiempo, aumentando así el rendimiento y la eficiencia global de nuestros programas.
+
+## Concurrencia vs Paralelismo
+
+![concurrency-vs-parallelism](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/concurrency-vs-parallelism.png)
+
+Muchas personas confunden concurrencia con paralelismo porque ambos conceptos implican, en cierto modo, ejecutar código al mismo tiempo, pero en realidad son dos conceptos completamente diferentes.
+
+La concurrencia es la tarea de ejecutar y gestionar múltiples cálculos al mismo tiempo, mientras que el paralelismo es la tarea de ejecutar múltiples cálculos simultáneamente.
+
+Una cita sencilla de Rob Pike lo resume bastante bien:
+
+_"La concurrencia consiste en tratar con muchas cosas a la vez. El paralelismo consiste en hacer muchas cosas a la vez."_
+
+Pero la concurrencia en Go es más que solo sintaxis. Para aprovechar realmente su potencia, primero debemos entender cómo Go aborda la ejecución concurrente del código. Go se basa en un modelo de concurrencia llamado CSP (Procesos Secuenciales Comunicantes).
+
+## Procesos Secuenciales Comunicantes (CSP)
+
+Los [Procesos Secuenciales Comunicantes](https://dl.acm.org/doi/10.1145/359576.359585) (CSP, por sus siglas en inglés) es un modelo propuesto por Tony Hoare en 1978 que describe las interacciones entre procesos concurrentes. Supuso un gran avance en la informática, especialmente en el ámbito de la concurrencia.
+
+Lenguajes como Go y Erlang han estado fuertemente inspirados por el concepto de CSP. A pesar de que la concurrencia es compleja, CSP nos permite dar una mejor estructura a nuestro código concurrente y proporciona un modelo para pensar sobre la concurrencia de una forma que la hace un poco más sencilla. En este modelo, los procesos son independientes y se comunican compartiendo canales entre ellos.
+
+![csp](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/csp.png)
+
+_Aprenderemos cómo Golang lo implementa utilizando goroutines y canales más adelante en el curso._
+
+## Conceptos básicos
+
+Ahora, familiaricémonos con algunos conceptos básicos de concurrencia.
+
+### Condición de carrera de datos (Data Race)
+
+Una condición de carrera de datos ocurre cuando varios procesos acceden al mismo recurso de forma concurrente.
+
+Por ejemplo, un proceso lee mientras otro escribe simultáneamente en el mismo recurso.
+
+### Condiciones de carrera (Race Conditions)
+
+Una condición de carrera ocurre cuando el tiempo o el orden de los eventos afecta a la corrección de un fragmento de código.
+
+### Interbloqueos (Deadlocks)
+
+Un interbloqueo ocurre cuando todos los procesos están bloqueados esperando unos por otros y el programa no puede continuar.
+
+**Condiciones de Coffman**
+
+Existen cuatro condiciones, conocidas como las condiciones de Coffman, que deben cumplirse simultáneamente para que ocurra un interbloqueo.
+
+- Exclusión mutua
+
+Un proceso concurrente posee al menos un recurso en un momento dado, lo que impide que sea compartido.
+
+_En el diagrama inferior, existe una única instancia del Recurso 1 y está siendo utilizado únicamente por el Proceso 1._
+
+![mutual-exclusion](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/mutual-exclusion.png)
+
+- Retención y espera (Hold and wait)
+
+Un proceso concurrente mantiene un recurso y está esperando otro recurso adicional.
+
+_En el diagrama inferior, el Proceso 2 posee los Recursos 2 y 3 y está solicitando el Recurso 1, que está en manos del Proceso 1._
+
+![hold-and-wait](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/hold-and-wait.png)
+
+- No expropiación (No preemption)
+
+Un recurso que está siendo utilizado por un proceso concurrente no puede ser retirado por el sistema. Solo puede ser liberado por el proceso que lo posee.
+
+_En el diagrama inferior, el Proceso 2 no puede quitarle el Recurso 1 al Proceso 1. Este solo será liberado cuando el Proceso 1 lo libere voluntariamente tras completar su ejecución._
+
+![no-preemption](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/no-preemption.png)
+
+- Espera circular (Circular wait)
+
+Un proceso espera un recurso que está siendo utilizado por otro proceso, que a su vez espera un recurso de un tercer proceso, y así sucesivamente, hasta que el último proceso espera un recurso que posee el primero, formando una cadena circular.
+
+_En el diagrama inferior, el Proceso 1 tiene asignado el Recurso 2 y solicita el Recurso 1. De manera similar, el Proceso 2 tiene asignado el Recurso 1 y solicita el Recurso 2, formando un ciclo de espera circular._
+
+![circular-wait](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/circular-wait.png)
+
+### Bloqueos activos (Livelocks)
+
+Los bloqueos activos son situaciones en las que los procesos están ejecutando operaciones concurrentes activamente, pero dichas operaciones no hacen avanzar el estado del programa.
+
+### Inanición (Starvation)
+
+La inanición ocurre cuando un proceso no recibe los recursos necesarios y, por tanto, no puede completar su ejecución.
+
+La inanición puede ocurrir debido a interbloqueos o a algoritmos de planificación ineficientes. Para solucionarla, es necesario emplear mejores algoritmos de asignación de recursos que garanticen que cada proceso reciba su parte justa de recursos.
+
+# Goroutines
+
+Vamos ahora con las goroutines.
+
+Pero antes de comenzar, quiero compartir un importante proverbio de Go:
+
+_"No te comuniques compartiendo memoria, comparte memoria comunicándote."_ – Rob Pike
+
+## ¿Qué es una goroutine?
+
+Una _goroutine_ es un hilo de ejecución ligero gestionado por el runtime de Go, que nos permite escribir código asíncrono de forma similar a código síncrono.
+
+Es importante saber que no son hilos reales del sistema operativo y que la función main también se ejecuta como una goroutine.
+
+Un único hilo puede ejecutar miles de goroutines gracias al planificador del runtime de Go, que utiliza un modelo de planificación cooperativa. Esto implica que, si la goroutine actual se bloquea o finaliza, el planificador moverá otras goroutines a otro hilo del sistema operativo. De este modo, se logra una planificación eficiente en la que ninguna rutina queda bloqueada indefinidamente.
+
+Podemos convertir cualquier función en una goroutine simplemente utilizando la palabra clave `go`.
+
+```go
+go fn(x, y, z)
+```
+
+Antes de escribir código, es importante hablar brevemente del modelo fork-join.
+
+## Modelo Fork-Join
+
+Go utiliza el modelo de concurrencia fork-join como base para las goroutines. Este modelo implica que un proceso hijo se separa de su proceso padre para ejecutarse de forma concurrente con él. Una vez que finaliza su ejecución, el proceso hijo se vuelve a unir al proceso padre. El punto en el que se reincorpora se denomina punto de unión (join point).
+
+![fork-join](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/goroutines/fork-join.png)
+
+Ahora, escribamos algo de código y creemos nuestra propia goroutine.
+
+```go
+package main
+
+import "fmt"
+
+func speak(arg string) {
+	fmt.Println(arg)
+}
+
+func main() {
+	go speak("Hola Mundo")
+}
+```
+
+Aquí, la llamada a la función `speak` está precedida por la palabra clave `go`. Esto permite que se ejecute como una goroutine independiente. ¡Y ya está, acabamos de crear nuestra primera goroutine! ¡Así de simple!
+
+Vamos a ejecutarlo:
+
+```bash
+$ go run main.go
+```
+
+Curiosamente, parece que nuestro programa no se ejecutó completamente, ya que falta parte de la salida. Esto se debe a que la goroutine principal (`main`) terminó su ejecución sin esperar a la goroutine que creamos.
+
+¿Qué ocurre si hacemos que el programa espere usando la función `time.Sleep`?
+
+```go
+func main() {
+	...
+	time.Sleep(1 * time.Second)
+}
+```
+
+```bash
+$ go run main.go
+Hello World
+```
+
+Ahora sí, podemos ver la salida completa.
+
+**Bien, esto funciona, pero no es lo ideal. ¿Cómo podemos mejorarlo?**
+
+La parte más complicada de trabajar con goroutines es saber cuándo terminan. Es importante tener en cuenta que las goroutines se ejecutan en el mismo espacio de direcciones, por lo que el acceso a memoria compartida debe sincronizarse.
 
 
 # Referencias
