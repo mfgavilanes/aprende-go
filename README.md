@@ -5019,6 +5019,60 @@ Ahora sí, podemos ver la salida completa.
 
 La parte más complicada de trabajar con goroutines es saber cuándo terminan. Es importante tener en cuenta que las goroutines se ejecutan en el mismo espacio de direcciones, por lo que el acceso a memoria compartida debe sincronizarse.
 
+# Canales
+
+Aprendamos sobre los canales.
+
+## ¿Qué son los canales?
+
+Un canal es, de forma sencilla, un medio de comunicación entre goroutines. Los datos entran por un extremo y salen por el otro en el mismo orden, hasta que el canal se cierra.
+
+![channel](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/channels/channel.png)
+
+Como vimos anteriormente, los canales en Go se basan en el modelo de Procesos Secuenciales Comunicantes (CSP).
+
+## Creación de un canal
+
+Ahora que entendemos qué son los canales, veamos cómo declararlos.
+
+```go
+var ch chan T
+```
+
+Aquí, anteponemos la palabra clave `chan` (que significa canal) al tipo `T`, que representa el tipo de dato que queremos enviar y recibir.
+
+Intentemos imprimir el valor de nuestro canal `ch` de tipo `string`.
+
+```go
+func main() {
+	var ch chan string
+
+	fmt.Println(ch)
+}
+```
+
+```bash
+$ go run main.go
+<nil>
+```
+
+Como podemos ver, el valor cero de un canal es `nil`, y si intentamos enviar datos a través de él, el programa provocará un error (`panic`).
+
+Por ello, al igual que con los slices, podemos inicializar un canal utilizando la función integrada `make`.
+
+```go
+func main() {
+	ch := make(chan string)
+
+	fmt.Println(ch)
+}
+```
+Si ejecutamos esto, veremos que el canal ha sido inicializado correctamente.
+
+```bash
+$ go run main.go
+0x1400010e060
+```
 
 # Referencias
 
