@@ -5074,6 +5074,274 @@ $ go run main.go
 0x1400010e060
 ```
 
+## Envío y recepción de datos
+
+Ahora que tenemos una comprensión básica de los canales, vamos a implementar nuestro ejemplo anterior utilizando canales para aprender cómo podemos usarlos para comunicarnos entre goroutines.
+
+```go
+package main
+
+import "fmt"
+
+func speak(arg string, ch chan string) {
+	ch <- arg // Envío
+}
+
+func main() {
+	ch := make(chan string)
+
+	go speak("Hola Mundo", ch)
+
+	data := <-ch // Recepción
+	fmt.Println(data)
+}
+```
+Observa cómo podemos enviar datos utilizando la sintaxis `canal <- dato` y recibir datos utilizando `dato := <-canal`.
+
+```bash
+$ go run main.go
+Hola Mundo
+```
+
+Perfecto, nuestro programa se ejecutó tal como esperábamos.
+
+## Canales con buffer
+
+También existen los canales con buffer, que permiten almacenar un número limitado de valores sin necesidad de que exista un receptor inmediato para esos valores.
+
+![buffered-channel](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/channels/buffered-channel.png)
+
+Esta _longitud del buffer_ o _capacidad_ se puede especificar mediante el segundo argumento de la función `make`.
+
+```go
+func main() {
+	ch := make(chan string, 2)
+
+	go speak("Hola Mundo", ch)
+	go speak("Hola de nuevo", ch)
+
+	data1 := <-ch
+	fmt.Println(data1)
+
+	data2 := <-ch
+	fmt.Println(data2)
+}
+```
+Como este canal tiene buffer, podemos enviar valores al canal sin necesidad de que exista un receptor concurrente en ese mismo momento. Esto significa que los `envíos` a un canal con buffer solo se bloquean cuando el buffer está lleno, y las `recepciones` se bloquean cuando el buffer está vacío.
+
+Por defecto, un canal es no bufferizado (_unbuffered_) y tiene capacidad 0, por lo que omitimos el segundo argumento en la función `make`.
+
+A continuación, veremos los canales direccionales.
+
+## Canales direccionales
+
+Cuando usamos canales como parámetros de funciones, podemos especificar si un canal está destinado únicamente a enviar o a recibir valores. Esto aumenta la seguridad de tipos de nuestro programa, ya que por defecto un canal puede tanto enviar como recibir valores.
+
+![directional-channels](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/channels/directional-channels.png)
+
+En nuestro ejemplo, podemos actualizar el segundo argumento de la función speak para que solo pueda enviar un valor.
+
+```go
+func speak(arg string, ch chan<- string) {
+	ch <- arg // Solo envío
+}
+```
+
+Aquí, `chan<-` solo puede usarse para enviar valores y producirá un error si intentamos recibir valores.
+
+## Cierre de canales
+
+Al igual que ocurre con otros recursos, una vez que hemos terminado de utilizar un canal, es necesario cerrarlo. Esto puede hacerse mediante la función incorporada `close`.
+
+En este caso, simplemente pasamos el canal como argumento a la función `close`.
+
+```go
+func main() {
+	ch := make(chan string, 2)
+
+	go speak("Hola Mundo", ch)
+	go speak("Hola de nuevo", ch)
+
+	data1 := <-ch
+	fmt.Println(data1)
+
+	data2 := <-ch
+	fmt.Println(data2)
+
+	close(ch)
+}
+```
+
+Opcionalmente, los receptores pueden comprobar si un canal ha sido cerrado asignando un segundo parámetro a la expresión de recepción.
+
+```go
+func main() {
+	ch := make(chan string, 2)
+
+	go speak("Hola Mundo", ch)
+	go speak("Hola de nuevo", ch)
+
+	data1 := <-ch
+	fmt.Println(data1)
+
+	data2, ok := <-ch
+	fmt.Println(data2, ok)
+
+	close(ch)
+}
+```
+Si `ok` es `false`, entonces no hay más valores que recibir y el canal está cerrado.
+
+_De alguna manera, esto es similar a cómo comprobamos si una clave existe o no en un map_.
+
+## Propiedades
+
+Por último, vamos a comentar algunas propiedades de los canales:
+
+- Un envío a un canal `nil` se bloquea indefinidamente.
+```go
+var c chan string
+c <- "Hola Mundo!" // Panic: todas las goroutines están dormidas - deadlock
+```
+
+- Una recepción desde un canal `nil` se bloquea indefinidamente.
+```go
+var c chan string
+fmt.Println(<-c) // Panic: todas las goroutines están dormidas - deadlock
+```
+
+- Un envío a un canal cerrado provoca un error (`panic`).
+```go
+var c = make(chan string, 1)
+c <- "Hola Mundo!"
+close(c)
+c <- "Hola, Panic!" // Panic: envío sobre canal cerrado
+```
+
+- Una recepción desde un canal cerrado devuelve inmediatamente el valor cero.
+```go
+var c = make(chan int, 2)
+c <- 5
+c <- 4
+close(c)
+for i := 0; i < 4; i++ {
+    fmt.Printf("%d ", <-c) // Salida: 5 4 0 0
+}
+```
+
+- Iteración sobre canales con `range`.
+
+También podemos usar `for` y `range` para iterar sobre los valores recibidos de un canal.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	ch := make(chan string, 2)
+
+	ch <- "Hola"
+	ch <- "Mundo"
+
+	close(ch)
+
+	for data := range ch {
+		fmt.Println(data)
+	}
+}
+```
+
+# Select
+
+En este tutorial aprenderemos sobre la sentencia `select` en Go.
+
+La sentencia `select` bloquea la ejecución y espera múltiples operaciones sobre canales de forma simultánea.
+
+Un `select` se bloquea hasta que uno de sus casos puede ejecutarse, y entonces ejecuta ese caso. Si varios están listos al mismo tiempo, selecciona uno de forma aleatoria.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	one := make(chan string)
+	two := make(chan string)
+
+	go func() {
+		time.Sleep(time.Second * 2)
+		one <- "Uno"
+	}()
+
+	go func() {
+		time.Sleep(time.Second * 1)
+		two <- "Dos"
+	}()
+
+	select {
+	case result := <-one:
+		fmt.Println("Recibido:", result)
+	case result := <-two:
+		fmt.Println("Recibido:", result)
+	}
+
+	close(one)
+	close(two)
+}
+```
+
+De forma similar a `switch`, `select` también tiene un caso `default` que se ejecuta si ningún otro caso está listo. Esto permite enviar o recibir sin bloquear.
+
+```go
+func main() {
+	one := make(chan string)
+	two := make(chan string)
+
+	for x := 0; x < 10; x++ {
+		go func() {
+			time.Sleep(time.Second * 2)
+			one <- "Uno"
+		}()
+
+		go func() {
+			time.Sleep(time.Second * 1)
+			two <- "Dos"
+		}()
+	}
+
+	for x := 0; x < 10; x++ {
+		select {
+		case result := <-one:
+			fmt.Println("Recibido:", result)
+		case result := <-two:
+			fmt.Println("Recibido:", result)
+		default:
+			fmt.Println("Default...")
+			time.Sleep(200 * time.Millisecond)
+		}
+	}
+
+	close(one)
+	close(two)
+}
+```
+
+También es importante saber que un `select {}` bloquea indefinidamente.
+
+```go
+func main() {
+	...
+	select {}
+
+	close(one)
+	close(two)
+}
+```
+
 # Referencias
 
 Aquí están los recursos que se consultaron al crear este curso.
