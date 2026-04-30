@@ -5583,11 +5583,11 @@ De forma similar a `sync.Mutex`, podemos utilizar `sync.RWMutex` mediante los si
 
 Nótese que `RWMutex` añade los métodos `RLock` y `RUnlock` respecto a Mutex.
 
-### Example
+### Ejemplo
 
-Let's add a `GetValue` method which will read the counter value. We will also change `sync.Mutex` to `sync.RWMutex`.
+Vamos a añadir un método `GetValue` que lea el valor del contador. También cambiaremos `sync.Mutex` por `sync.RWMutex`.
 
-Now, we can simply use the `RLock` and `RUnlock` methods so that readers don't have to wait for each other.
+Ahora podemos usar los métodos `RLock` y `RUnlock` para que los lectores no tengan que esperar entre sí.
 
 ```go
 package main
@@ -5607,7 +5607,7 @@ func (c *Counter) Update(n int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	c.m.Lock()
-	fmt.Printf("Adding %d to %d\n", n, c.value)
+	fmt.Printf("Añadiendo %d to %d\n", n, c.value)
 	c.value += n
 	c.m.Unlock()
 }
@@ -5617,7 +5617,7 @@ func (c *Counter) GetValue(wg *sync.WaitGroup) {
 
 	c.m.RLock()
 	defer c.m.RUnlock()
-	fmt.Println("Get value:", c.value)
+	fmt.Println("Get valor:", c.value)
 	time.Sleep(400 * time.Millisecond)
 }
 
@@ -5639,13 +5639,14 @@ func main() {
 
 ```bash
 $ go run main.go
-Get value: 0
-Adding 10 to 0
-Get value: 10
-Get value: 10
+Get valor: 0
+Añadiendo 10 to 0
+Get valor: 10
+Get valor: 10
 ```
+En este ejemplo, `Update` usa `Lock` porque modifica el valor y necesita acceso exclusivo. En cambio, `GetValue` usa `RLock` porque solo lee el valor, por lo que varias lecturas pueden ejecutarse al mismo tiempo.
 
-_Note: Both `sync.Mutex` and `sync.RWMutex` implements the `sync.Locker` interface._
+_Nota: Tanto sync.Mutex como `sync.RWMutex` implementan la interfaz `sync.Locker`._
 
 ```go
 type Locker interface {
@@ -5654,17 +5655,21 @@ type Locker interface {
 }
 ```
 
+Esto significa que cualquier tipo que implemente los métodos `Lock()` y `Unlock()` puede utilizarse de forma intercambiable cuando se espera un `Locker`.
+
 ## Cond
 
-The `sync.Cond` condition variable can be used to coordinate those goroutines that want to share resources. When the state of shared resources changes, it can be used to notify goroutines blocked by a mutex.
+La variable de condición `sync.Cond` puede utilizarse para coordinar goroutines que desean compartir recursos. Cuando el estado de los recursos compartidos cambia, permite notificar a las goroutines que están bloqueadas esperando sobre un mutex.
 
-Each Cond has an associated lock (often a `*Mutex` or `*RWMutex`), which must be held when changing the condition and when calling the Wait method.
+Cada `Cond` tiene asociado un bloqueo (normalmente un `*Mutex` o un `*RWMutex`), que debe mantenerse cuando se modifica la condición y cuando se llama al método Wait.
 
-### But why do we need it?
+### ¿Por qué lo necesitamos?
 
-One scenario can be when one process is receiving data, and other processes must wait for this process to receive data before they can read the correct data.
+Un escenario típico es cuando un proceso está recibiendo datos y otros procesos deben esperar a que esos datos estén disponibles antes de poder leerlos correctamente.
 
-If we simply use a [channel](https://karanpratapsingh.com/courses/go/channels) or mutex, only one process can wait and read the data. There is no way to notify other processes to read the data. Thus, we can `sync.Cond` to coordinate shared resources.
+Si utilizamos únicamente un [canal](https://karanpratapsingh.com/courses/go/channels) o un mutex, solo un proceso puede esperar y leer los datos. No existe un mecanismo directo para notificar a múltiples procesos que los datos ya están disponibles.
+
+Por ello, `sync.Cond` permite coordinar el acceso a recursos compartidos y notificar a varias goroutines.
 
 ### Usage
 
