@@ -5671,18 +5671,18 @@ Si utilizamos únicamente un [canal](https://karanpratapsingh.com/courses/go/cha
 
 Por ello, `sync.Cond` permite coordinar el acceso a recursos compartidos y notificar a varias goroutines.
 
-### Usage
+### Uso
 
-`sync.Cond` comes with the following methods:
+`sync.Cond` proporciona los siguientes métodos:
 
-- `NewCond(l Locker)` returns a new Cond.
-- `Broadcast()` wakes all goroutines waiting on the condition.
-- `Signal()` wakes one goroutine waiting on the condition if there is any.
-- `Wait()` atomically unlocks the underlying mutex lock.
+- `NewCond(l Locker)` devuelve una nueva variable de condición asociada a un `Locker`.
+- `Broadcast()` despierta a todas las goroutines que están esperando en la condición.
+- `Signal()` despierta a una goroutine que esté esperando (si hay alguna).
+- `Wait()` libera el bloqueo asociado de forma atómica y bloquea la goroutine hasta que sea despertada.
 
-### Example
+### Ejemplo
 
-Here is an example that demonstrates the interaction of different goroutines using the `Cond`.
+A continuación se muestra un ejemplo que demuestra la interacción entre distintas goroutines utilizando `Cond`.
 
 ```go
 package main
@@ -5700,19 +5700,19 @@ func read(name string, c *sync.Cond) {
 	for !done {
 		c.Wait()
 	}
-	fmt.Println(name, "starts reading")
+	fmt.Println(name, "empezando leyendo")
 	c.L.Unlock()
 }
 
 func write(name string, c *sync.Cond) {
-	fmt.Println(name, "starts writing")
+	fmt.Println(name, "empezando escribiendo")
 	time.Sleep(time.Second)
 
 	c.L.Lock()
 	done = true
 	c.L.Unlock()
 
-	fmt.Println(name, "wakes all")
+	fmt.Println(name, "despierta a todos")
 	c.Broadcast()
 }
 
@@ -5720,10 +5720,10 @@ func main() {
 	var m sync.Mutex
 	cond := sync.NewCond(&m)
 
-	go read("Reader 1", cond)
-	go read("Reader 2", cond)
-	go read("Reader 3", cond)
-	write("Writer", cond)
+	go read("Lector 1", cond)
+	go read("Lector 2", cond)
+	go read("Lector 3", cond)
+	write("Escritor", cond)
 
 	time.Sleep(4 * time.Second)
 }
@@ -5731,28 +5731,28 @@ func main() {
 
 ```bash
 $ go run main.go
-Writer starts writing
-Writer wakes all
-Reader 2 starts reading
-Reader 3 starts reading
-Reader 1 starts reading
+Escritor starts writing
+Escritor wakes all
+Lector 2 starts reading
+Lector 3 starts reading
+Lector 1 starts reading
 ```
 
-As we can see, the readers were suspended using the `Wait` method until the writer used the `Broadcast` method to wake up the process.
+Como se puede observar, los lectores quedan suspendidos mediante el método `Wait` hasta que el escritor utiliza el método `Broadcast` para despertarlos.
+
 
 ## Once
 
-Once ensures that only one execution will be carried out even among several goroutines.
+Once garantiza que una determinada acción se ejecute una única vez, incluso cuando varias goroutines intentan ejecutarla simultáneamente.
 
-### Usage
+### Uso
 
-Unlike other primitives, `sync.Once` only has a single method:
+A diferencia de otras primitivas, `sync.Once` solo dispone de un único método:
 
-- `Do(f func())` calls the function `f` **only once**. If `Do` is called multiple times, only the first call will invoke the function `f`.
+- `Do(f func())` ejecuta la función `f`**una única vez**. Si `Do` se llama varias veces, solo la primera llamada ejecutará la función `f`.
+### Ejemplo
 
-### Example
-
-This seems pretty straightforward, let's take an example:
+Esto es bastante directo. Veamos un ejemplo:
 
 ```go
 package main
@@ -5782,43 +5782,44 @@ func main() {
 	}
 
 	increments.Wait()
-	fmt.Printf("Count is %d\n", count)
+	fmt.Printf("Count es %d\n", count)
 }
 ```
 
 ```bash
 $ go run main.go
-Count is 1
+Count es 1
 ```
 
-As we can see, even when we ran 100 goroutines, the count only got incremented once.
+Como se puede observar, aunque se han lanzado 100 goroutines, el contador solo se incrementa una vez.
 
 ## Pool
 
-Pool is s a scalable pool of temporary objects and is also concurrency safe. Any stored value in the pool can be deleted at any time without receiving notification. In addition, under high load, the object pool can be dynamically expanded, and when it is not used or the concurrency is not high, the object pool will shrink.
+Pool es un contenedor escalable de objetos temporales y es seguro para concurrencia. Cualquier valor almacenado en el pool puede ser eliminado en cualquier momento sin notificación. Además, bajo alta carga, el pool puede expandirse dinámicamente y, cuando no se utiliza o la concurrencia disminuye, puede reducirse.
 
-_The key idea is the reuse of objects to avoid repeated creation and destruction, which will affect the performance._
+_La idea clave es la reutilización de objetos para evitar creaciones y destrucciones repetidas, lo que afecta al rendimiento._
 
-### But why do we need it?
+### ¿Por qué lo necesitamos?
 
-Pool's purpose is to cache allocated but unused items for later reuse, relieving pressure on the garbage collector. That is, it makes it easy to build efficient, thread-safe free lists. However, it is not suitable for all free lists.
+El propósito de Pool es almacenar en caché objetos ya asignados pero no utilizados para su reutilización posterior, reduciendo la presión sobre el recolector de basura (_garbage collector_). Es decir, facilita la creación de listas libres (_free lists_) eficientes y seguras para concurrencia. Sin embargo, no es adecuado para todos los casos.
 
-The appropriate use of a Pool is to manage a group of temporary items silently shared among and potentially reused by concurrent independent clients of a package. Pool provides a way to spread the cost of allocation overhead across many clients.
+El uso adecuado de un Pool es gestionar un conjunto de objetos temporales compartidos de forma transparente entre múltiples clientes concurrentes de un paquete. Pool permite distribuir el coste de asignación entre muchos clientes.
 
-_It is important to note that Pool also has its performance cost. It is much slower to use `sync.Pool` than simple initialization. Also, a Pool must not be copied after first use._
+_Es importante destacar que Pool también tiene un coste en rendimiento. Usar `sync.Pool` es más lento que una inicialización simple. Además, un Pool no debe copiarse después de su primer uso._
 
-### Usage
+### Uso
 
-`sync.Pool` gives us the following methods:
+`sync.Pool` proporciona los siguientes métodos:
 
-- `Get()` selects an arbitrary item from the Pool, removes it from the Pool, and returns it to the caller.
-- `Put(x any)` adds the item to the pool.
+- `Get()` selecciona un elemento arbitrario del pool, lo elimina y lo devuelve al llamador.
+- `Put(x any)` añade un elemento al pool.
 
-### Example
+### Ejemplo
 
-Now, let's look at an example.
+Veamos un ejemplo.
 
-First, we will create a new `sync.Pool`, where we can optionally specify a function to generate a value when we call, `Get`, otherwise it will return a `nil` value.
+Primero, creamos un `sync.Pool`, donde opcionalmente podemos definir una función New que genere un valor cuando se llame a `Get`. Si no se define, devolverá `nil`.
+
 
 ```go
 package main
@@ -5834,42 +5835,42 @@ type Person struct {
 
 var pool = sync.Pool{
 	New: func() any {
-		fmt.Println("Creating a new person...")
+		fmt.Println("Creando nueva persona...")
 		return &Person{}
 	},
 }
 
 func main() {
 	person := pool.Get().(*Person)
-	fmt.Println("Get object from sync.Pool for the first time:", person)
+	fmt.Println("Obtener objeto de sync.Pool por primera vez:", person)
 
-	fmt.Println("Put the object back in the pool")
+	fmt.Println("Devolver el objeto al pool")
 	pool.Put(person)
 
 	person.Name = "Gopher"
-	fmt.Println("Set object property name:", person.Name)
+	fmt.Println("Establecer la propiedad nombre del objeto:", person.Name)
 
-	fmt.Println("Get object from pool again (it's updated):", pool.Get().(*Person))
-	fmt.Println("There is no object in the pool now (new one will be created):", pool.Get().(*Person))
+	fmt.Println("Obtener el objeto del pool de nuevo (está actualizado):", pool.Get().(*Person))
+	fmt.Println("Ya no hay ningún objeto en el pool ahora se creará uno nuevo:", pool.Get().(*Person))
 }
 ```
 
-And if we run this, we'll see an interesting output:
+Al ejecutarlo, obtenemos una salida interesante:
 
 ```bash
 $ go run main.go
-Creating a new person...
-Get object from sync.Pool for the first time: &{}
-Put the object back in the pool
-Set object property name: Gopher
-Get object from pool again (it's updated): &{Gopher}
-Creating a new person...
-There is no object in the pool now (new one will be created): &{}
+Creando nueva persona...
+Obtener objeto de sync.Pool por primera vez: &{}
+Devolver el objeto al pool
+Establecer la propiedad nombre del objeto: Gopher
+Obtener el objeto del pool de nuevo (está actualizado): &{Gopher}
+Creando nueva persona...
+Ya no hay ningún objeto en el pool ahora se creará uno nuevo: &{}
 ```
 
-_Notice how we did [type assertion](https://karanpratapsingh.com/courses/go/interfaces#type-assertion) when we call `Get`._
+_Observa cómo hemos utilizado una aserción de tipo ([type assertion](https://karanpratapsingh.com/courses/go/interfaces#type-assertion)) al llamar a `Get`._
 
-It can be seen that the `sync.Pool` is strictly a temporary object pool, which is suitable for storing some temporary objects that will be shared among goroutines.
+Se puede ver que `sync.Pool` es estrictamente un pool de objetos temporales, adecuado para almacenar objetos que serán compartidos y reutilizados entre goroutines.
 
 ## Map
 
