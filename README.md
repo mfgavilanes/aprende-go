@@ -6239,22 +6239,25 @@ El patrón fan-out permite repartir trabajo entre varios consumidores concurrent
 
 ![pipeline](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/pipeline.png)
 
-The pipeline pattern is a series of _stages_ connected by channels, where each stage is a group of goroutines running the same function.
+El patrón pipeline consiste en una serie de etapas conectadas mediante canales, donde cada etapa está formada por una o varias goroutines que ejecutan la misma función.
 
-In each stage, the goroutines:
+En cada etapa, las goroutines:
 
-- Receive values from _upstream_ via _inbound_ channels.
-- Perform some function on that data, usually producing new values.
-- Send values _downstream_ via _outbound_ channels.
+- reciben valores desde la etapa anterior (_upstream_) mediante canales de entrada (_inbound channels_),
+- realizan alguna operación sobre esos datos,
+- envían los nuevos valores a la siguiente etapa (_downstream_) mediante canales de salida (_outbound channels_).
 
-Each stage has any number of inbound and outbound channels, except the first and last stages, which have only outbound or inbound channels, respectively. The first stage is sometimes called the _source_ or _producer_; the last stage is the _sink_ or _consumer_.
+Cada etapa puede tener cualquier número de canales de entrada y de salida, excepto la primera y la última etapa, que tienen únicamente canales de salida o de entrada, respectivamente.
 
-By using a pipeline, we separate the concerns of each stage, which provides numerous benefits such as:
+La primera etapa suele llamarse _fuente o productor_, y la última etapa suele llamarse _sumidero o consumidor_.
 
-- Modify stages independent of one another.
-- Mix and match how stages are combined independently of modifying the stage.
+El uso de pipelines permite separar responsabilidades:
 
-In our example, we have defined three stages, `filter`, `square`, and `half`.
+- cada etapa realiza una tarea concreta,
+- las etapas pueden modificarse de forma independiente,
+- se pueden combinar distintas etapas sin cambiar su implementación.
+
+En este ejemplo se definen tres etapas: `filter`, `square`, y `half`.
 
 ```go
 package main
@@ -6337,7 +6340,7 @@ func generateWork(work []int) <-chan int {
 }
 ```
 
-Seem like our input was processed correctly by the pipeline in a concurrent manner.
+Parece que la entrada se ha procesado correctamente mediante el pipeline de forma concurrente.
 
 ```bash
 $ go run main.go
@@ -6346,6 +6349,15 @@ $ go run main.go
 8
 18
 32
+```
+
+La transformación aplicada es:
+```bash
+0  -> 0²  -> 0/2  = 0
+2  -> 4   -> 4/2  = 2
+4  -> 16  -> 16/2 = 8
+6  -> 36  -> 36/2 = 18
+8  -> 64  -> 64/2 = 32
 ```
 
 ## Worker Pool
