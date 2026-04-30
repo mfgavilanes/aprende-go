@@ -58,10 +58,7 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
 
     - [Siguientes pasos](#next-steps)
     - [Referencias](#references)
-    - 
-- **Apéndice**
 
-  - [Referencias](#references)
 
 # Cómo usar este repositorio
 ```
