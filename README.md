@@ -5874,35 +5874,35 @@ Se puede ver que `sync.Pool` es estrictamente un pool de objetos temporales, ade
 
 ## Map
 
-Map is like the standard `map[any]any` but is safe for concurrent use by multiple goroutines without additional locking or coordination. Loads, stores, and deletes are spread over constant time.
+Map es similar al tipo estándar `map[any]any`, pero es seguro para su uso concurrente por múltiples goroutines sin necesidad de mecanismos adicionales de bloqueo o coordinación. Las operaciones de lectura, escritura y borrado tienen un coste constante.
 
-### But why do we need it?
+### ¿Por qué lo necesitamos?
 
-The Map type is _specialized_. Most code should use a plain Go map instead, with separate locking or coordination, for better type safety and to make it easier to maintain other invariants along with the map content.
+El tipo Map es _especializado_. En la mayoría de los casos, se recomienda utilizar un map estándar de Go junto con mecanismos de sincronización (como Mutex o RWMutex), ya que ofrece mayor seguridad de tipos y facilita el mantenimiento de invariantes.
 
-The Map type is optimized for two common use cases:
+El tipo Map está optimizado para dos casos de uso comunes:
 
-- When the entry for a given key is only ever written once but read many times, as in caches that only grow.
-- When multiple goroutines read, write, and overwrite entries for disjoint sets of keys. In these two cases, the use of a `sync.Map` may significantly reduce lock contention compared to a Go map paired with a separate `Mutex` or `RWMutex`.
+- Cuando el valor asociado a una clave se escribe una única vez pero se lee muchas veces (por ejemplo, en cachés que solo crecen).
+- Cuando múltiples goroutines leen, escriben y sobrescriben valores sobre conjuntos de claves distintos. En estos casos, `sync.Map` puede reducir significativamente la contención frente a un map tradicional protegido con `Mutex` o `RWMutex`.
 
-_The zero Map is empty and ready for use. A Map must not be copied after first use._
+_El valor cero de un Map está vacío y listo para usar. Un Map no debe copiarse después de su primer uso._
 
-### Usage
+### Uso
 
-`sync.Map` gives us the following methods:
+`sync.Map` proporciona los siguientes métodos:
 
-- `Delete()` deletes the value for a key.
-- `Load(key any)` returns the value stored in the map for a key, or nil if no value is present.
-- `LoadAndDelete(key any)` deletes the value for a key, returning the previous value if any. The loaded result reports whether the key was present.
-- `LoadOrStore(key, value any)` returns the existing value for the key if present. Otherwise, it stores and returns the given value. The loaded result is true if the value was loaded, and false if stored.
-- `Store(key, value any)` sets the value for a key.
-- `Range(f func(key, value any) bool)` calls `f` sequentially for each key and value present in the map. If `f` returns false, the range stops the iteration.
+- `Delete()` elimina el valor asociado a una clave.
+- `Load(key any)` devuelve el valor asociado a una clave, o nil si no existe.
+- `LoadAndDelete(key any)` elimina el valor asociado a una clave y devuelve el valor anterior si existía. Además indica si la clave estaba presente.
+- `LoadOrStore(key, value any)` devuelve el valor existente si la clave ya estaba presente. En caso contrario, almacena y devuelve el nuevo valor. Indica si el valor fue cargado (true) o almacenado (false).
+- `Store(key, value any)` asigna un valor a una clave.
+- `Range(f func(key, value any) bool)` recorre el mapa llamando a `f` para cada par clave-valor. Si `f` devuelve false, se detiene la iteración.
 
-_Note: Range does not necessarily correspond to any consistent snapshot of the Map's contents._
+_Nota: Range no garantiza una vista consistente del contenido del mapa._
 
-### Example
+### Ejemplo
 
-Let's look at an example. Here, we will launch a bunch of goroutines that will add and retrieve values from our map concurrently.
+Veamos un ejemplo. En este caso lanzamos varias goroutines que insertan y leen valores del mapa de forma concurrente.
 
 ```go
 package main
@@ -5919,9 +5919,9 @@ func main() {
 	wg.Add(10)
 	for i := 0; i <= 4; i++ {
 		go func(k int) {
-			v := fmt.Sprintf("value %v", k)
+			v := fmt.Sprintf("valor %v", k)
 
-			fmt.Println("Writing:", v)
+			fmt.Println("Escribiendo:", v)
 			m.Store(k, v)
 			wg.Done()
 		}(i)
@@ -5930,7 +5930,7 @@ func main() {
 	for i := 0; i <= 4; i++ {
 		go func(k int) {
 			v, _ := m.Load(k)
-			fmt.Println("Reading: ", v)
+			fmt.Println("Leyendo: ", v)
 			wg.Done()
 		}(i)
 	}
@@ -5939,39 +5939,39 @@ func main() {
 }
 ```
 
-As expected, our store and retrieve operation will be safe for concurrent use.
+Como es de esperar, las operaciones de escritura y lectura son seguras en ejecución concurrente.
 
 ```bash
 $ go run main.go
-Reading: <nil>
-Writing: value 0
-Writing: value 1
-Writing: value 2
-Writing: value 3
-Writing: value 4
-Reading: value 0
-Reading: value 1
-Reading: value 2
-Reading: value 3
+Leyendo: <nil>
+Escribiendo: value 0
+Escribiendo: value 1
+Escribiendo: value 2
+Escribiendo: value 3
+Escribiendo: value 4
+Leyendo: value 0
+Leyendo: value 1
+Leyendo: value 2
+Leyendo: value 3
 ```
 
 ## Atomic
 
-Package atomic provides low-level atomic memory primitives for integers and pointers that are useful for implementing synchronization algorithms.
+El paquete atomic proporciona primitivas de memoria de bajo nivel para realizar operaciones atómicas sobre enteros y punteros. Estas operaciones son útiles para implementar algoritmos de sincronización.
 
 ### Usage
 
-`atomic` package provides [several functions](https://pkg.go.dev/sync/atomic#pkg-functions) that do the following 5 operations for `int`, `uint`, and `uintptr` types:
+El paquete `atomic` ofrece [varias funciones](https://pkg.go.dev/sync/atomic#pkg-functions) que realizan las siguientes 5 operaciones sobre tipos `int`, `uint`, y `uintptr`:
 
-- Add
-- Load
-- Store
-- Swap
-- Compare and Swap
+- Add (sumar)
+- Load (leer)
+- Store (escribir)
+- Swap (intercambiar)
+- Compare and Swap (comparar e intercambiar)
 
-### Example
+### Ejemplo
 
-We won't be able to cover all of the functions here. So, let's take a look at the most commonly used function like `AddInt32` to get an idea.
+No es posible cubrir todas las funciones aquí, así que veremos una de las más utilizadas, `AddInt32`, para entender su funcionamiento.
 
 ```go
 package main
@@ -5998,30 +5998,31 @@ func main() {
 
 	wg.Wait()
 
-	fmt.Println("Result:", n)
+	fmt.Println("Resultado:", n)
 }
 ```
-
-Here, `atomic.AddInt32` guarantees that the result of `n` will be 1000 as the instruction execution of atomic operations cannot be interrupted.
+En este ejemplo, `atomic.AddInt32` garantiza que el valor final de `n` será 1000, ya que la ejecución de las operaciones atómicas no puede ser interrumpida.
 
 ```bash
 $ go run main.go
-Result: 1000
+Resultado: 1000
 ```
 
-# Advanced Concurrency Patterns
+Las operaciones atómicas permiten modificar variables compartidas sin necesidad de usar `Mutex`, evitando condiciones de carrera en escenarios simples.
 
-In this tutorial, we will discuss some advanced concurrency patterns in Go. Often, these patterns are used in combination in the real world.
+# Patrones avanzados de concurrencia
+
+En este apartado se presentan algunos patrones avanzados de concurrencia en Go. En la práctica, estos patrones suelen utilizarse de forma combinada en aplicaciones reales.
 
 ## Generator
 
 ![generator](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/generator.png)
 
-Then generator Pattern is used to generate a sequence of values which is used to produce some output.
+El patrón generator (generador) se utiliza para producir una secuencia de valores que posteriormente se consumen para generar una salida.
 
-In our example, we have a `generator` function that simply returns a channel from which we can read the values.
+En este ejemplo, tenemos una función `generator` que devuelve un canal desde el cual podemos leer valores.
 
-This works on the fact that _sends_ and _receives_ block until both the sender and receiver are ready. This property allowed us to wait until the next value is requested.
+Este patrón se basa en el hecho de que las operaciones de _envío_ y _recepción_ en canales son bloqueantes hasta que tanto el emisor como el receptor están listos. Esta propiedad permite generar valores bajo demanda.
 
 ```go
 package main
@@ -6033,7 +6034,7 @@ func main() {
 
 	for i := 0; i < 5; i++ {
 		value := <-ch
-		fmt.Println("Value:", value)
+		fmt.Println("Valor:", value)
 	}
 }
 
@@ -6050,18 +6051,19 @@ func generator() <-chan int {
 }
 ```
 
-If we run this, we'll notice that we can consume values that were produced on demand.
+Si ejecutamos este programa, veremos que los valores se generan y consumen según se necesitan:
 
 ```bash
 $ go run main.go
-Value: 0
-Value: 1
-Value: 2
-Value: 3
-Value: 4
+Valor: 0
+Valor: 1
+Valor: 2
+Valor: 3
+Valor: 4
 ```
+El generador produce valores de forma continua, pero solo se consumen cuando el programa los solicita.
 
-_This is a similar behavior as `yield` in JavaScript and Python._
+_Este comportamiento es similar al uso de `yield` en lenguajes como JavaScript o Python._
 
 ## Fan-in
 
