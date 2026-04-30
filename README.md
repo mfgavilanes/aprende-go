@@ -4872,7 +4872,7 @@ Mediante la concurrencia, podemos obtener los mismos resultados en menos tiempo,
 
 ## Concurrencia vs Paralelismo
 
-![concurrency-vs-parallelism](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/concurrency-vs-parallelism.png)
+![concurrency-vs-parallelism](images/concurrency-vs-parallelism.png)
 
 Muchas personas confunden concurrencia con paralelismo porque ambos conceptos implican, en cierto modo, ejecutar código al mismo tiempo, pero en realidad son dos conceptos completamente diferentes.
 
@@ -4890,7 +4890,7 @@ Los [Procesos Secuenciales Comunicantes](https://dl.acm.org/doi/10.1145/359576.3
 
 Lenguajes como Go y Erlang han estado fuertemente inspirados por el concepto de CSP. A pesar de que la concurrencia es compleja, CSP nos permite dar una mejor estructura a nuestro código concurrente y proporciona un modelo para pensar sobre la concurrencia de una forma que la hace un poco más sencilla. En este modelo, los procesos son independientes y se comunican compartiendo canales entre ellos.
 
-![csp](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/csp.png)
+![csp](images/csp.png)
 
 _Aprenderemos cómo Golang lo implementa utilizando goroutines y canales más adelante en el curso._
 
@@ -4922,7 +4922,7 @@ Un proceso concurrente posee al menos un recurso en un momento dado, lo que impi
 
 _En el diagrama inferior, existe una única instancia del Recurso 1 y está siendo utilizado únicamente por el Proceso 1._
 
-![mutual-exclusion](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/mutual-exclusion.png)
+![mutual-exclusion](images/mutual-exclusion.png)
 
 - Retención y espera (Hold and wait)
 
@@ -4930,7 +4930,7 @@ Un proceso concurrente mantiene un recurso y está esperando otro recurso adicio
 
 _En el diagrama inferior, el Proceso 2 posee los Recursos 2 y 3 y está solicitando el Recurso 1, que está en manos del Proceso 1._
 
-![hold-and-wait](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/hold-and-wait.png)
+![hold-and-wait](images/hold-and-wait.png)
 
 - No expropiación (No preemption)
 
@@ -4938,7 +4938,7 @@ Un recurso que está siendo utilizado por un proceso concurrente no puede ser re
 
 _En el diagrama inferior, el Proceso 2 no puede quitarle el Recurso 1 al Proceso 1. Este solo será liberado cuando el Proceso 1 lo libere voluntariamente tras completar su ejecución._
 
-![no-preemption](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/no-preemption.png)
+![no-preemption](images/no-preemption.png)
 
 - Espera circular (Circular wait)
 
@@ -4946,7 +4946,7 @@ Un proceso espera un recurso que está siendo utilizado por otro proceso, que a 
 
 _En el diagrama inferior, el Proceso 1 tiene asignado el Recurso 2 y solicita el Recurso 1. De manera similar, el Proceso 2 tiene asignado el Recurso 1 y solicita el Recurso 2, formando un ciclo de espera circular._
 
-![circular-wait](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/concurrency/circular-wait.png)
+![circular-wait](images/circular-wait.png)
 
 ### Bloqueos activos (Livelocks)
 
@@ -4986,7 +4986,7 @@ Antes de escribir código, es importante hablar brevemente del modelo fork-join.
 
 Go utiliza el modelo de concurrencia fork-join como base para las goroutines. Este modelo implica que un proceso hijo se separa de su proceso padre para ejecutarse de forma concurrente con él. Una vez que finaliza su ejecución, el proceso hijo se vuelve a unir al proceso padre. El punto en el que se reincorpora se denomina punto de unión (join point).
 
-![fork-join](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/goroutines/fork-join.png)
+![fork-join](images/fork-join.png)
 
 Ahora, escribamos algo de código y creemos nuestra propia goroutine.
 
@@ -5025,7 +5025,7 @@ func main() {
 
 ```bash
 $ go run main.go
-Hello World
+Hola Mundo
 ```
 
 Ahora sí, podemos ver la salida completa.
@@ -5042,7 +5042,7 @@ Aprendamos sobre los canales.
 
 Un canal es, de forma sencilla, un medio de comunicación entre goroutines. Los datos entran por un extremo y salen por el otro en el mismo orden, hasta que el canal se cierra.
 
-![channel](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/channels/channel.png)
+![channel](images/channel.png)
 
 Como vimos anteriormente, los canales en Go se basan en el modelo de Procesos Secuenciales Comunicantes (CSP).
 
@@ -5124,7 +5124,7 @@ Perfecto, nuestro programa se ejecutó tal como esperábamos.
 
 También existen los canales con buffer, que permiten almacenar un número limitado de valores sin necesidad de que exista un receptor inmediato para esos valores.
 
-![buffered-channel](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/channels/buffered-channel.png)
+![buffered-channel](images/buffered-channel.png)
 
 Esta _longitud del buffer_ o _capacidad_ se puede especificar mediante el segundo argumento de la función `make`.
 
@@ -5152,7 +5152,7 @@ A continuación, veremos los canales direccionales.
 
 Cuando usamos canales como parámetros de funciones, podemos especificar si un canal está destinado únicamente a enviar o a recibir valores. Esto aumenta la seguridad de tipos de nuestro programa, ya que por defecto un canal puede tanto enviar como recibir valores.
 
-![directional-channels](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/channels/directional-channels.png)
+![directional-channels](images/directional-channels.png)
 
 En nuestro ejemplo, podemos actualizar el segundo argumento de la función speak para que solo pueda enviar un valor.
 
@@ -5682,7 +5682,7 @@ Cada `Cond` tiene asociado un bloqueo (normalmente un `*Mutex` o un `*RWMutex`),
 
 Un escenario típico es cuando un proceso está recibiendo datos y otros procesos deben esperar a que esos datos estén disponibles antes de poder leerlos correctamente.
 
-Si utilizamos únicamente un [canal](https://karanpratapsingh.com/courses/go/channels) o un mutex, solo un proceso puede esperar y leer los datos. No existe un mecanismo directo para notificar a múltiples procesos que los datos ya están disponibles.
+Si utilizamos únicamente un canal o un mutex, solo un proceso puede esperar y leer los datos. No existe un mecanismo directo para notificar a múltiples procesos que los datos ya están disponibles.
 
 Por ello, `sync.Cond` permite coordinar el acceso a recursos compartidos y notificar a varias goroutines.
 
@@ -5883,7 +5883,7 @@ Creando nueva persona...
 Ya no hay ningún objeto en el pool ahora se creará uno nuevo: &{}
 ```
 
-_Observa cómo hemos utilizado una aserción de tipo ([type assertion](https://karanpratapsingh.com/courses/go/interfaces#type-assertion)) al llamar a `Get`._
+_Observa cómo hemos utilizado una aserción de tipo (_type assertion_) al llamar a `Get`._
 
 Se puede ver que `sync.Pool` es estrictamente un pool de objetos temporales, adecuado para almacenar objetos que serán compartidos y reutilizados entre goroutines.
 
@@ -6031,7 +6031,7 @@ En este apartado se presentan algunos patrones avanzados de concurrencia en Go. 
 
 ## Generator
 
-![generator](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/generator.png)
+![generator](images/generator.png)
 
 El patrón generator (generador) se utiliza para producir una secuencia de valores que posteriormente se consumen para generar una salida.
 
@@ -6082,7 +6082,7 @@ _Este comportamiento es similar al uso de `yield` en lenguajes como JavaScript o
 
 ## Fan-in
 
-![fan-in](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/fan-in.png)
+![fan-in](images/fan-in.png)
 
 El patrón fan-in combina múltiples entradas en un único canal de salida. Es decir, permite multiplexar varias fuentes de datos en un solo flujo.
 
@@ -6168,7 +6168,7 @@ El patrón fan-in permite combinar múltiples fuentes de eventos en un único fl
 
 ## Fan-out
 
-![fan-out](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/fan-out.png)
+![fan-out](images/fan-out.png)
 
 El patrón fan-out permite dividir un único canal de entrada en múltiples canales de salida. Es un patrón útil para distribuir elementos de trabajo entre varios actores o trabajadores uniformes.
 
@@ -6252,7 +6252,7 @@ El patrón fan-out permite repartir trabajo entre varios consumidores concurrent
 
 ## Pipeline
 
-![pipeline](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/pipeline.png)
+![pipeline](images/pipeline.png)
 
 El patrón pipeline consiste en una serie de etapas conectadas mediante canales, donde cada etapa está formada por una o varias goroutines que ejecutan la misma función.
 
@@ -6377,7 +6377,7 @@ La transformación aplicada es:
 
 ## Worker Pool
 
-![worker-pool](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/worker-pool.png)
+![worker-pool](images/worker-pool.png)
 
 El patrón worker pool es un patrón muy potente que permite distribuir el trabajo entre múltiples trabajadores (goroutines) de forma concurrente.
 
@@ -6471,11 +6471,11 @@ Es especialmente útil cuando:
 
 ## Patrón de cola
 
-![queuing](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/queuing.png)
+![queuing](images/queuing.png)
 
 El patrón `queuing` permite procesar un número `n` limitado de elementos al mismo tiempo.
 
-En este ejemplo, se utiliza un canal con buffer para simular el comportamiento de una cola. Enviamos una [estructura vacía struct{}{}](https://karanpratapsingh.com/courses/go/structs#properties) al canal nuestro `queue` y esperamos a que otro proceso libere espacio para poder continuar.
+En este ejemplo, se utiliza un canal con buffer para simular el comportamiento de una cola. Enviamos una estructura vacía struct{}{} al canal nuestro `queue` y esperamos a que otro proceso libere espacio para poder continuar.
 
 Esto funciona porque:
 - los envíos (_sends_) a un canal con buffer solo bloquean cuando el buffer está lleno,
@@ -6559,7 +6559,7 @@ Algunos patrones adicionales que puede ser útil conocer son:
 - canal con _ring buffer_,
 - paralelismo acotado.
 
-# Contexto
+# Context
 
 En programas concurrentes, a menudo es necesario interrumpir operaciones debido a:
 
@@ -6835,3 +6835,4 @@ Aquí están los recursos que se consultaron al crear este curso.
 - [Official Go blog](https://go.dev/blog)
 - [A Tour of Go](https://go.dev/tour)
 - [Learn Go with Tests](https://quii.gitbook.io/learn-go-with-tests)
+- [Learn Go](https://github.com/karanpratapsingh/learn-go)
