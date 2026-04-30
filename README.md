@@ -6270,9 +6270,9 @@ import (
 func main() {
 	in := generateWork([]int{0, 1, 2, 3, 4, 5, 6, 7, 8})
 
-	out := filter(in) // Filter odd numbers
-	out = square(out) // Square the input
-	out = half(out)   // Half the input
+	out := filter(in) // Filtra números pares
+	out = square(out) // Eleva al cuadrado
+	out = half(out)   // Divide entre dos
 
 	for value := range out {
 		fmt.Println(value)
@@ -6364,13 +6364,17 @@ La transformación aplicada es:
 
 ![worker-pool](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/worker-pool.png)
 
-The worker pool is a really powerful pattern that lets us distributes the work across multiple workers (goroutines) concurrently.
+El patrón worker pool es un patrón muy potente que permite distribuir el trabajo entre múltiples trabajadores (goroutines) de forma concurrente.
 
-In our example, we have a `jobs` channel to which we will send our jobs and a `results` channel where our workers will send the results once they've finished doing the work.
+En este ejemplo, tenemos:
+- un canal `jobs`, donde se envían las tareas,
+- un canal `results`, donde los trabajadores envían los resultados una vez completado el trabajo.
+
+A continuación, se lanzan los trabajadores de forma concurrente y simplemente se recogen los resultados desde el canal `results`.
 
 After that, we can launch our workers concurrently and simply receive the results from the `results` channel.
 
-_Ideally, `totalWorkers` should be set to `runtime.NumCPU()` which gives us the number of logical CPUs usable by the current process._
+_Idealmente, `totalWorkers` debería establecerse usando `runtime.NumCPU()`, que devuelve el número de CPUs lógicas disponibles para el proceso._
 
 ```go
 package main
@@ -6391,14 +6395,14 @@ func main() {
 		go worker(w, jobs, results)
 	}
 
-	// Send jobs
+	// Enviar trabajos
 	for j := 1; j <= totalJobs; j++ {
 		jobs <- j
 	}
 
 	close(jobs)
 
-	// Receive results
+	// Recibir resultados
 	for a := 1; a <= totalJobs; a++ {
 		<-results
 	}
@@ -6415,13 +6419,13 @@ func worker(id int, jobs <-chan int, results chan<- int) {
 		go func(job int) {
 			defer wg.Done()
 
-			fmt.Printf("Worker %d started job %d\n", id, job)
+			fmt.Printf("Worker %d comenzó la tarea %d\n", id, job)
 
-			// Do work and send result
+			// Realizar el trabajo y enviar resultado
 			result := job * 2
 			results <- result
 
-			fmt.Printf("Worker %d finished job %d\n", id, job)
+			fmt.Printf("Worker %d terminó la tarea %d\n", id, job)
 		}(j)
 	}
 
@@ -6429,33 +6433,44 @@ func worker(id int, jobs <-chan int, results chan<- int) {
 }
 ```
 
-As expected, our jobs were distributed among our workers.
+Tal y como se esperaba, los jobs se distribuyen en los workers.
 
 ```bash
 $ go run main.go
-Worker 2 started job 4
-Worker 2 started job 1
-Worker 1 started job 3
-Worker 2 started job 2
-Worker 2 finished job 1
-Worker 1 finished job 3
-Worker 2 finished job 2
-Worker 2 finished job 4
+Worker 2 comenzó la tarea 4
+Worker 2 comenzó la tarea 1
+Worker 1 comenzó la tarea 3
+Worker 2 comenzó la tarea 2
+Worker 2 terminó la tarea 1
+Worker 1 terminó la tarea 3
+Worker 2 terminó la tarea 2
+Worker 2 terminó la tarea 4
 ```
+El patrón worker pool permite repartir un conjunto de tareas entre varios trabajadores, mejorando el rendimiento y aprovechando la concurrencia del sistema.
 
-## Queuing
+Es especialmente útil cuando:
+
+- hay muchas tareas independientes,
+- cada tarea puede procesarse de forma paralela,
+- se quiere limitar el número de goroutines activas (controlando `totalWorkers`).
+
+## Patrón de cola
 
 ![queuing](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/queuing.png)
 
-Queuing pattern allows us to process `n` number of items at a time.
+El patrón `queuing` permite procesar un número `n` limitado de elementos al mismo tiempo.
 
-In our example, we use a buffered channel to simulate a queue behavior. We simply send an [empty struct](https://karanpratapsingh.com/courses/go/structs#properties) to our `queue` channel and wait for it to be released by the previous process so that we can continue.
+En este ejemplo, se utiliza un canal con buffer para simular el comportamiento de una cola. Enviamos una [estructura vacía struct{}{}](https://karanpratapsingh.com/courses/go/structs#properties) al canal nuestro `queue` y esperamos a que otro proceso libere espacio para poder continuar.
 
-This is because _sends_ to a buffered channel block only when the buffer is full and _receives_ block when the buffer is empty.
+Esto funciona porque:
+- los envíos (_sends_) a un canal con buffer solo bloquean cuando el buffer está lleno,
+- las recepciones (_receives_) bloquean cuando el buffer está vacío.
+
+En este caso, tenemos 10 elementos de trabajo y un límite de 2. Esto significa que solo se pueden procesar 2 elementos al mismo tiempo.
 
 Here, we have total work of 10 items and we have a limit of 2. This means we can process 2 items at a time.
 
-_Notice how our `queue` channel is of type `struct{}` as an empty struct occupies zero bytes of storage._
+_Observa que el canal `queue` es de tipo `struct{}` porque una estructura vacía ocupa cero bytes de almacenamiento._
 
 ```go
 package main
@@ -6472,7 +6487,7 @@ const work = 10
 func main() {
 	var wg sync.WaitGroup
 
-	fmt.Println("Queue limit:", limit)
+	fmt.Println("Límite de la queue:", limit)
 	queue := make(chan struct{}, limit)
 
 	wg.Add(work)
@@ -6484,7 +6499,7 @@ func main() {
 	wg.Wait()
 
 	close(queue)
-	fmt.Println("Work complete")
+	fmt.Println("Tarea completada")
 }
 
 func process(work int, queue chan struct{}, wg *sync.WaitGroup) {
@@ -6494,53 +6509,65 @@ func process(work int, queue chan struct{}, wg *sync.WaitGroup) {
 		defer wg.Done()
 
 		time.Sleep(1 * time.Second)
-		fmt.Println("Processed:", work)
+		fmt.Println("Procesado:", work)
 
 		<-queue
 	}()
 }
 ```
 
-If we run this, we will notice that it briefly pauses when every 2nd item (which is our limit) is processed as our queue waits to be dequeued.
+Si ejecutamos el programa, veremos que se produce una pequeña pausa cada vez que se procesan 2 elementos, porque ese es el límite de la cola.
 
 ```bash
 $ go run main.go
-Queue limit: 2
-Processed: 1
-Processed: 2
-Processed: 4
-Processed: 3
-Processed: 5
-Processed: 6
-Processed: 8
-Processed: 7
-Processed: 9
-Processed: 10
-Work complete
+Límite de la queue: 2
+Procesado: 1
+Procesado: 2
+Procesado: 4
+Procesado: 3
+Procesado: 5
+Procesado: 6
+Procesado: 8
+Procesado: 7
+Procesado: 9
+Procesado: 10
+Tarea completada
 ```
+La idea clave es que el canal `queue` no transporta datos relevantes, sino que actúa como un semáforo de concurrencia: limita cuántas goroutines pueden estar trabajando simultáneamente.
 
-## Additional patterns
+## Patrones adicionales
 
-Some additional patterns that might be useful to know:
+Algunos patrones adicionales que puede ser útil conocer son:
 
-- Tee channel
-- Bridge channel
-- Ring buffer channel
-- Bounded parallelism
+- canal _tee_,
+- canal _bridge_,
+- canal con _ring buffer_,
+- paralelismo acotado.
 
-# Context
+# Contexto
 
-In concurrent programs, it's often necessary to preempt operations because of timeouts, cancellations, or failure of another portion of the system.
+En programas concurrentes, a menudo es necesario interrumpir operaciones debido a:
 
-The `context` package makes it easy to pass request-scoped values, cancellation signals, and deadlines across API boundaries to all the goroutines involved in handling a request.
+- tiempos de espera,
+- cancelaciones,
+- fallos en otra parte del sistema.
 
-## Types
+El paquete `context` facilita pasar:
 
-Let's discuss some core types of the `context` package.
+- valores asociados a una petición,
+- señales de cancelación,
+- límites temporales,
+- y plazos de ejecución,
+
+a través de distintas APIs y hacia todas las goroutines implicadas en el procesamiento de una solicitud.
+
+## Tipos
+
+Veamos algunos tipos principales del paquete `context`.
 
 ### Context
 
-The `Context` is an `interface` type that is defined as follows:
+`Context` es un tipo `interface` definido de la siguiente forma:
 
 ```go
 type Context interface {
@@ -6551,30 +6578,37 @@ type Context interface {
 }
 ```
 
-The `Context` type has the following methods:
+El tipo `Context` tiene los siguientes métodos:
 
-- `Done() <- chan struct{}` returns a channel that is closed when the context is canceled or times out. Done may return `nil` if the context can never be canceled.
-- `Deadline() (deadline time.Time, ok bool)` returns the time when the context will be canceled or timed out. Deadline returns `ok` as `false` when no deadline is set.
-- `Err() error` returns an error that explains why the Done channel was closed. If Done is not closed yet, it returns `nil`.
-- `Value(key any) any` returns the value associated with the key or `nil` if none.
+- `Done() <- chan struct{}` devuelve un canal que se cierra cuando el contexto se cancela o expira. Done puede devolver `nil` si el contexto nunca puede cancelarse.
+- `Deadline() (deadline time.Time, ok bool)` devuelve el instante en el que el contexto será cancelado o expirará. `ok` será `false` si no hay ningún plazo establecido.
+- `Err() error` devuelve un error que explica por qué se cerró el canal Done. Si Done todavía no se ha cerrado, devuelve `nil`.
+- `Value(key any) any` devuelve el valor asociado a una clave, o `nil` si no existe ningún valor asociado.
 
 ### CancelFunc
 
-A `CancelFunc` tells an operation to abandon its work and it does not wait for the work to stop. If it is called by multiple goroutines simultaneously, after the first call, subsequent calls to a `CancelFunc` does nothing.
+Un `CancelFunc` indica a una operación que debe abandonar su ejecución, pero no espera a que esta finalice.
+
+Si se invoca desde múltiples goroutines simultáneamente, solo la primera llamada tiene efecto; las siguientes no hacen nada.
 
 ```go
 type CancelFunc func()
 ```
 
-## Usage
+## Uso
 
-Let's discuss functions that are exposed by the `context` package:
+A continuación se describen algunas funciones proporcionadas por el paquete `context`.
 
 ### Background
 
-Background returns a non-nil, empty `Context`. It is never canceled, has no values, and has no deadline.
+Background devuelve un `Context` vacío y no nulo. 
 
-_It is typically used by the main function, initialization, and tests, and as the top-level Context for incoming requests._
+Este contexto:
+- nunca se cancela,
+- no contiene valores,
+- no tiene límite de tiempo.
+
+_Se utiliza normalmente en la función principal, en la inicialización y en pruebas, así como contexto raíz para solicitudes entrantes._
 
 ```go
 func Background() Context
@@ -6582,9 +6616,14 @@ func Background() Context
 
 ### TODO
 
-Similar to the `Background` function `TODO` function also returns a non-nil, empty `Context`.
+De forma similar a la función `Background`, la función `TODO` también devuelve un `Context` vacío y no nulo.
 
-However, it should only be used when we are not sure what context to use or if the function has not been updated to receive a context. This means we plan to add context to the function in the future.
+Sin embargo, debe utilizarse únicamente cuando:
+
+- no se sabe qué contexto utilizar, o
+- la función todavía no ha sido adaptada para recibir un contexto.
+
+Esto indica que se planea añadir el uso de `context` en el futuro.
 
 ```go
 func TODO() Context
@@ -6592,19 +6631,19 @@ func TODO() Context
 
 ### WithValue
 
-This function takes in a context and returns a derived context where the value `val` is associated with `key` and flows through the context tree with the context.
+Esta función recibe un contexto y devuelve un nuevo contexto derivado en el que el valor `val` queda asociado a la clave `key`, propagándose a través del árbol de contextos.
 
-This means that once you get a context with value, any context that derives from this gets this value.
+Esto significa que cualquier contexto derivado de este heredará dicho valor.
 
-_It is not recommended to pass in critical parameters using context values, instead, functions should accept those values in the signature making it explicit._
+_No se recomienda usar el contexto para pasar parámetros críticos. En su lugar, estos deberían aparecer explícitamente en la firma de la función._
 
 ```go
 func WithValue(parent Context, key, val any) Context
 ```
 
-**Example**
+**Ejemplo**
 
-Let's take a simple example to see how we can add a key-value pair to the context.
+Veamos un ejemplo sencillo para entender cómo añadir un par clave-valor a un contexto:
 
 ```go
 package main
@@ -6625,24 +6664,26 @@ func main() {
 
 func ProcessRequest(ctx context.Context) {
 	value := ctx.Value("processID")
-	fmt.Printf("Processing ID: %v", value)
+	fmt.Printf("Procesando ID: %v", value)
 }
 ```
-
-And if we run this, we'll see the `processID` being passed via our context.
+La ejecución sería:
 
 ```bash
 $ go run main.go
-Processing ID: abc-xyz
+Procesando ID: abc-xyz
 ```
+El contexto permite transportar información asociada a una petición (como identificadores, trazas, etc.) entre distintas funciones y goroutines sin necesidad de modificar todas las firmas de funciones.
 
 ### WithCancel
 
-This function creates a new context from the parent context and derived context and the cancel function. The parent can be a `context.Background` or a context that was passed into the function.
+Esta función crea un nuevo contexto a partir de un contexto padre y devuelve tanto el contexto derivado como una función de cancelación.
 
-Canceling this context releases resources associated with it, so the code should call cancel as soon as the operations running in this context is completed.
+El contexto padre puede ser `context.Background` o un contexto recibido como parámetro en una función.
 
-_Passing around the `cancel` function is not recommended as it may lead to unexpected behavior._
+Cancelar este contexto libera los recursos asociados, por lo que se recomienda llamar a `cancel` tan pronto como finalicen las operaciones que utilizan dicho contexto.
+
+_No es recomendable propagar la función `cancel`, ya que puede provocar comportamientos inesperados._
 
 ```go
 func WithCancel(parent Context) (ctx Context, cancel CancelFunc)
@@ -6650,9 +6691,9 @@ func WithCancel(parent Context) (ctx Context, cancel CancelFunc)
 
 ### WithDeadline
 
-This function returns a derived context from its parent that gets canceled when the deadline exceeds or the cancel function is called.
+Esta función devuelve un contexto derivado que se cancela automáticamente cuando se alcanza un instante de tiempo determinado (deadline) o cuando se invoca la función de cancelación.
 
-For example, we can create a context that will automatically get canceled at a certain time in the future and pass that around in child functions. When that context gets canceled because of the deadline running out, all the functions that got the context gets notified to stop work and return.
+Por ejemplo, podemos crear un contexto que se cancele automáticamente en un momento futuro y pasarlo a funciones hijas. Cuando el contexto se cancela por haber alcanzado el límite de tiempo, todas las funciones que lo utilizan son notificadas para detener su ejecución.
 
 ```go
 func WithDeadline(parent Context, d time.Time) (Context, CancelFunc)
@@ -6660,7 +6701,7 @@ func WithDeadline(parent Context, d time.Time) (Context, CancelFunc)
 
 ### WithTimeout
 
-This function is just a wrapper around the `WithDeadline` function with the added timeout.
+Esta función es un caso particular de `WithDeadline` en el que el límite se expresa como una duración (timeout).
 
 ```go
 func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
