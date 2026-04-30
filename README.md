@@ -44,6 +44,21 @@ _Si este material te resulta útil, puedes dejar una ⭐ en el repositorio._
   - [Testing (pruebas)](#testing)
   - [Genéricos](#genéricos)
 
+- **Capítulo IV**
+
+    - [Concurrencia](#concurrencia)
+    - [Goroutines](#goroutines)
+    - [Channels](#canales)
+    - [Select](#select)
+    - [Paquete sync](#sync-package)
+    - [Patrones avanzados de concurrencia](#patrones-avanzados-de-concurrencia)
+    - [Context](#context)
+
+- **Apéndice**
+
+    - [Siguientes pasos](#next-steps)
+    - [Referencias](#references)
+    - 
 - **Apéndice**
 
   - [Referencias](#references)
@@ -6709,11 +6724,13 @@ func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
 }
 ```
 
-## Example
+Estos mecanismos permiten construir sistemas concurrentes que pueden cancelarse, limitarse en el tiempo y liberar recursos correctamente, algo fundamental en sistemas reactivos y distribuidos.
 
-Let's look at an example to solidify our understanding of the context.
+## Ejemplo
 
-In the example below, we have a simple HTTP server that handles a request.
+Veamos un ejemplo para afianzar el uso de context.
+
+En el siguiente código, tenemos un servidor HTTP sencillo que gestiona una petición:
 
 ```go
 package main
@@ -6725,69 +6742,89 @@ import (
 )
 
 func handleRequest(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("Handler started")
+	fmt.Println("Handler arrancado")
 	context := req.Context()
 
 	select {
-	// Simulating some work by the server, waits 5 seconds and then responds.
+	// Simula trabajo del servidor durante 5 segundos
 	case <-time.After(5 * time.Second):
-		fmt.Fprintf(w, "Response from the server")
+		fmt.Fprintf(w, "Respuesta del servidor")
 
-	// Handling request cancellation
+	// Maneja la cancelación de la petición
 	case <-context.Done():
 		err := context.Err()
 		fmt.Println("Error:", err)
 	}
 
-	fmt.Println("Handler complete")
+	fmt.Println("Handler completado")
 }
 
 func main() {
 	http.HandleFunc("/request", handleRequest)
 
-	fmt.Println("Server is running...")
+	fmt.Println("Servidor funcionando...")
 	http.ListenAndServe(":4000", nil)
 }
 ```
 
-Let's open two terminals. In terminal one we'll run our example.
+Abrimos dos terminales. En el primero ejecutamos el programa:
 
 ```bash
 $ go run main.go
-Server is running...
-Handler started
-Handler complete
+Servidor funcionando...
+Handler arrancado
+Handler completado
 ```
 
-In the second terminal, we will simply make a request to our server. And if we wait for 5 seconds, we get a response back.
+En el segundo terminal realizamos una petición al servidor. Si esperamos 5 segundos, obtenemos una respuesta:
 
 ```bash
 $ curl localhost:4000/request
-Response from the server
+Respuesta del servidor
 ```
 
-Now, let's see what happens if we cancel the request before it completes.
+Ahora veamos qué ocurre si cancelamos la petición antes de que termine.
 
-_Note: we can use `ctrl + c` to cancel the request midway._
+_Nota: podemos usar `ctrl + c` para cancelar la petición._
 
 ```bash
 $ curl localhost:4000/request
 ^C
 ```
 
-And as we can see, we're able to detect the cancellation of the request because of the request context.
+En este caso, el servidor detecta la cancelación gracias al contexto de la petición:
 
 ```bash
 $ go run main.go
-Server is running...
-Handler started
+Server funcionando...
+Handler arrancado
 Error: context canceled
-Handler complete
+Handler completado
 ```
 
-I'm sure you can already see how this can be immensely useful.
+El uso de context permite:
 
-For example, we can use this to cancel any resource-intensive work if it's no longer needed or has exceeded the deadline or a timeout.
+- detectar cancelaciones de forma automática,
+- detener trabajo innecesario,
+- liberar recursos correctamente,
+- gestionar tiempos de espera y límites de ejecución.
+
+Esto resulta especialmente útil en sistemas concurrentes y reactivos, donde las operaciones pueden dejar de ser necesarias antes de completarse.
+
+# ¿Y ahora?
+
+¡Enhorabuena! Has finalizado el curso.
+
+Ahora que conoces los fundamentos de Go, puedes seguir profundizando con los siguientes recursos:
+
+- [Construir una API REST con Go para principiantes](https://www.youtube.com/watch?v=bFYZrEuEDLE)
+- [Conexión a PostgreSQL usando GORM](https://www.youtube.com/watch?v=Yk5ZjKq4qDQ)
+- [Web scraping con Go](https://www.youtube.com/watch?v=sU_BwzOxl54)
+- [Dockerizar una aplicación en Go](https://www.youtube.com/watch?v=zUc2LihXjlw)
+- [Hoja de ruta de DevOps](https://www.youtube.com/watch?v=np_seazJL3Q)
+
+A partir de aquí, el siguiente paso natural es aplicar estos conocimientos en proyectos reales que integren concurrencia, acceso a datos y despliegue.
+
 
 # Referencias
 
