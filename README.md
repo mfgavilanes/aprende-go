@@ -6069,11 +6069,11 @@ _Este comportamiento es similar al uso de `yield` en lenguajes como JavaScript o
 
 ![fan-in](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/fan-in.png)
 
-The fan-in pattern combines multiple inputs into one single output channel. Basically, we multiplex our inputs.
+El patrón fan-in combina múltiples entradas en un único canal de salida. Es decir, permite multiplexar varias fuentes de datos en un solo flujo.
 
-In our example, we create the inputs `i1` and `i2` using the `generateWork` function. Then we use our [variadic function](https://karanpratapsingh.com/courses/go/functions#variadic-functions) `fanIn` to combine values from these inputs to a single output channel from which we can consume values.
+En este ejemplo, se crean dos entradas `i1` e `i2` mediante la función `generateWork`. A continuación, se utiliza la [función variádica](https://karanpratapsingh.com/courses/go/functions#variadic-functions) `fanIn` para combinar los valores de ambas entradas en un único canal de salida, desde el cual se consumen los valores.
 
-_Note: order of input will not be guaranteed._
+_Nota: el orden de los valores en la salida no está garantizado._
 
 ```go
 package main
@@ -6090,7 +6090,7 @@ func main() {
 	out := fanIn(i1, i2)
 
 	for value := range out {
-		fmt.Println("Value:", value)
+		fmt.Println("Valor:", value)
 	}
 }
 
@@ -6140,25 +6140,27 @@ func generateWork(work []int) <-chan int {
 
 ```bash
 $ go run main.go
-Value: 0
-Value: 1
-Value: 2
-Value: 6
-Value: 8
-Value: 3
-Value: 5
-Value: 7
+Valor: 0
+Valor: 1
+Valor: 2
+Valor: 6
+Valor: 8
+Valor: 3
+Valor: 5
+Valor: 7
 ```
+El patrón fan-in permite combinar múltiples fuentes de eventos en un único flujo, algo muy útil en sistemas reactivos donde varios sensores generan información simultáneamente.
 
 ## Fan-out
 
 ![fan-out](https://raw.githubusercontent.com/karanpratapsingh/portfolio/master/public/static/courses/go/chapter-IV/advanced-concurrency-patterns/fan-out.png)
 
-Fan-out patterns allow us to essentially split our single input channel into multiple output channels. This is a useful pattern to distribute work items into multiple uniform actors.
+El patrón fan-out permite dividir un único canal de entrada en múltiples canales de salida. Es un patrón útil para distribuir elementos de trabajo entre varios actores o trabajadores uniformes.
 
-In our example, we break the input channel into 4 different output channels. For a dynamic number of outputs, we can merge outputs into a shared _"aggregate"_ channel and use `select`.
+En este ejemplo, dividimos el canal de entrada en 4 canales de salida diferentes. Para un número dinámico de salidas, podríamos combinar las salidas en un canal compartido de agregación y utilizar `select`.
 
-_Note: fan-out pattern is different from pub/sub._
+
+_Nota: el patrón fan-out es diferente del patrón pub/sub._
 
 ```go
 package main
@@ -6177,13 +6179,13 @@ func main() {
 	for range work {
 		select {
 		case value := <-out1:
-			fmt.Println("Output 1 got:", value)
+			fmt.Println("La salida 1 recibió:", value)
 		case value := <-out2:
-			fmt.Println("Output 2 got:", value)
+			fmt.Println("La salida 2 recibió:", value)
 		case value := <-out3:
-			fmt.Println("Output 3 got:", value)
+			fmt.Println("La salida 3 recibió:", value)
 		case value := <-out4:
-			fmt.Println("Output 4 got:", value)
+			fmt.Println("La salida 4 recibió:", value)
 		}
 	}
 }
@@ -6217,19 +6219,21 @@ func generateWork(work []int) <-chan int {
 }
 ```
 
-As we can see, our work has been split between multiple goroutines.
+Como se puede observar, el trabajo se reparte entre varias goroutines.
 
 ```bash
 $ go run main.go
-Output 1 got: 1
-Output 2 got: 3
-Output 4 got: 4
-Output 1 got: 5
-Output 3 got: 2
-Output 3 got: 6
-Output 3 got: 7
-Output 1 got: 8
+La salida 1 recibió: 1
+La salida 2 recibió: 3
+La salida 4 recibió: 4
+La salida 1 recibió: 5
+La salida 3 recibió: 2
+La salida 3 recibió: 6
+La salida 3 recibió: 7
+La salida 1 recibió: 8
 ```
+
+El patrón fan-out permite repartir trabajo entre varios consumidores concurrentes, de modo que cada elemento del canal de entrada sea procesado por uno de ellos.
 
 ## Pipeline
 
